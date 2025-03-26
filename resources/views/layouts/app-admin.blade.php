@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title')</title>
     <script src="https://unpkg.com/htmx.org@1.9.5"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+
+    @vite('resources/css/app.css')
 </head>
 
 <body class="bg-gray-100">
 
     {{-- Navbar --}}
-
 
     <nav
         class="fixed top-0 z-4 w-full sm:w-[calc(100%-256px)] sm:ml-64 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -32,21 +32,50 @@
                     </button>
                 </div>
                 <div class="flex items-center">
-                    <div class="flex items-center ms-4">
+                    <div class="flex items-center ms-4 gap-8 sm:gap-2">
+                        <button id="mailButton" type="button"
+                            class="flex sm:mr-8 text-sm bg-transparent rounded-full  focus:ring-gray-300 dark:focus:ring-gray-600 
+                                active:scale-90 transition-transform duration-400 ease-in-out">
+                            <svg class="h-8 w-8 text-gray-500" width="24" height="24" viewBox="0 0 24 24"
+                                stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" />
+                                <rect x="3" y="5" width="18" height="14" rx="2" />
+                                <polyline points="3 7 12 13 21 7" />
+                            </svg>
+                        </button>
+
+
                         <div class="relative">
                             <!-- Button Foto Profil -->
                             <button id="profileButton" type="button"
-                                class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600 
-                                active:scale-90 transition-transform duration-400 ease-in-out">
+                                class="flex text-sm bg-[#F0F0F0] rounded-full  focus:ring-gray-300 dark:focus:ring-gray-600 
+                                active:scale-90 transition-transform duration-400 ease-in-out items-center justify-center sm:pr-4 sm:py-2 sm:pl-3 gap-4">
                                 <span class="sr-only">Open user menu</span>
                                 <img class="w-10 h-10 rounded-full"
                                     src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
                                     alt="user photo">
+                                <h3
+                                    class="hidden md:block items-center justify-center font-poppins text-[16px] text-gray-900 font-medium ">
+                                    Nama</h3>
+                                <svg id="arrowDown" class="h-8 w-8 text-neutral-500 md:block hidden" width="24"
+                                    height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" />
+                                    <polyline points="6 9 12 15 18 9" />
+                                </svg>
+                                <svg id="arrowUp" class="h-8 w-8 text-neutral-500 md:block hidden" width="24"
+                                    height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" />
+                                    <polyline points="6 15 12 9 18 15" />
+                                </svg>
                             </button>
+
 
                             <!-- Dropdown Menu -->
                             <div id="profileDropdown"
-                                class="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg dark:bg-gray-700 dark:shadow-md 
+                                class="absolute right-0 mt-2 w-48 bg-[#F0F0F0] shadow-lg rounded-lg dark:bg-gray-700 dark:shadow-md 
                                 opacity-0 scale-95 transform transition-all duration-300 ease-out pointer-events-none">
                                 <div class="px-4 py-3 border-b dark:border-gray-600">
                                     <p class="text-sm font-semibold text-gray-900 dark:text-white">Neil Sims</p>
@@ -74,6 +103,18 @@
                                     </li>
                                 </ul>
                             </div>
+                            <!-- Mail Dropdown -->
+                            <div id="mailDropdown"
+                                class="absolute right-20 mt-2 w-64 bg-[#F0F0F0] rounded-lg shadow-lg opacity-0 scale-95 pointer-events-none transition-all duration-300">
+                                <div class="flex p-4 items-center">
+                                    <img src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                                        class="w-10 h-10 rounded-full mr-3" alt="user photo">
+                                    <div>
+                                        <p class="text-gray-900 font-medium">Nama</p>
+                                        <p class="text-gray-500 text-sm">Telah memasuki masa pensiun</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -82,7 +123,7 @@
     </nav>
 
     <aside id="logo-sidebar"
-        class="fixed top-0 left-0 z-40 w-72 h-screen pt-10 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
+        class="fixed top-0 left-0 z-40 w-72  h-screen pt-10 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
         aria-label="Sidebar">
         <button id="closeSidebar"
             class="absolute top-2 right-2 p-2 text-gray-500 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 sm:hidden">
@@ -214,8 +255,8 @@
         </div>
     </aside>
     {{-- Main Content --}}
-    <div class="container mx-auto sm:ml-72">
-        <div class="p-8  border-dashed rounded-lg dark:border-gray-700 mt-16">
+    <div class="container mx-auto sm:ml-96">
+        <div class="p-8  border-dashed rounded-lg dark:border-gray-700 mt-24">
             @yield('content')
         </div>
     </div>
@@ -230,26 +271,69 @@
 
         // untuk buka profile di navbar
         document.addEventListener("DOMContentLoaded", function() {
-
             const profileButton = document.getElementById("profileButton");
             const profileDropdown = document.getElementById("profileDropdown");
+            const arrowUp = document.getElementById("arrowUp");
+            const arrowDown = document.getElementById("arrowDown");
+            const mailButton = document.getElementById("mailButton");
+            const mailDropdown = document.getElementById("mailDropdown");
 
-            // Toggle dropdown saat tombol profile diklik
+            function isMobile() {
+                return window.innerWidth <= 768;
+            }
+
+            function updateArrowVisibility() {
+                if (isMobile()) {
+                    arrowUp.style.display = "none";
+                    arrowDown.style.display = "none";
+                } else {
+                    arrowUp.style.display = "none";
+                    arrowDown.style.display = "block";
+                }
+            }
+
+            updateArrowVisibility();
+            window.addEventListener("resize", updateArrowVisibility);
+
             profileButton.addEventListener("click", function() {
                 if (profileDropdown.classList.contains("opacity-0")) {
                     profileDropdown.classList.remove("opacity-0", "scale-95", "pointer-events-none");
                     profileDropdown.classList.add("opacity-100", "scale-100");
+                    if (!isMobile()) {
+                        arrowUp.style.display = "block";
+                        arrowDown.style.display = "none";
+                    }
                 } else {
                     profileDropdown.classList.add("opacity-0", "scale-95", "pointer-events-none");
                     profileDropdown.classList.remove("opacity-100", "scale-100");
+                    if (!isMobile()) {
+                        arrowUp.style.display = "none";
+                        arrowDown.style.display = "block";
+                    }
+                }
+            });
+            mailButton.addEventListener("click", function() {
+                if (mailDropdown.classList.contains("opacity-0")) {
+                    mailDropdown.classList.remove("opacity-0", "scale-95", "pointer-events-none");
+                    mailDropdown.classList.add("opacity-100", "scale-100");
+                } else {
+                    mailDropdown.classList.add("opacity-0", "scale-95", "pointer-events-none");
+                    mailDropdown.classList.remove("opacity-100", "scale-100");
                 }
             });
 
-            // Tutup dropdown jika klik di luar
             document.addEventListener("click", function(event) {
                 if (!profileButton.contains(event.target) && !profileDropdown.contains(event.target)) {
                     profileDropdown.classList.add("opacity-0", "scale-95", "pointer-events-none");
                     profileDropdown.classList.remove("opacity-100", "scale-100");
+                    if (!isMobile()) {
+                        arrowUp.style.display = "none";
+                        arrowDown.style.display = "block";
+                    }
+                }
+                if (!mailButton.contains(event.target) && !mailDropdown.contains(event.target)) {
+                    mailDropdown.classList.add("opacity-0", "scale-95", "pointer-events-none");
+                    mailDropdown.classList.remove("opacity-100", "scale-100");
                 }
             });
         });

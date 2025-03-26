@@ -23,6 +23,19 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\File;
+
+Route::get('/font/{folder}/{filename}', function ($folder, $filename) {
+    $path = public_path("font/{$folder}/{$filename}");
+
+    if (!File::exists($path)) {
+        abort(404);
+    }
+
+    return Response::file($path);
+});
+
 
 Route::get('/', function () {
     return view(view: 'home');
