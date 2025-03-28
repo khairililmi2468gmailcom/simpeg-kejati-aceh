@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KepangkatanController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\MutasiController;
+use App\Http\Controllers\PegawaiBarchartController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
@@ -55,6 +56,7 @@ Route::get('/admin/home', [HomeController::class, 'index'])->name('admin.home');
 Route::get('/home', function () {
     return redirect()->route('home');
 });
+Route::get('/admin/home', [PegawaiBarchartController::class, 'index'])->name('admin.home');
 
 Route::get('/admin/settings', [SettingsController::class, 'index'])->name('admin.settings');
 
@@ -73,3 +75,4 @@ Route::get('admin/laporan', [LaporanController::class, 'index'])->name('admin.la
 Route::get('admin/profile', [ProfileController::class, 'index'])->name('admin.profile');
 
 Route::get('admin/account-settting', [AccountSettingsController::class, 'index'])->name('admin.account-setting');
+
