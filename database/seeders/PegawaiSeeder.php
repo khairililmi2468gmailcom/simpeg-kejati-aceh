@@ -4,8 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class PegawaiSeeder extends Seeder
 {
@@ -29,6 +27,8 @@ class PegawaiSeeder extends Seeder
                 'status' => 'Menikah',
                 'j_anak' => 3,
                 'id_provinsi' => '11', // Aceh
+                'id_kabupaten' => '1101', // Kabupaten Simeulue
+                'id_kecamatan' => '1101010', // Kecamatan Teupah Selatan
                 'alamat' => 'Jl. Teuku Umar No. 10, Banda Aceh',
                 'kode_pos' => '23111',
                 'hp' => '08123456789',
@@ -60,6 +60,8 @@ class PegawaiSeeder extends Seeder
                 'status' => 'Menikah',
                 'j_anak' => 2,
                 'id_provinsi' => '11', // Aceh
+                'id_kabupaten' => '1201', // Kabupaten Nias
+                'id_kecamatan' => '1201010', // Kecamatan Gunungsitoli
                 'alamat' => 'Jl. Merdeka No. 23, Lhokseumawe',
                 'kode_pos' => '24311',
                 'hp' => '085267891234',

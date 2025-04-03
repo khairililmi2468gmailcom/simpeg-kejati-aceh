@@ -11,7 +11,7 @@ class Kabupaten extends Model
 
     protected $table = 'kabupaten';
     protected $primaryKey = 'id';
-    public $incrementing = false; // Karena ID adalah string (4 karakter)
+    public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = ['id', 'nama_kabupaten', 'id_provinsi'];
 
@@ -23,5 +23,10 @@ class Kabupaten extends Model
     public function kecamatan()
     {
         return $this->hasMany(Kecamatan::class, 'id_kabupaten', 'id');
+    }
+
+    public function pegawai()
+    {
+        return $this->hasMany(Pegawai::class, 'id_kabupaten', 'id');
     }
 }

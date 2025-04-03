@@ -13,8 +13,8 @@ class KecamatanSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('kecamatan')->truncate();
-
+        DB::table('kecamatan')->delete(); // Ganti truncate() dengan delete()
+    
         DB::table('kecamatan')->insert([
             ['id' => '1101010', 'nama_kecamatan' => 'Teupah Selatan', 'id_kabupaten' => '1101'],
             ['id' => '1101020', 'nama_kecamatan' => 'Simeulue Timur', 'id_kabupaten' => '1101'],
@@ -22,4 +22,5 @@ class KecamatanSeeder extends Seeder
             ['id' => '1201020', 'nama_kecamatan' => 'Gunungsitoli Selatan', 'id_kabupaten' => '1201'],
         ]);
     }
+    
 }

@@ -15,13 +15,24 @@ class Pegawai extends Model
     protected $keyType = 'string';
     protected $fillable = [
         'nip', 'nrp', 'karpeg', 'nama', 'tmpt_lahir', 'tgl_lahir', 'agama', 'suku', 'gol_darah', 'j_kelamin', 
-        'status', 'j_anak', 'id_provinsi', 'alamat', 'kode_pos', 'hp', 'pendidikan', 'universitas', 
-        'jurusan', 't_lulus', 'tahun_masuk', 'foto', 'tmt_jabatan', 'id_golongan', 'kode_kantor', 'id_jabatan', 'ket'
+        'status', 'j_anak', 'id_provinsi', 'id_kabupaten', 'id_kecamatan', 'alamat', 'kode_pos', 'hp', 
+        'pendidikan', 'universitas', 'jurusan', 't_lulus', 'tahun_masuk', 'foto', 'tmt_jabatan', 
+        'id_golongan', 'kode_kantor', 'id_jabatan', 'ket'
     ];
 
     public function provinsi()
     {
         return $this->belongsTo(Provinsi::class, 'id_provinsi', 'id');
+    }
+
+    public function kabupaten()
+    {
+        return $this->belongsTo(Kabupaten::class, 'id_kabupaten', 'id');
+    }
+
+    public function kecamatan()
+    {
+        return $this->belongsTo(Kecamatan::class, 'id_kecamatan', 'id');
     }
 
     public function golongan()
