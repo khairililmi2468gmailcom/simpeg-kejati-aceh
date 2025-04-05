@@ -83,6 +83,14 @@
             </svg>
             Unduh Template
         </a>
+        <!-- Info Button -->
+        <button onclick="toggleReferensiModal()"
+            class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-blue-600 hover:bg-blue-700 text-white focus:outline-none">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" />
+            </svg>
+        </button>
 
     </div>
 
@@ -232,6 +240,39 @@
         }
     </script>
 @endsection
+<!-- Modal -->
+<div id="referensiModal"
+    class="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 hidden bg-white border border-gray-300 rounded-lg shadow-xl w-[95%] md:w-[70%] max-h-[80vh] overflow-y-auto p-5">
+    <div class="flex justify-between items-center mb-3">
+        <h2 class="text-lg font-semibold text-[#00A181]">Petunjuk Pengisian Excel</h2>
+        <button onclick="toggleReferensiModal()" class="text-gray-500 hover:text-red-500">✖</button>
+    </div>
+
+    <p class="text-sm text-gray-600 mb-4">
+        <strong>Catatan:</strong> NIP maksimal 18 digit. Gunakan ID dari data referensi berikut untuk kolom Provinsi,
+        Kabupaten, Kecamatan, Golongan, Jabatan, dan Unit Kerja.
+    </p>
+
+    <!-- Tabs -->
+    <div class="flex flex-wrap gap-2 mb-4">
+        @foreach (['provinsi', 'kabupaten', 'kecamatan', 'golongan', 'jabatan', 'unitkerja'] as $tab)
+            <button class="tab-btn bg-gray-200 text-black px-4 py-1.5 rounded text-sm"
+                onclick="showReferensiTab('{{ $tab }}', this)">
+                {{ ucfirst($tab) }}
+            </button>
+        @endforeach
+    </div>
+
+    <!-- Search -->
+    <input type="text" id="searchInput" oninput="filterReferensiTable()" placeholder="Cari nama..."
+        class="w-full px-3 py-2 mb-3 border border-gray-300 rounded text-sm" />
+
+    <!-- Konten Tab -->
+    <div id="referensiTable" class="overflow-x-auto text-sm">
+        <p class="text-gray-500">Pilih salah satu tab di atas untuk melihat datanya.</p>
+    </div>
+</div>
+
 
 @section('scripts')
     <script>
@@ -375,4 +416,61 @@
             });
         </script>
     @endif
+
+@endpush
+
+@push('scripts')
+    <script>
+        function toggleReferensiModal() {
+            const modal = document.getElementById('referensiModal');
+            modal.classList.toggle('hidden');
+        }
+
+        function showReferensiTab(tabName, btn) {
+            // Style tombol aktif
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('bg-[#00A181]', 'text-white');
+                el.classList.add('bg-gray-200', 'text-black');
+            });
+            btn.classList.remove('bg-gray-200', 'text-black');
+            btn.classList.add('bg-[#00A181]', 'text-white');
+
+            // Ambil data dari Blade ke JS
+            let data = @json($referensi);
+
+
+            let currentData = data[tabName] || [];
+
+            // Buat tabel
+            let html = `<table id="referensiTableContent" class="min-w-full table-auto border">
+            <thead>
+                <tr class="bg-gray-100 text-left text-xs text-gray-700 uppercase">
+                    <th class="border px-3 py-2">ID</th>
+                    <th class="border px-3 py-2">Nama</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${currentData.map(item => `
+                            <tr>
+                                <td class="border px-3 py-1.5">${item.id}</td>
+                                <td class="border px-3 py-1.5">${item.nama}</td>
+                            </tr>
+                        `).join('')}
+            </tbody>
+        </table>`;
+
+            document.getElementById('referensiTable').innerHTML = html;
+            document.getElementById('searchInput').value = '';
+        }
+
+        function filterReferensiTable() {
+            const input = document.getElementById("searchInput").value.toLowerCase();
+            const rows = document.querySelectorAll("#referensiTableContent tbody tr");
+
+            rows.forEach(row => {
+                const nama = row.cells[1].innerText.toLowerCase();
+                row.style.display = nama.includes(input) ? "" : "none";
+            });
+        }
+    </script>
 @endpush

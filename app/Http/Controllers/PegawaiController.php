@@ -29,8 +29,15 @@ class PegawaiController extends Controller
             })
             ->orderBy('nama')
             ->paginate($perPage);
-
-        return view('admin.pegawai.index', compact('pegawai'));
+        $referensi = [
+            'provinsi' => \App\Models\Provinsi::select('id', 'nama_provinsi as nama')->get(),
+            'kabupaten' => \App\Models\Kabupaten::select('id', 'nama_kabupaten as nama')->get(),
+            'kecamatan' => \App\Models\Kecamatan::select('id', 'nama_kecamatan as nama')->get(),
+            'golongan' => \App\Models\Golongan::select('id_golongan as id', 'jabatan_fungsional as nama')->get(),
+            'jabatan' => \App\Models\Jabatan::select('id_jabatan as id', 'nama_jabatan as nama')->get(),
+            'unitkerja' => \App\Models\UnitKerja::select('kode_kantor as id', 'nama_kantor as nama')->get(),
+        ];
+        return view('admin.pegawai.index', compact('pegawai', 'referensi'));
     }
 
     public function create()

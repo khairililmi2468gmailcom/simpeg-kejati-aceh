@@ -79,6 +79,17 @@ Route::put('/admin/pegawai/{nip}', [PegawaiController::class, 'update'])->name('
 // Route untuk menghapus pegawai
 Route::delete('/admin/pegawai/{nip}', [PegawaiController::class, 'destroy'])->name('admin.pegawai.destroy');
 Route::post('/admin/pegawai/bulk-delete', [PegawaiController::class, 'bulkDelete'])->name('admin.pegawai.bulkDelete');
+Route::get('/data/provinsi', function () {
+    return response()->json(\App\Models\Provinsi::select('id', 'nama_provinsi')->get());
+});
+Route::prefix('data')->group(function () {
+    Route::view('/provinsi', 'referensi.provinsi')->name('referensi.provinsi');
+    Route::view('/kabupaten', 'referensi.kabupaten')->name('referensi.kabupaten');
+    Route::view('/kecamatan', 'referensi.kecamatan')->name('referensi.kecamatan');
+    Route::view('/golongan', 'referensi.golongan')->name('referensi.golongan');
+    Route::view('/jabatan', 'referensi.jabatan')->name('referensi.jabatan');
+    Route::view('/unit-kerja', 'referensi.unitkerja')->name('referensi.unitkerja');
+});
 
 Route::get('/get-kabupaten/{id_provinsi}', [App\Http\Controllers\WilayahController::class, 'getKabupaten']);
 Route::get('/get-kecamatan/{id_kabupaten}', [App\Http\Controllers\WilayahController::class, 'getKecamatan']);
