@@ -60,7 +60,21 @@ Route::get('/admin/home', [PegawaiBarchartController::class, 'index'])->name('ad
 
 Route::get('/admin/settings', [SettingsController::class, 'index'])->name('admin.settings');
 
+// Route untuk halaman index pegawai
 Route::get('/admin/pegawai', [PegawaiController::class, 'index'])->name('admin.pegawai');
+
+// Route untuk menampilkan form tambah pegawai
+Route::get('/admin/pegawai/create', [PegawaiController::class, 'create'])->name('admin.pegawai.create');
+// Route untuk menyimpan pegawai baru
+Route::post('/admin/pegawai/store', [PegawaiController::class, 'store'])->name('admin.pegawai.store');
+// Route untuk menampilkan detail pegawai
+Route::get('/admin/pegawai/{nip}', [PegawaiController::class, 'show'])->name('admin.pegawai.show');
+// Route untuk menampilkan form edit pegawai
+Route::get('/admin/pegawai/{nip}/edit', [PegawaiController::class, 'edit'])->name('admin.pegawai.edit');
+// Route untuk update data pegawai
+Route::put('/admin/pegawai/{nip}', [PegawaiController::class, 'update'])->name('admin.pegawai.update');
+// Route untuk menghapus pegawai
+Route::delete('/admin/pegawai/{nip}', [PegawaiController::class, 'destroy'])->name('admin.pegawai.destroy');
 
 Route::get('admin/cuti', [CutiController::class, 'index'])->name('admin.cuti');
 

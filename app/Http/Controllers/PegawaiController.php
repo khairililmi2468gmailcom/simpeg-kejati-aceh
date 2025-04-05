@@ -15,7 +15,9 @@ class PegawaiController extends Controller
     public function index()
     {
         $pegawai = Pegawai::with(['provinsi', 'golongan', 'unitKerja', 'jabatan'])->get();
-        return view('admin.pegawai.index', compact('pegawai'));
+        $golongan = Golongan::all();
+        $jabatan = Jabatan::all();
+        return view('admin.pegawai.index', compact('pegawai', 'golongan', 'jabatan'));
     }
 
     public function create()
