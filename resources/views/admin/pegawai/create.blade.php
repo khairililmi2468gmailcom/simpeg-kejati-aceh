@@ -5,6 +5,9 @@
         <h1 class="text-3xl font-bold text-[#00A181]">Tambah Pegawai</h1>
         <p class="text-gray-600">Tambahkan data pegawai Kejaksaan Tinggi</p>
     </div>
+    <button type="button" onclick="isiFormOtomatis()"
+        class="cursor-pointer bg-[#00A181] text-white px-4 py-2 rounded-lg mt-4">Isi
+        Otomatis</button>
 
     <div class="max-w-6xl mx-auto mt-6 p-6 bg-white shadow-md rounded-xl">
         <form action="{{ route('admin.pegawai.store') }}" method="POST" enctype="multipart/form-data">
@@ -15,6 +18,7 @@
                 <div>
                     <label class="block font-semibold text-gray-700">NIP</label>
                     <input type="text" name="nip" id="nip" maxlength="18" oninput="validateNIP()"
+                        value="{{ old('nip') }}"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]">
                     <p id="nip-warning" class="text-sm text-red-600 mt-1 hidden">
                         NIP harus terdiri dari 18 karakter.
@@ -26,6 +30,7 @@
                 <div>
                     <label class="block font-semibold text-gray-700">NRP</label>
                     <input type="text" name="nrp" maxlength="25" oninput="this.value = this.value.slice(0, 25);"
+                        value="{{ old('nrp') }}"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
@@ -34,6 +39,7 @@
                 <div>
                     <label class="block font-semibold text-gray-700">Karpeg</label>
                     <input type="text" name="karpeg" maxlength="25" oninput="this.value = this.value.slice(0, 25);"
+                        value="{{ old('karpeg') }}"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
@@ -42,6 +48,7 @@
                 <div>
                     <label class="block font-semibold text-gray-700">Nama</label>
                     <input type="text" name="nama" maxlength="100" oninput="this.value = this.value.slice(0, 100);"
+                        value="{{ old('nama') }}"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
@@ -50,6 +57,7 @@
                 <div>
                     <label class="block font-semibold text-gray-700">Tempat Lahir</label>
                     <input type="text" name="tmpt_lahir" maxlength="25" oninput="this.value = this.value.slice(0, 25);"
+                        value="{{ old('tmpt_lahir') }}"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
@@ -57,7 +65,7 @@
                 {{-- Tanggal Lahir --}}
                 <div>
                     <label class="block font-semibold text-gray-700">Tanggal Lahir</label>
-                    <input type="date" name="tgl_lahir"
+                    <input type="date" name="tgl_lahir" value="{{ old('tgl_lahir') }}"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
@@ -79,6 +87,7 @@
                 <div>
                     <label class="block font-semibold text-gray-700">Suku</label>
                     <input type="text" name="suku" maxlength="25" oninput="this.value = this.value.slice(0, 25);"
+                        value="{{ old('suku') }}"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
@@ -100,8 +109,8 @@
                     <select name="j_kelamin"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
-                    <option value="Laki-Laki">Laki-Laki</option>
-                    <option value="Perempuan">Perempuan</option>
+                    <option value="Laki-Laki" @selected(old('j_kelamin') == 'Laki-Laki')>Laki-Laki</option>
+                    <option value="Perempuan" @selected(old('j_kelamin') == 'Perempuan')>Perempuan</option>
                     </select>
                 </div>
 
@@ -119,6 +128,7 @@
                 <div>
                     <label class="block font-semibold text-gray-700">Jumlah Anak</label>
                     <input type="number" name="j_anak" maxlength="11" oninput="this.value = this.value.slice(0, 11);"
+                        value="{{ old('j_anak') }}"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
@@ -134,7 +144,8 @@
                             </span>
                             <svg class="w-5 h-5 text-gray-400 transform transition-transform" fill="none"
                                 stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
                             </svg>
                         </div>
                         <div id="provinsi-dropdown"
@@ -155,6 +166,10 @@
                         </div>
                     </div>
                     <input type="hidden" name="id_provinsi" id="provinsi-input" value="{{ old('id_provinsi') }}">
+                    <p id="provinsi-warning" class="text-sm text-red-600 mt-1 hidden">
+                        Provinsi wajib dipilih.
+                    </p>
+
                 </div>
 
 
@@ -182,6 +197,10 @@
                         </div>
                     </div>
                     <input type="hidden" name="id_kabupaten" id="kabupaten-input" value="">
+                    <p id="kabupaten-warning" class="text-sm text-red-600 mt-1 hidden">
+                        Kabupaten wajib dipilih.
+                    </p>
+
                 </div>
 
                 {{-- Kecamatan --}}
@@ -208,12 +227,17 @@
                         </div>
                     </div>
                     <input type="hidden" name="id_kecamatan" id="kecamatan-input" value="">
+                    <p id="kecamatan-warning" class="text-sm text-red-600 mt-1 hidden">
+                        Kecamatan wajib dipilih.
+                    </p>
+
                 </div>
 
 
                 <div>
                     <label class="block font-semibold text-gray-700">Alamat</label>
-                    <input type="text" name="alamat" maxlength="100" oninput="this.value = this.value.slice(0, 100);"
+                    <input type="text" name="alamat" maxlength="100"
+                        oninput="this.value = this.value.slice(0, 100);" value="{{ old('alamat') }}"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
@@ -222,12 +246,14 @@
                 <div>
                     <label class="block font-semibold text-gray-700">Kode Pos</label>
                     <input type="text" name="kode_pos" maxlength="12" oninput="this.value = this.value.slice(0, 12);"
+                        value="{{ old('kode_pos') }}"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
                 <div>
                     <label class="block font-semibold text-gray-700">No. HP</label>
                     <input type="text" name="hp" maxlength="12" oninput="this.value = this.value.slice(0, 12);"
+                        value="{{ old('hp') }}"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
@@ -239,13 +265,15 @@
                 {{-- Pendidikan, Universitas --}}
                 <div>
                     <label class="block font-semibold text-gray-700">Pendidikan Terakhir</label>
-                    <input type="text" name="pendidikan" maxlength="25" oninput="this.value = this.value.slice(0, 25);"
+                    <input type="text" name="pendidikan" maxlength="25"
+                        oninput="this.value = this.value.slice(0, 25);" value="{{ old('pendidikan') }}"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
                 <div>
                     <label class="block font-semibold text-gray-700">Universitas</label>
-                    <input type="text" name="universitas" maxlength="99" oninput="this.value = this.value.slice(0, 99);"
+                    <input type="text" name="universitas" maxlength="99"
+                        oninput="this.value = this.value.slice(0, 99);" value="{{ old('universitas') }}"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
@@ -253,13 +281,15 @@
                 {{-- Jurusan, Tahun Lulus --}}
                 <div>
                     <label class="block font-semibold text-gray-700">Jurusan</label>
-                    <input type="text" name="jurusan" maxlength="100" oninput="this.value = this.value.slice(0, 100);"
+                    <input type="text" name="jurusan" maxlength="100"
+                        oninput="this.value = this.value.slice(0, 100);" value="{{ old('jurusan') }}"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
                 <div>
                     <label class="block font-semibold text-gray-700">Tahun Lulus</label>
                     <input type="number" name="t_lulus" maxlength="4" oninput="this.value = this.value.slice(0, 4);"
+                        value="{{ old('t_lulus') }}"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
@@ -267,7 +297,8 @@
                 {{-- Tahun Masuk --}}
                 <div>
                     <label class="block font-semibold text-gray-700">Tahun Masuk</label>
-                    <input type="number" name="tahun_masuk" maxlength="4" oninput="this.value = this.value.slice(0, 4);"
+                    <input type="number" name="tahun_masuk" maxlength="4"
+                        oninput="this.value = this.value.slice(0, 4);" value="{{ old('tahun_masuk') }}"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
@@ -281,48 +312,65 @@
                 {{-- Golongan --}}
                 <div>
                     <label class="block font-semibold text-gray-700">TMT Jabatan</label>
-                    <input type="date" name="tmt_jabatan"
+                    <input type="date" name="tmt_jabatan" value="{{ old('tmt_jabatan') }}"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
                 <div>
                     <label class="block font-semibold text-gray-700 mb-2">Golongan</label>
-                    <select name="id_golongan"
+                    <select name="id_golongan" id="id_golongan"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]">
                         <option value="">Pilih Golongan</option>
                         @foreach ($golongan as $gol)
-                            <option value="{{ $gol->id_golongan }}">{{ $gol->pangkat }}</option>
+                            <option value="{{ $gol->id_golongan }}"
+                                {{ old('id_golongan') == $gol->id_golongan ? 'selected' : '' }}>
+                                {{ $gol->pangkat }}
+                            </option>
                         @endforeach
                     </select>
+                    <p id="golongan-warning" class="text-sm text-red-600 mt-1 hidden">
+                        Golongan wajib dipilih.
+                    </p>
+
                 </div>
 
 
                 {{-- Jabatan --}}
                 <div>
                     <label class="block font-semibold text-gray-700">Jabatan</label>
-                    <select name="id_jabatan"
+                    <select name="id_jabatan" id="id_jabatan"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]">
                         <option value="">Pilih Jabatan</option>
-
                         @foreach ($jabatan as $jab)
-                            <option value="{{ $jab->id_jabatan }}">{{ $jab->nama_jabatan }}
+                            <option value="{{ $jab->id_jabatan }}"
+                                {{ old('id_jabatan') == $jab->id_jabatan ? 'selected' : '' }}>
+                                {{ $jab->nama_jabatan }}
                             </option>
                         @endforeach
                     </select>
+                    <p id="jabatan-warning" class="text-sm text-red-600 mt-1 hidden">
+                        Jabatan wajib dipilih.
+                    </p>
+
                 </div>
 
                 {{-- Unit Kerja --}}
                 <div>
                     <label class="block font-semibold text-gray-700">Unit Kerja</label>
-                    <select name="kode_kantor"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
-                    <option value="">Pilih Unit Kerja</option>
-
-                    @foreach ($unitKerja as $unit)
-                        <option value="{{ $unit->kode_kantor }}">
-                            {{ $unit->nama_kantor }}</option>
-                    @endforeach
+                    <select name="kode_kantor" id="kode_kantor"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]">
+                        <option value="">Pilih Unit Kerja</option>
+                        @foreach ($unitKerja as $unit)
+                            <option value="{{ $unit->kode_kantor }}"
+                                {{ old('kode_kantor') == $unit->kode_kantor ? 'selected' : '' }}>
+                                {{ $unit->nama_kantor }}
+                            </option>
+                        @endforeach
                     </select>
+                    <p id="unitkerja-warning" class="text-sm text-red-600 mt-1 hidden">
+                        Unit Kerja wajib dipilih.
+                    </p>
+
                 </div>
             </div>
             <h3 class="text-2xl font-extrabold dark:text-white md:mb-4 md:mt-8">Data Tambahan</h3>
@@ -334,7 +382,7 @@
                 <div class="md:col-span-2">
                     <label class="block font-semibold text-gray-700">Keterangan</label>
                     <textarea name="ket" rows="2" maxlength="150" oninput="this.value = this.value.slice(0, 150);"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]">
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]">{{ old('ket') }}
 </textarea>
                 </div>
 
@@ -410,6 +458,67 @@
             });
         </script>
     @endif
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            if (!form) return;
+
+            form.addEventListener('submit', function(e) {
+                let valid = true;
+
+                const fields = [{
+                        id: 'provinsi-input',
+                        warning: 'provinsi-warning'
+                    },
+                    {
+                        id: 'kabupaten-input',
+                        warning: 'kabupaten-warning'
+                    },
+                    {
+                        id: 'kecamatan-input',
+                        warning: 'kecamatan-warning'
+                    },
+                    {
+                        id: 'id_golongan',
+                        warning: 'golongan-warning'
+                    },
+                    {
+                        id: 'id_jabatan',
+                        warning: 'jabatan-warning'
+                    },
+                    {
+                        id: 'kode_kantor',
+                        warning: 'unitkerja-warning'
+                    }
+                ];
+
+                fields.forEach(field => {
+                    const el = document.getElementById(field.id);
+                    const warning = document.getElementById(field.warning);
+
+                    if (!el || !warning) return;
+
+                    if (!el.value) {
+                        warning.classList.remove('hidden');
+                        valid = false;
+                    } else {
+                        warning.classList.add('hidden');
+                    }
+                });
+
+                if (!valid) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Beberapa data wajib diisi belum lengkap.',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+    </script>
 
     {{-- Select2 --}}
 
@@ -543,6 +652,7 @@
     </script>
 
 @endpush
+<script src="{{ asset('js/faker.min.js') }}"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -616,5 +726,97 @@
         } else {
             warning.classList.add('hidden');
         }
+    }
+    document.querySelector('form').addEventListener('submit', function(e) {
+        let valid = true;
+
+        const fields = [{
+                id: 'provinsi-input',
+                warning: 'provinsi-warning'
+            },
+            {
+                id: 'kabupaten-input',
+                warning: 'kabupaten-warning'
+            },
+            {
+                id: 'kecamatan-input',
+                warning: 'kecamatan-warning'
+            },
+            {
+                id: 'id_golongan',
+                warning: 'golongan-warning'
+            },
+            {
+                id: 'id_jabatan',
+                warning: 'jabatan-warning'
+            },
+            {
+                id: 'kode_kantor',
+                warning: 'unitkerja-warning'
+            }
+        ];
+
+        fields.forEach(field => {
+            const el = document.getElementById(field.id);
+            const warning = document.getElementById(field.warning);
+
+            if (!el.value) {
+                warning.classList.remove('hidden');
+                valid = false;
+            } else {
+                warning.classList.add('hidden');
+            }
+        });
+
+        if (!valid) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: 'Beberapa data wajib diisi belum lengkap.',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        }
+    });
+
+    function isiFormOtomatis() {
+        document.querySelector('[name="nip"]').value = faker.random.number({
+            min: 1e17,
+            max: 9e17
+        }).toString();
+        document.querySelector('[name="nrp"]').value = faker.random.alphaNumeric(10);
+        document.querySelector('[name="karpeg"]').value = faker.random.alphaNumeric(10);
+        document.querySelector('[name="nama"]').value = faker.name.findName();
+        document.querySelector('[name="tmpt_lahir"]').value = faker.address.city();
+        document.querySelector('[name="tgl_lahir"]').value = faker.date.past(40, '2000-01-01').toISOString().split('T')[
+            0];
+        document.querySelector('[name="agama"]').value = 'Islam';
+        document.querySelector('[name="suku"]').value = faker.random.word();
+        document.querySelector('[name="gol_darah"]').value = 'O';
+        document.querySelector('[name="j_kelamin"]').value = 'Laki-Laki';
+        document.querySelector('[name="status"]').value = 'Menikah';
+        document.querySelector('[name="j_anak"]').value = Math.floor(Math.random() * 5);
+        document.querySelector('[name="alamat"]').value = faker.address.streetAddress();
+        document.querySelector('[name="kode_pos"]').value = faker.address.zipCode();
+        document.querySelector('[name="hp"]').value = faker.phone.phoneNumber('08##########');
+        document.querySelector('[name="pendidikan"]').value = 'S1';
+        document.querySelector('[name="universitas"]').value = faker.company.companyName();
+        document.querySelector('[name="jurusan"]').value = 'Hukum';
+        document.querySelector('[name="t_lulus"]').value = faker.random.number({
+            min: 1990,
+            max: 2022
+        });
+        document.querySelector('[name="tahun_masuk"]').value = faker.random.number({
+            min: 1980,
+            max: 2020
+        });
+        document.querySelector('[name="tmt_jabatan"]').value = faker.date.past(10).toISOString().split('T')[0];
+        const ketInput = document.querySelector('[name="ket"]');
+        if (ketInput) {
+            ketInput.value = faker.lorem.sentence().slice(0, 150);
+        }
+
+        // Untuk select lain seperti jabatan, golongan, unit kerja — bisa diisi manual atau random ambil salah satu option.
     }
 </script>

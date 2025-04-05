@@ -3,9 +3,91 @@
 @section('content')
     <h1 class="text-3xl font-bold text-[#00A181]">Data Pegawai</h1>
     <p class="mb-4">Halaman daftar pegawai Kejaksaan Tinggi</p>
-    <input type="text" id="search" class="border px-3 py-2 w-1/3" placeholder="Cari pegawai...">
+
+    {{-- Filter & Search --}}
+    <form method="GET" action="{{ route('admin.pegawai') }}"
+        class="flex flex-wrap md:flex-nowrap items-center justify-between gap-2 mb-6">
+
+        <div class="relative w-full md:w-1/3">
+            <input type="text" name="search" id="search" value="{{ request('search') }}"
+                class="border border-gray-300 px-4 py-2 pl-10 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-[#00A181]"
+                placeholder="Cari pegawai...">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
+                </svg>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <select name="per_page" onchange="this.form.submit()"
+                class="border border-gray-300 px-3 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]">
+                @foreach ([5, 10, 25, 50, 100, 250, 500, 1000, 2000, 5000, 10000] as $size)
+                    <option value="{{ $size }}" {{ request('per_page', 10) == $size ? 'selected' : '' }}>
+                        {{ $size }} / halaman
+                    </option>
+                @endforeach
+            </select>
+
+            <button type="submit"
+                class="inline-flex items-center text-white bg-[#00A181] hover:bg-[#008f73] focus:ring-4 focus:ring-[#00A181]/50 font-medium rounded-md text-sm px-4 py-2">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
+                </svg>
+                Cari
+            </button>
+        </div>
+    </form>
+    <div class="flex flex-wrap items-center gap-3 mb-4">
+
+        <!-- Export PDF -->
+        <a href="{{ route('admin.pegawai.export.pdf') }}"
+            class="inline-flex items-center text-white bg-red-500 hover:bg-red-600 font-medium rounded-lg text-sm px-5 py-2.5">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            Export PDF
+        </a>
+
+        <!-- Export Excel -->
+        <a href="{{ route('admin.pegawai.export.excel') }}"
+            class="inline-flex items-center text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm px-5 py-2.5">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            Export Excel
+        </a>
+
+        <!-- Import Excel -->
+        <form action="{{ route('admin.pegawai.import.excel') }}" method="POST" enctype="multipart/form-data"
+            class="inline-flex items-center gap-2">
+            @csrf
+            <label
+                class="inline-flex items-center bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-lg text-sm px-4 py-2.5 cursor-pointer">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                <span>Import Excel</span>
+                <input type="file" name="file" class="hidden" onchange="this.form.submit()" accept=".xlsx,.xls">
+            </label>
+        </form>
+
+        <!-- Download Template Excel -->
+        <a href="{{ url('/pegawai/template/excel') }}" download
+            class="inline-flex items-center text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v16h16V4H4zm8 8v4m0-4l-2 2m2-2l2 2" />
+            </svg>
+            Unduh Template
+        </a>
+
+    </div>
 
     <div class="flex justify-end space-x-2 mb-4 mt-4">
+
         <!-- Tombol Tambah -->
         <a href="{{ route('admin.pegawai.create') }}"
             class="inline-flex items-center text-white bg-[#00A181] hover:bg-[#008f73] focus:outline-none focus:ring-4 focus:ring-[#00A181]/50 font-medium rounded-lg text-sm px-6 py-2.5 text-center dark:bg-[#00A181] dark:hover:bg-[#008f73] dark:focus:ring-[#00795f]">
@@ -32,81 +114,123 @@
         </button>
     </div>
 
-    <table class="w-full border-collapse border-2 border-gray-100 p-2">
-        <thead>
-            <tr class="bg-[#00A181] text-left text-white">
-                <th class="p-2 text-center"><input type="checkbox" id="checkAll"></th>
-
-                <th class="p-2">NIP</th>
-                <th class="p-2">Nama</th>
-                <th class="p-2">Golongan</th>
-                <th class="p-2">Jabatan</th>
-                <th class="p-2">Unit Kerja</th>
-                <th class="p-2">Aksi</th>
+    <table class="w-full text-base text-left text-gray-700 bg-white shadow-lg rounded-xl overflow-hidden">
+        <thead class="text-white bg-[#00A181]">
+            <tr>
+                <th class="px-5 py-4 text-center"><input type="checkbox" id="checkAll"></th>
+                <th class="px-5 py-4">NIP</th>
+                <th class="px-5 py-4">Nama</th>
+                <th class="px-5 py-4">Golongan</th>
+                <th class="px-5 py-4">Jabatan</th>
+                <th class="px-5 py-4">Unit Kerja</th>
+                <th class="px-5 py-4">Aksi</th>
             </tr>
         </thead>
-        <tbody class="bg-white">
-            @foreach ($pegawai as $item)
-                <tr class="border">
-                    <td class="p-2 text-center">
+        <tbody class="divide-y divide-gray-200">
+            @forelse ($pegawai as $item)
+                <tr class="hover:bg-gray-50 transition-all duration-150">
+                    <td class="px-5 py-4 text-center">
                         <input type="checkbox" class="checkbox-item" value="{{ $item->nip }}">
                     </td>
-                    <td class="p-2">{{ $item->nip }}</td>
-                    <td class="p-2">{{ $item->nama }}</td>
-                    <td class="p-2">{{ $item->golongan->pangkat ?? '-' }} </td>
-                    <td class="p-2">{{ $item->jabatan->nama_jabatan ?? '-' }}</td>
-                    <td class="p-2">{{ $item->unitKerja->nama_kantor ?? '-' }}
-                    </td>
-                    <td class="p-2">
+                    <td class="px-5 py-4 font-medium">{{ $item->nip }}</td>
+                    <td class="px-5 py-4">{{ $item->nama }}</td>
+                    <td class="px-5 py-4">{{ $item->golongan->pangkat ?? '-' }}</td>
+                    <td class="px-5 py-4">{{ $item->jabatan->nama_jabatan ?? '-' }}</td>
+                    <td class="px-5 py-4">{{ $item->unitKerja->nama_kantor ?? '-' }}</td>
+                    <td class="px-5 py-4 space-y-2">
+                        {{-- Tombol Detail --}}
                         <a href="{{ route('admin.pegawai.show', $item->nip) }}"
-                            class="inline-flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                            <!-- Icon Detail (eye) -->
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z">
-                                </path>
+                            class="inline-flex items-center text-white bg-blue-500 hover:bg-blue-600 font-semibold rounded-md text-sm px-4 py-2">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                </path>
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                             </svg>
                             Detail
                         </a>
 
+                        {{-- Tombol Edit --}}
                         <a href="{{ route('admin.pegawai.edit', $item->nip) }}"
-                            class="inline-flex items-center text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900">
-                            <!-- Icon Edit (pencil) -->
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            class="inline-flex items-center text-white bg-yellow-500 hover:bg-yellow-600 font-semibold rounded-md text-sm px-4 py-2">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828A4 4 0 019 17H5v-4a4 4 0 014-4z">
-                                </path>
+                                    d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828A4 4 0 019 17H5v-4a4 4 0 014-4z" />
                             </svg>
                             Edit
                         </a>
 
+                        {{-- Tombol Hapus --}}
                         <form action="{{ route('admin.pegawai.destroy', $item->nip) }}" method="POST"
                             class="inline delete-form">
                             @csrf
                             @method('DELETE')
                             <button type="button"
-                                class="btn-delete inline-flex items-center cursor-pointer text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
-                                <!-- Icon Hapus (trash) -->
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2"
-                                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                class="btn-delete inline-flex items-center text-white bg-red-500 hover:bg-red-600 font-semibold rounded-md text-sm px-4 py-2">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a1 1 0 011 1v1H9V4a1 1 0 011-1zM4 7h16">
-                                    </path>
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a1 1 0 011 1v1H9V4a1 1 0 011-1zM4 7h16" />
                                 </svg>
                                 Hapus
                             </button>
                         </form>
-
-
                     </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="7" class="text-center py-6 text-gray-500">Data tidak ditemukan.</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
+
+    {{-- Pagination --}}
+    <div class="mt-6 flex justify-end">
+        {{ $pegawai->appends(request()->all())->links() }}
+    </div>
+    @if ($pegawai->hasPages())
+        <div class="mt-6 flex justify-end">
+            <nav class="flex items-center space-x-1 text-sm">
+                {{-- Tombol Previous --}}
+                @if ($pegawai->onFirstPage())
+                    <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded-md cursor-not-allowed">← Prev</span>
+                @else
+                    <a href="{{ $pegawai->previousPageUrl() }}"
+                        class="px-3 py-1 bg-white border rounded-md text-[#00A181] hover:bg-[#00A181]/10">← Prev</a>
+                @endif
+
+                {{-- Angka halaman --}}
+                @foreach ($pegawai->getUrlRange(1, $pegawai->lastPage()) as $page => $url)
+                    @if ($page == $pegawai->currentPage())
+                        <span
+                            class="px-3 py-1 bg-[#00A181] text-white rounded-md font-semibold">{{ $page }}</span>
+                    @else
+                        <a href="{{ $url }}"
+                            class="px-3 py-1 bg-white border rounded-md hover:bg-[#00A181]/10 text-[#00A181]">{{ $page }}</a>
+                    @endif
+                @endforeach
+
+                {{-- Tombol Next --}}
+                @if ($pegawai->hasMorePages())
+                    <a href="{{ $pegawai->nextPageUrl() }}"
+                        class="px-3 py-1 bg-white border rounded-md text-[#00A181] hover:bg-[#00A181]/10">Next →</a>
+                @else
+                    <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded-md cursor-not-allowed">Next →</span>
+                @endif
+            </nav>
+        </div>
+    @endif
+
+    <script>
+        function changePerPage(perPage) {
+            const params = new URLSearchParams(window.location.search);
+            params.set('per_page', perPage);
+            window.location.search = params.toString();
+        }
+    </script>
 @endsection
 
 @section('scripts')
@@ -226,3 +350,29 @@
         });
     });
 </script>
+
+@push('scripts')
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: '{{ session('success') }}',
+                timer: 2500,
+                showConfirmButton: false,
+                confirmButtonColor: '#00A181'
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Import',
+                html: `{!! session('error') !!}`,
+                confirmButtonColor: 'red'
+            });
+        </script>
+    @endif
+@endpush

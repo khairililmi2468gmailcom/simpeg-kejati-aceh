@@ -8,16 +8,29 @@ use App\Models\Provinsi;
 use App\Models\Golongan;
 use App\Models\UnitKerja;
 use App\Models\Jabatan;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\PegawaiExport;
+use App\Imports\PegawaiImport;
+use PDF;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class PegawaiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pegawai = Pegawai::with(['provinsi', 'golongan', 'unitKerja', 'jabatan'])->get();
-        $golongan = Golongan::all();
-        $jabatan = Jabatan::all();
-        return view('admin.pegawai.index', compact('pegawai', 'golongan', 'jabatan'));
+        $search = $request->search;
+        $perPage = $request->per_page ?? 10;
+
+        $pegawai = Pegawai::with(['golongan', 'jabatan', 'unitKerja'])
+            ->when($search, function ($query) use ($search) {
+                $query->where('nip', 'like', "%$search%")
+                    ->orWhere('nama', 'like', "%$search%");
+            })
+            ->orderBy('nama')
+            ->paginate($perPage);
+
+        return view('admin.pegawai.index', compact('pegawai'));
     }
 
     public function create()
@@ -59,7 +72,7 @@ class PegawaiController extends Controller
             'id_golongan' => 'required|string|exists:golongan,id_golongan',
             'kode_kantor' => 'nullable|string|max:10|exists:unit_kerja,kode_kantor',
             'id_jabatan' => 'nullable|integer|exists:jabatan,id_jabatan',
-            'ket' => 'nullable|string|max:25'
+            'ket' => 'nullable|string|max:150'
         ]);
 
         // Simpan foto jika ada
@@ -165,5 +178,44 @@ class PegawaiController extends Controller
         }
 
         return redirect()->route('admin.pegawai')->with('success', count($nips) . ' data pegawai berhasil dihapus.');
+    }
+    public function exportPdf()
+    {
+        $pegawai = Pegawai::with(['golongan', 'jabatan', 'unitKerja'])->get();
+        $pdf = PDF::loadView('admin.pegawai.export_pdf', compact('pegawai'));
+        return $pdf->download('data_pegawai.pdf');
+    }
+
+    public function exportExcel()
+    {
+        return Excel::download(new PegawaiExport, 'data_pegawai.xlsx');
+    }
+
+    public function importExcel(Request $request)
+    {
+        if (!$request->hasFile('file')) {
+            Log::error('No file uploaded for import.');
+            return redirect()->route('admin.pegawai')->with('error', 'Tidak ada file yang diupload.');
+        }
+
+        try {
+            Log::info('Mulai import pegawai...');
+
+            Excel::import(new PegawaiImport, $request->file('file'));
+
+            Log::info('Import pegawai selesai.');
+            return redirect()->route('admin.pegawai')->with('success', 'Data pegawai berhasil diimpor!');
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            $failures = $e->failures();
+
+            $messages = collect($failures)->map(function ($fail) {
+                return 'Baris ' . $fail->row() . ': ' . implode(', ', $fail->errors());
+            })->implode('<br>');
+
+            return redirect()->route('admin.pegawai')->with('error', $messages);
+        } catch (\Throwable $e) {
+            Log::error('Gagal import pegawai: ' . $e->getMessage());
+            return redirect()->route('admin.pegawai')->with('error', 'Terjadi kesalahan saat mengimpor data.');
+        }
     }
 }

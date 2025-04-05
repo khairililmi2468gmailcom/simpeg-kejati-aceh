@@ -13,6 +13,9 @@ use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use Symfony\Component\HttpKernel\Profiler\Profile;
+use App\Exports\PegawaiExport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TemplatePegawaiExport;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +82,17 @@ Route::post('/admin/pegawai/bulk-delete', [PegawaiController::class, 'bulkDelete
 
 Route::get('/get-kabupaten/{id_provinsi}', [App\Http\Controllers\WilayahController::class, 'getKabupaten']);
 Route::get('/get-kecamatan/{id_kabupaten}', [App\Http\Controllers\WilayahController::class, 'getKecamatan']);
+
+Route::prefix('admin/pegawai')->name('admin.pegawai.')->group(function () {
+    Route::get('export/pdf', [PegawaiController::class, 'exportPdf'])->name('export.pdf');
+    Route::get('export/excel', [PegawaiController::class, 'exportExcel'])->name('export.excel');
+    Route::post('import/excel', [PegawaiController::class, 'importExcel'])->name('import.excel');
+
+});
+
+Route::get('/pegawai/template/excel', function () {
+    return Excel::download(new TemplatePegawaiExport, 'template_pegawai.xlsx');
+});
 
 
 Route::get('admin/cuti', [CutiController::class, 'index'])->name('admin.cuti');
