@@ -75,6 +75,11 @@ Route::get('/admin/pegawai/{nip}/edit', [PegawaiController::class, 'edit'])->nam
 Route::put('/admin/pegawai/{nip}', [PegawaiController::class, 'update'])->name('admin.pegawai.update');
 // Route untuk menghapus pegawai
 Route::delete('/admin/pegawai/{nip}', [PegawaiController::class, 'destroy'])->name('admin.pegawai.destroy');
+Route::post('/admin/pegawai/bulk-delete', [PegawaiController::class, 'bulkDelete'])->name('admin.pegawai.bulkDelete');
+
+Route::get('/get-kabupaten/{id_provinsi}', [App\Http\Controllers\WilayahController::class, 'getKabupaten']);
+Route::get('/get-kecamatan/{id_kabupaten}', [App\Http\Controllers\WilayahController::class, 'getKecamatan']);
+
 
 Route::get('admin/cuti', [CutiController::class, 'index'])->name('admin.cuti');
 

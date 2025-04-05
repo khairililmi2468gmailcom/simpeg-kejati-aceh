@@ -70,7 +70,7 @@ class PegawaiController extends Controller
 
         $pegawai = Pegawai::create(array_merge($request->all(), ['foto' => $fotoPath]));
 
-        return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil ditambahkan.');
+        return redirect()->route('admin.pegawai')->with('success', 'Pegawai berhasil ditambahkan.');
     }
 
     public function show($nip)
@@ -121,18 +121,19 @@ class PegawaiController extends Controller
             'ket' => 'nullable|string|max:25'
         ]);
 
-        // Simpan foto baru jika ada
+        $data = $request->all();
+
         if ($request->hasFile('foto')) {
             if ($pegawai->foto) {
                 Storage::delete('public/' . $pegawai->foto);
             }
-            $fotoPath = $request->file('foto')->store('pegawai', 'public');
-            $pegawai->foto = $fotoPath;
+            $data['foto'] = $request->file('foto')->store('pegawai', 'public');
         }
 
-        $pegawai->update($request->except('foto'));
+        $pegawai->update($data);
 
-        return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil diperbarui.');
+
+        return redirect()->route('admin.pegawai')->with('success', 'Data pegawai berhasil diperbarui!');
     }
 
     public function destroy($nip)
@@ -144,6 +145,25 @@ class PegawaiController extends Controller
         }
 
         $pegawai->delete();
-        return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil dihapus.');
+        return redirect()->route('admin.pegawai')->with('success', 'Pegawai berhasil dihapus.');
+    }
+    public function bulkDelete(Request $request)
+    {
+        $nips = $request->nips;
+
+        if (!$nips || !is_array($nips)) {
+            return redirect()->back()->with('error', 'Tidak ada data yang dipilih.');
+        }
+
+        $pegawaiList = Pegawai::whereIn('nip', $nips)->get();
+
+        foreach ($pegawaiList as $pegawai) {
+            if ($pegawai->foto) {
+                Storage::delete('public/' . $pegawai->foto);
+            }
+            $pegawai->delete();
+        }
+
+        return redirect()->route('admin.pegawai')->with('success', count($nips) . ' data pegawai berhasil dihapus.');
     }
 }
