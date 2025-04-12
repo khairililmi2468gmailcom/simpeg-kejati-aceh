@@ -69,49 +69,47 @@
     </div>
 
     <!-- Tabel Provinsi -->
-    <div class="overflow-x-auto">
-        <table class="w-full text-base text-left text-gray-700 bg-white shadow-lg rounded-xl">
-            <thead class="text-white bg-[#00A181]">
-                <tr>
-                    <th class="px-5 py-4 text-center"><input type="checkbox" id="checkAll"></th>
-                    <th class="px-5 py-4">ID Provinsi</th>
-                    <th class="px-5 py-4">Nama Provinsi</th>
-                    <th class="px-5 py-4">Aksi</th>
-                </tr>
-            </thead>
+    <table class="w-full text-base text-left text-gray-700 bg-white shadow-lg rounded-xl overflow-hidden">
+        <thead class="text-white bg-[#00A181]">
+            <tr>
+                <th class="px-5 py-4 text-center"><input type="checkbox" id="checkAll"></th>
+                <th class="px-5 py-4">ID Provinsi</th>
+                <th class="px-5 py-4">Nama Provinsi</th>
+                <th class="px-5 py-4">Aksi</th>
+            </tr>
+        </thead>
 
-            <tbody class="divide-y divide-gray-200" id="provinsiTableBody">
-                @forelse ($provinsi as $item)
-                    <tr class="hover:bg-gray-50 transition-all duration-150">
-                        <td class="px-5 py-4 text-center">
-                            <input type="checkbox" class="checkbox-item" value="{{ $item->id }}">
-                        </td>
-                        <td class="px-5 py-4">{{ $item->id }}</td>
-                        <td class="px-5 py-4">{{ $item->nama_provinsi }}</td>
-                        <td class="px-5 py-4 space-y-2">
-                            <a href="{{ route('admin.provinsi.edit', $item->id) }}"
-                                class="inline-flex items-center text-white bg-yellow-500 hover:bg-yellow-600 font-semibold rounded-md text-sm px-4 py-2">
-                                Edit
-                            </a>
-                            <form action="{{ route('admin.provinsi.destroy', $item->id) }}" method="POST"
-                                class="inline delete-form">
-                                @csrf
-                                @method('DELETE')
-                                <button type="button"
-                                    class="cursor-pointer btn-delete inline-flex items-center text-white bg-red-500 hover:bg-red-600 font-semibold rounded-md text-sm px-4 py-2">
-                                    Hapus
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="4" class="text-center py-6 text-gray-500">Data tidak ditemukan.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+        <tbody class="divide-y divide-gray-200" id="provinsiTableBody">
+            @forelse ($provinsi as $item)
+                <tr class="hover:bg-gray-50 transition-all duration-150">
+                    <td class="px-5 py-4 text-center">
+                        <input type="checkbox" class="checkbox-item" value="{{ $item->id }}">
+                    </td>
+                    <td class="px-5 py-4">{{ $item->id }}</td>
+                    <td class="px-5 py-4">{{ $item->nama_provinsi }}</td>
+                    <td class="px-5 py-4 space-y-2">
+                        <a href="{{ route('admin.provinsi.edit', $item->id) }}"
+                            class="inline-flex items-center text-white bg-yellow-500 hover:bg-yellow-600 font-semibold rounded-md text-sm px-4 py-2">
+                            Edit
+                        </a>
+                        <form action="{{ route('admin.provinsi.destroy', $item->id) }}" method="POST"
+                            class="inline delete-form">
+                            @csrf
+                            @method('DELETE')
+                            <button type="button"
+                                class="cursor-pointer btn-delete inline-flex items-center text-white bg-red-500 hover:bg-red-600 font-semibold rounded-md text-sm px-4 py-2">
+                                Hapus
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="4" class="text-center py-6 text-gray-500">Data tidak ditemukan.</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
     {{-- Pagination --}}
     <div class="mt-6 flex justify-end">
         {{ $provinsi->links() }}

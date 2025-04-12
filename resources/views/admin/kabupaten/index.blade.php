@@ -81,53 +81,51 @@
     </div>
 
     <!-- Tabel Provinsi -->
-    <div class="overflow-x-auto">
-        <table class="w-full text-base text-left text-gray-700 bg-white shadow-lg rounded-xl">
-            <thead class="text-white bg-[#00A181]">
-                <tr>
-                    <th class="px-5 py-4 text-center"><input type="checkbox" id="checkAll"></th>
-                    <th class="px-5 py-4">ID Kabupaten</th>
-                    <th class="px-5 py-4">Nama Kabupaten</th>
-                    <th class="px-5 py-4">ID Provinsi</th>
-                    <th class="px-5 py-4">Nama Provinsi</th>
-                    <th class="px-5 py-4">Aksi</th>
-                </tr>
-            </thead>
+    <table class="w-full text-base text-left text-gray-700 bg-white shadow-lg rounded-xl overflow-hidden">
+        <thead class="text-white bg-[#00A181]">
+            <tr>
+                <th class="px-5 py-4 text-center"><input type="checkbox" id="checkAll"></th>
+                <th class="px-5 py-4">ID Kabupaten</th>
+                <th class="px-5 py-4">Nama Kabupaten</th>
+                <th class="px-5 py-4">ID Provinsi</th>
+                <th class="px-5 py-4">Nama Provinsi</th>
+                <th class="px-5 py-4">Aksi</th>
+            </tr>
+        </thead>
 
-            <tbody class="divide-y divide-gray-200" id="provinsiTableBody">
-                @forelse ($kabupaten as $item)
-                    <tr class="hover:bg-gray-50 transition-all duration-150">
-                        <td class="px-5 py-4 text-center">
-                            <input type="checkbox" class="checkbox-item" value="{{ $item->id }}">
-                        </td>
-                        <td class="px-5 py-4">{{ $item->id }}</td>
-                        <td class="px-5 py-4">{{ $item->nama_kabupaten }}</td>
-                        <td class="px-5 py-4">{{ $item->provinsi->id }}</td>
-                        <td class="px-5 py-4">{{ $item->provinsi->nama_provinsi }}</td>
-                        <td class="px-5 py-4 space-y-2">
-                            <a href="{{ route('admin.kabupaten.edit', $item->id) }}"
-                                class="inline-flex items-center text-white bg-yellow-500 hover:bg-yellow-600 font-semibold rounded-md text-sm px-4 py-2">
-                                Edit
-                            </a>
-                            <form action="{{ route('admin.kabupaten.destroy', $item->id) }}" method="POST"
-                                class="inline delete-form">
-                                @csrf
-                                @method('DELETE')
-                                <button type="button"
-                                    class="cursor-pointer btn-delete inline-flex items-center text-white bg-red-500 hover:bg-red-600 font-semibold rounded-md text-sm px-4 py-2">
-                                    Hapus
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="4" class="text-center py-6 text-gray-500">Data tidak ditemukan.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+        <tbody class="divide-y divide-gray-200" id="provinsiTableBody">
+            @forelse ($kabupaten as $item)
+                <tr class="hover:bg-gray-50 transition-all duration-150">
+                    <td class="px-5 py-4 text-center">
+                        <input type="checkbox" class="checkbox-item" value="{{ $item->id }}">
+                    </td>
+                    <td class="px-5 py-4">{{ $item->id }}</td>
+                    <td class="px-5 py-4">{{ $item->nama_kabupaten }}</td>
+                    <td class="px-5 py-4">{{ $item->provinsi->id }}</td>
+                    <td class="px-5 py-4">{{ $item->provinsi->nama_provinsi }}</td>
+                    <td class="px-5 py-4 space-y-2">
+                        <a href="{{ route('admin.kabupaten.edit', $item->id) }}"
+                            class="inline-flex items-center text-white bg-yellow-500 hover:bg-yellow-600 font-semibold rounded-md text-sm px-4 py-2">
+                            Edit
+                        </a>
+                        <form action="{{ route('admin.kabupaten.destroy', $item->id) }}" method="POST"
+                            class="inline delete-form">
+                            @csrf
+                            @method('DELETE')
+                            <button type="button"
+                                class="cursor-pointer btn-delete inline-flex items-center text-white bg-red-500 hover:bg-red-600 font-semibold rounded-md text-sm px-4 py-2">
+                                Hapus
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="4" class="text-center py-6 text-gray-500">Data tidak ditemukan.</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
     {{-- Pagination --}}
     <div class="mt-6 flex justify-end">
         {{ $kabupaten->links() }}
@@ -217,7 +215,8 @@
         class="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 hidden bg-white border border-gray-300 rounded-lg shadow-xl w-[95%] md:w-[70%] max-h-[80vh] overflow-y-auto p-5">
         <div class="flex justify-between items-center mb-3">
             <h2 class="text-lg font-semibold text-[#00A181]">Petunjuk Pengisian Excel</h2>
-            <button onclick="toggleReferensiModal()" class="cursor-pointer text-gray-500 hover:text-red-500 text-xl">✖</button>
+            <button onclick="toggleReferensiModal()"
+                class="cursor-pointer text-gray-500 hover:text-red-500 text-xl">✖</button>
         </div>
 
         <p class="text-sm text-gray-600 mb-4">
@@ -484,7 +483,7 @@
             document.getElementById('importModal').classList.add('hidden');
         });
     </script>
-   <script>
+    <script>
         function toggleReferensiModal() {
             const modal = document.getElementById('referensiModal');
             modal.classList.toggle('hidden');
