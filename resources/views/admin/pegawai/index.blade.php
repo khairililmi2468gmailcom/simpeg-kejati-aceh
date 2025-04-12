@@ -3,7 +3,17 @@
 @section('content')
     <h1 class="text-3xl font-bold text-[#00A181]">Data Pegawai</h1>
     <p class="mb-4">Halaman daftar pegawai Kejaksaan Tinggi</p>
-
+    <!-- Info Button -->
+    <div class="flex items-center justify-start  space-x-2 mb-4">
+        <button onclick="toggleReferensiModal()"
+            class="cursor-context-menu inline-flex items-center justify-center w-9 h-9 rounded-full bg-yellow-400 hover:bg-yellow-500 text-white focus:outline-none">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" />
+            </svg>
+        </button>
+        <span class="text-sm text-gray-600 hidden md:inline">Petunjuk Pengisian Excel</span>
+    </div>
     {{-- Filter & Search --}}
     <form method="GET" action="{{ route('admin.pegawai') }}"
         class="flex flex-wrap md:flex-nowrap items-center justify-between gap-2 mb-6">
@@ -83,14 +93,6 @@
             </svg>
             Unduh Template
         </a>
-        <!-- Info Button -->
-        <button onclick="toggleReferensiModal()"
-            class="cursor-context-menu inline-flex items-center justify-center w-9 h-9 rounded-full bg-orange-600 hover:bg-orange-700 text-white focus:outline-none">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" />
-            </svg>
-        </button>
 
     </div>
 
@@ -231,6 +233,38 @@
             </nav>
         </div>
     @endif
+    <!-- Modal -->
+    <div id="referensiModal"
+        class="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 hidden bg-white border border-gray-300 rounded-lg shadow-xl w-[95%] md:w-[70%] max-h-[80vh] overflow-y-auto p-5">
+        <div class="flex justify-between items-center mb-3">
+            <h2 class="text-lg font-semibold text-[#00A181]">Petunjuk Pengisian Excel</h2>
+            <button onclick="toggleReferensiModal()" class="cursor-grabbing text-gray-500 hover:text-red-500">✖</button>
+        </div>
+
+        <p class="text-sm text-gray-600 mb-4">
+            <strong>Catatan:</strong> NIP maksimal 18 digit. Gunakan ID dari data referensi berikut untuk kolom Provinsi,
+            Kabupaten, Kecamatan, Golongan, Jabatan, dan Unit Kerja.
+        </p>
+
+        <!-- Tabs -->
+        <div class="flex flex-wrap gap-2 mb-4">
+            @foreach (['provinsi', 'kabupaten', 'kecamatan', 'golongan', 'jabatan', 'unitkerja'] as $tab)
+                <button class="tab-btn bg-gray-200 text-black px-4 py-1.5 rounded text-sm"
+                    onclick="showReferensiTab('{{ $tab }}', this)">
+                    {{ ucfirst($tab) }}
+                </button>
+            @endforeach
+        </div>
+
+        <!-- Search -->
+        <input type="text" id="searchInput" oninput="filterReferensiTable()" placeholder="Cari nama..."
+            class="w-full px-3 py-2 mb-3 border border-gray-300 rounded text-sm" />
+
+        <!-- Konten Tab -->
+        <div id="referensiTable" class="overflow-x-auto text-sm">
+            <p class="text-gray-500">Pilih salah satu tab di atas untuk melihat datanya.</p>
+        </div>
+    </div>
 
     <script>
         function changePerPage(perPage) {
@@ -240,38 +274,6 @@
         }
     </script>
 @endsection
-<!-- Modal -->
-<div id="referensiModal"
-    class="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 hidden bg-white border border-gray-300 rounded-lg shadow-xl w-[95%] md:w-[70%] max-h-[80vh] overflow-y-auto p-5">
-    <div class="flex justify-between items-center mb-3">
-        <h2 class="text-lg font-semibold text-[#00A181]">Petunjuk Pengisian Excel</h2>
-        <button onclick="toggleReferensiModal()" class="cursor-grabbing text-gray-500 hover:text-red-500">✖</button>
-    </div>
-
-    <p class="text-sm text-gray-600 mb-4">
-        <strong>Catatan:</strong> NIP maksimal 18 digit. Gunakan ID dari data referensi berikut untuk kolom Provinsi,
-        Kabupaten, Kecamatan, Golongan, Jabatan, dan Unit Kerja.
-    </p>
-
-    <!-- Tabs -->
-    <div class="flex flex-wrap gap-2 mb-4">
-        @foreach (['provinsi', 'kabupaten', 'kecamatan', 'golongan', 'jabatan', 'unitkerja'] as $tab)
-            <button class="tab-btn bg-gray-200 text-black px-4 py-1.5 rounded text-sm"
-                onclick="showReferensiTab('{{ $tab }}', this)">
-                {{ ucfirst($tab) }}
-            </button>
-        @endforeach
-    </div>
-
-    <!-- Search -->
-    <input type="text" id="searchInput" oninput="filterReferensiTable()" placeholder="Cari nama..."
-        class="w-full px-3 py-2 mb-3 border border-gray-300 rounded text-sm" />
-
-    <!-- Konten Tab -->
-    <div id="referensiTable" class="overflow-x-auto text-sm">
-        <p class="text-gray-500">Pilih salah satu tab di atas untuk melihat datanya.</p>
-    </div>
-</div>
 
 
 @section('scripts')
@@ -526,4 +528,3 @@
         }
     </script>
 @endpush
-

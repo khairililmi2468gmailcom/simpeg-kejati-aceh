@@ -9,25 +9,23 @@ use App\Imports\ProvinsiImport;
 
 class ProvinsiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $provinsi = Provinsi::all();
+        $search = $request->search;
+        $perPage = $request->per_page ?? 10;
+    
+        $provinsi = Provinsi::query()
+            ->when($search, function ($query) use ($search) {
+                $query->where('id', 'like', "%$search%")
+                      ->orWhere('nama_provinsi', 'like', "%$search%");
+            })
+            ->orderBy('id')
+            ->paginate($perPage)
+            ->appends($request->all()); // penting untuk tetap menyimpan query string saat pagination
+    
         return view('admin.provinsi.index', compact('provinsi'));
     }
-
-    public function search(Request $request)
-    {
-        // Ambil keyword pencarian dari input user
-        $query = $request->input('search');
     
-        // Cari provinsi berdasarkan nama atau ID
-        $provinsi = Provinsi::where('id', 'like', "%$query%")
-            ->orWhere('nama_provinsi', 'like', "%$query%")
-            ->get();
-    
-        // Kembalikan hasil pencarian ke view dengan data provinsi
-        return view('admin.provinsi.index', compact('provinsi'));
-    }
 
     public function create()
     {

@@ -131,8 +131,24 @@ Route::get('/admin/provinsi/create', [ProvinsiController::class, 'create'])->nam
 Route::post('/admin/provinsi/store', [ProvinsiController::class, 'store'])->name('admin.provinsi.store');
 Route::post('/admin/provinsi/import', [ProvinsiController::class, 'import'])->name('admin.provinsi.import');
 Route::get('/admin/provinsi/template', [ProvinsiController::class, 'downloadTemplate'])->name('admin.provinsi.download-template');
-Route::get('/admin/provinsi/cari', [ProvinsiController::class, 'search'])->name('admin.provinsi.search');
 
 
 Route::get('admin/kabupaten', [KabupatenController::class, 'index'])->name('admin.kabupaten');
+Route::get('/admin/kabupaten/{id}/edit', [KabupatenController::class, 'edit'])->name('admin.kabupaten.edit');
+Route::put('/admin/kabupaten/{id}', [KabupatenController::class, 'update'])->name('admin.kabupaten.update');
+Route::delete('/admin/kabupaten/{id}', [KabupatenController::class, 'destroy'])->name('admin.kabupaten.destroy');
+Route::post('/admin/kabupaten/bulk-delete', [KabupatenController::class, 'bulkDelete'])->name('admin.kabupaten.bulkDelete');
+Route::get('/admin/kabupaten/create', [KabupatenController::class, 'create'])->name('admin.kabupaten.create');
+Route::post('/admin/kabupaten/store', [KabupatenController::class, 'store'])->name('admin.kabupaten.store');
+Route::post('/admin/kabupaten/import', [KabupatenController::class, 'import'])->name('admin.kabupaten.import');
+Route::get('/admin/kabupaten/template', [KabupatenController::class, 'downloadTemplate'])->name('admin.kabupaten.download-template');
+
 Route::get('admin/kecamatan', [KecamatanController::class, 'index'])->name('admin.kecamatan');
+Route::get('/admin/kecamatan/{id}/edit', [KecamatanController::class, 'edit'])->name('admin.kecamatan.edit');
+Route::put('/admin/kecamatan/{id}', [KecamatanController::class, 'update'])->name('admin.kecamatan.update');
+Route::delete('/admin/kecamatan/{id}', [KecamatanController::class, 'destroy'])->name('admin.kecamatan.destroy');
+Route::post('/admin/kecamatan/bulk-delete', [KecamatanController::class, 'bulkDelete'])->name('admin.kecamatan.bulkDelete');
+Route::get('/admin/kecamatan/create', [KecamatanController::class, 'create'])->name('admin.kecamatan.create');
+Route::post('/admin/kecamatan/store', [KecamatanController::class, 'store'])->name('admin.kecamatan.store');
+Route::post('/admin/kecamatan/import', [KecamatanController::class, 'import'])->name('admin.kecamatan.import');
+Route::get('/admin/kecamatan/template', [KecamatanController::class, 'downloadTemplate'])->name('admin.kecamatan.download-template');

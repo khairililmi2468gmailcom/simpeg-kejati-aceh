@@ -1,14 +1,24 @@
 @extends('layouts.app-admin')
 
 @section('content')
-    <h1 class="text-3xl font-bold">Provinsi</h1>
-    <p>Halaman Provinsi</p>
+    <h1 class="text-3xl font-bold text-[#00A181]">Provinsi</h1>
+    <p class="text-gray-600">Halaman Provinsi</p>
     <div class="flex flex-wrap justify-between items-center mb-4 mt-4">
         <!-- Input Search -->
         <div class="w-full md:w-1/3 mb-4 md:mb-0">
-            <form action="{{ route('admin.provinsi.search') }}" method="GET">
-                <input type="text" name="search" placeholder="Cari Provinsi..."
-                    class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00A181] w-full">
+            <form action="{{ route('admin.provinsi') }}" method="GET">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Provinsi..."
+                    class="px-4 py-2 mb-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00A181] w-full">
+                <select name="per_page" onchange="this.form.submit()"
+                    class="border border-gray-300 px-3 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]">
+                    @foreach ([5, 10, 25, 50, 100, 250, 500, 1000, 2000, 5000, 10000] as $size)
+                        <option value="{{ $size }}" {{ request('per_page', 10) == $size ? 'selected' : '' }}>
+                            {{ $size }} / halaman
+                        </option>
+                    @endforeach
+                </select>
+
+
             </form>
         </div>
 
@@ -102,47 +112,92 @@
             </tbody>
         </table>
     </div>
-@endsection
-<!-- Modal Upload -->
-<div id="importModal" class="fixed inset-0 bg-transparent bg-opacity-10 hidden flex items-center justify-center z-50">
-    <div class="bg-white rounded-xl shadow-lg max-w-md w-full p-6 relative">
-        <!-- Close Button -->
-        <button id="closeImportModal" class="absolute top-2 right-2 text-gray-600 hover:text-red-500">
-            ✕
-        </button>
-
-        <h2 class="text-xl font-semibold text-[#00A181] mb-4">Upload File Excel</h2>
-        <form id="importForm" action="{{ route('admin.provinsi.import') }}" method="POST"
-            enctype="multipart/form-data">
-            @csrf
-            <div id="dropzone"
-                class="border-2 border-dashed border-gray-300 p-6 rounded-lg text-center text-gray-600 cursor-pointer hover:border-[#00A181] hover:text-[#00A181] transition">
-                <p class="mb-2">Seret file ke sini atau klik untuk pilih file Excel</p>
-
-                <input type="file" name="file" id="excelFileInput" accept=".xlsx,.xls" class="hidden" required>
-                <div id="filePreview" class="hidden mt-2 flex items-center justify-center gap-2 text-green-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" fill="currentColor"
-                        viewBox="0 0 20 20">
-                        <path
-                            d="M16.704 2.29a1 1 0 00-.707-.29H7a2 2 0 00-2 2v2H4a2 2 0 00-2 2v6a2 2 0 002 2h4.5v2H6a1 1 0 000 2h8a1 1 0 000-2h-2.5v-2H16a2 2 0 002-2V4a1 1 0 00-.296-.71zM12 18h-4v-2h4v2zm4-4H4V8h12v6zm0-8H6V4h10v2z" />
-                    </svg>
-                    <span id="fileName" class="text-sm font-medium"></span>
-                </div>
-            </div>
-
-            <div class="mt-4 text-right">
-                <div class="w-full bg-gray-200 rounded-full h-2.5 mt-4 hidden" id="progressContainer">
-                    <div class="bg-[#00A181] h-2.5 rounded-full transition-all duration-300" id="progressBar"
-                        style="width: 0%;"></div>
-                </div>
-                <button type="submit" id="uploadBtn"
-                    class="cursor-pointer bg-[#00A181] text-white px-4 py-2 rounded hover:bg-[#009171] transition">
-                    Upload
-                </button>
-            </div>
-        </form>
+    {{-- Pagination --}}
+    <div class="mt-6 flex justify-end">
+        {{ $provinsi->links() }}
     </div>
-</div>
+    @if ($provinsi->hasPages())
+        <div class="mt-6 flex justify-end">
+            <nav class="flex items-center space-x-1 text-sm">
+                {{-- Tombol Previous --}}
+                @if ($provinsi->onFirstPage())
+                    <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded-md cursor-not-allowed">← Prev</span>
+                @else
+                    <a href="{{ $provinsi->previousPageUrl() }}"
+                        class="px-3 py-1 bg-white border rounded-md text-[#00A181] hover:bg-[#00A181]/10">← Prev</a>
+                @endif
+
+                {{-- Angka halaman --}}
+                @foreach ($provinsi->getUrlRange(1, $provinsi->lastPage()) as $page => $url)
+                    @if ($page == $provinsi->currentPage())
+                        <span class="px-3 py-1 bg-[#00A181] text-white rounded-md font-semibold">{{ $page }}</span>
+                    @else
+                        <a href="{{ $url }}"
+                            class="px-3 py-1 bg-white border rounded-md hover:bg-[#00A181]/10 text-[#00A181]">{{ $page }}</a>
+                    @endif
+                @endforeach
+
+                {{-- Tombol Next --}}
+                @if ($provinsi->hasMorePages())
+                    <a href="{{ $provinsi->nextPageUrl() }}"
+                        class="px-3 py-1 bg-white border rounded-md text-[#00A181] hover:bg-[#00A181]/10">Next →</a>
+                @else
+                    <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded-md cursor-not-allowed">Next →</span>
+                @endif
+            </nav>
+        </div>
+    @endif
+
+    <script>
+        function changePerPage(perPage) {
+            const params = new URLSearchParams(window.location.search);
+            params.set('per_page', perPage);
+            window.location.search = params.toString();
+        }
+    </script>
+    <!-- Modal Upload -->
+    <div id="importModal" class="fixed inset-0 bg-transparent bg-opacity-10 hidden flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-lg max-w-md w-full p-6 relative">
+            <!-- Close Button -->
+            <button id="closeImportModal" class="absolute top-2 right-2 text-gray-600 hover:text-red-500">
+                ✕
+            </button>
+
+            <h2 class="text-xl font-semibold text-[#00A181] mb-4">Upload File Excel</h2>
+            <form id="importForm" action="{{ route('admin.provinsi.import') }}" method="POST"
+                enctype="multipart/form-data">
+                @csrf
+                <div id="dropzone"
+                    class="border-2 border-dashed border-gray-300 p-6 rounded-lg text-center text-gray-600 cursor-pointer hover:border-[#00A181] hover:text-[#00A181] transition">
+                    <p class="mb-2">Seret file ke sini atau klik untuk pilih file Excel</p>
+                    <div id="filePreview" class="hidden mt-2 flex items-center justify-center gap-2 text-green-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" fill="currentColor"
+                            viewBox="0 0 20 20">
+                            <path
+                                d="M16.704 2.29a1 1 0 00-.707-.29H7a2 2 0 00-2 2v2H4a2 2 0 00-2 2v6a2 2 0 002 2h4.5v2H6a1 1 0 000 2h8a1 1 0 000-2h-2.5v-2H16a2 2 0 002-2V4a1 1 0 00-.296-.71zM12 18h-4v-2h4v2zm4-4H4V8h12v6zm0-8H6V4h10v2z" />
+                        </svg>
+                        <span id="fileName" class="text-sm font-medium"></span>
+                    </div>
+                    <input type="file" name="file" id="excelFileInput" accept=".xlsx,.xls" class="hidden"
+                        required>
+
+                </div>
+
+                <div class="mt-4 text-right">
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 mt-4 hidden" id="progressContainer">
+                        <div class="bg-[#00A181] h-2.5 rounded-full transition-all duration-300" id="progressBar"
+                            style="width: 0%;"></div>
+                    </div>
+                    <button type="submit" id="uploadBtn"
+                        class="cursor-pointer bg-[#00A181] text-white px-4 py-2 rounded hover:bg-[#009171] transition">
+                        Upload
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+@endsection
+
 
 @push('scripts')
     @if (session('success'))
@@ -251,15 +306,17 @@
 
 @push('scripts')
     <script>
+        // Open modal
         document.getElementById('openImportModal').addEventListener('click', () => {
             document.getElementById('importModal').classList.remove('hidden');
         });
 
+        // Close modal
         document.getElementById('closeImportModal').addEventListener('click', () => {
             document.getElementById('importModal').classList.add('hidden');
         });
 
-        // Dropzone drag & drop
+        // Dropzone logic
         const dropzone = document.getElementById('dropzone');
         const input = document.getElementById('excelFileInput');
 
@@ -319,16 +376,13 @@
                     }
                 })
                 .then(response => {
-                    // Check if the response is JSON
                     if (response.ok) {
-                        return response.json(); // Process the response as JSON
+                        return response.json();
                     } else {
                         throw new Error('Failed to fetch response');
                     }
                 })
                 .then(data => {
-                    console.log('Response Data:', data); // Log the response to check the structure
-
                     uploadBtn.disabled = false;
                     progressBar.style.width = '100%';
 
@@ -336,7 +390,6 @@
                         progressContainer.classList.add('hidden');
                         progressBar.style.width = '0%';
 
-                        // Check if the success flag is correctly returned
                         if (data.success) {
                             Swal.fire({
                                 icon: 'success',
@@ -361,7 +414,6 @@
                     progressContainer.classList.add('hidden');
                     progressBar.style.width = '0%';
 
-                    // Log the error in detail
                     console.error('Error during upload:', error);
 
                     Swal.fire({
@@ -371,6 +423,11 @@
                         confirmButtonColor: '#00A181'
                     });
                 });
+        });
+
+        // ✅ Pastikan modal disembunyikan saat reload
+        window.addEventListener('load', () => {
+            document.getElementById('importModal').classList.add('hidden');
         });
     </script>
 @endpush

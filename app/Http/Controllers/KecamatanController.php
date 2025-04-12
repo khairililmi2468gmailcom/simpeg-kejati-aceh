@@ -2,16 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\KecamatanImport;
 use Illuminate\Http\Request;
 use App\Models\Kecamatan;
 use App\Models\Kabupaten;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Log;
 
 class KecamatanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $kecamatan = Kecamatan::with('kabupaten')->get();
-        return view('admin.kecamatan.index', compact('kecamatan'));
+        $search = $request->search;
+        $perPage = $request->per_page ?? 5;
+
+        $kecamatan = Kecamatan::with('kabupaten')
+            ->when($search, function ($query) use ($search) {
+                $query->where('id', 'like', "%$search%")
+                    ->orWhere('nama_kecamatan', 'like', "%$search%");
+            })
+            ->orderBy('id')
+            ->paginate($perPage);
+        $referensi = [
+            'kabupaten' => \App\Models\Kabupaten::select('id', 'nama_kabupaten as nama')->get(),
+        ];
+        return view('admin.kecamatan.index', compact('kecamatan', 'referensi'));
     }
 
     public function create()
@@ -23,14 +38,24 @@ class KecamatanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id' => 'required|string|max:7|unique:kecamatan,id',
-            'nama_kecamatan' => 'required|string|max:50',
+            'nama_kecamatan' => 'required|string|max:50|unique:kecamatan,nama_kecamatan',
             'id_kabupaten' => 'required|string|max:4|exists:kabupaten,id',
         ]);
+        $existingIds = Kecamatan::pluck('id')->map(fn($id) => intval($id))->sort()->values();
+        $newId = null;
+        for ($i = 1000000; $i <= 9999999; $i++) {
+            if (!$existingIds->contains($i)) {
+                $newId = str_pad($i, 7, '0', STR_PAD_LEFT);
+                break;
+            }
+        }
+        Kecamatan::create([
+            'id' => $newId,
+            'nama_kecamatan' => $request->nama_kecamatan,
+            'id_kabupaten' => $request->id_kabupaten,
+        ]);
 
-        Kecamatan::create($request->all());
-
-        return redirect()->route('kecamatan.index')->with('success', 'Kecamatan berhasil ditambahkan.');
+        return redirect()->route('admin.kecamatan')->with('success', 'Kecamatan berhasil ditambahkan.');
     }
 
     public function edit($id)
@@ -51,12 +76,63 @@ class KecamatanController extends Controller
 
         $kecamatan->update($request->all());
 
-        return redirect()->route('kecamatan.index')->with('success', 'Kecamatan berhasil diperbarui.');
+        return redirect()->route('admin.kecamatan')->with('success', 'Kecamatan berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
         Kecamatan::findOrFail($id)->delete();
-        return redirect()->route('kecamatan.index')->with('success', 'Kecamatan berhasil dihapus.');
+        return redirect()->route('admin.kecamatan')->with('success', 'Kecamatan berhasil dihapus.');
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|array',
+            'id.*' => 'string|exists:kecamatan,id',
+        ]);
+
+        Kecamatan::whereIn('id', $request->id)->delete();
+
+        return redirect()->route('admin.kecamatan')->with('success', count($request->id) . ' data Kecamatan berhasil dihapus.');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv',
+        ]);
+
+        try {
+            Excel::import(new KecamatanImport, $request->file('file'));
+
+            // Kembalikan JSON untuk notifikasi sukses
+            return response()->json([
+                'success' => true,
+                'message' => 'Import berhasil.'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error saat import Kecamatan: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+    
+            // Kembalikan JSON untuk notifikasi gagal
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat import.'
+            ]);
+        }
+    }
+    public function downloadTemplate()
+    {
+        $file = public_path('template/template-kecamatan.xlsx');
+
+        if (!file_exists($file)) {
+            abort(404, 'Template tidak ditemukan.');
+        }
+
+        return response()->download($file, 'template-kecamatan.xlsx');
     }
 }
