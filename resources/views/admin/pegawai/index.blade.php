@@ -85,7 +85,7 @@
         </a>
         <!-- Info Button -->
         <button onclick="toggleReferensiModal()"
-            class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-blue-600 hover:bg-blue-700 text-white focus:outline-none">
+            class="cursor-context-menu inline-flex items-center justify-center w-9 h-9 rounded-full bg-orange-600 hover:bg-orange-700 text-white focus:outline-none">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" />
@@ -245,7 +245,7 @@
     class="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 hidden bg-white border border-gray-300 rounded-lg shadow-xl w-[95%] md:w-[70%] max-h-[80vh] overflow-y-auto p-5">
     <div class="flex justify-between items-center mb-3">
         <h2 class="text-lg font-semibold text-[#00A181]">Petunjuk Pengisian Excel</h2>
-        <button onclick="toggleReferensiModal()" class="text-gray-500 hover:text-red-500">✖</button>
+        <button onclick="toggleReferensiModal()" class="cursor-grabbing text-gray-500 hover:text-red-500">✖</button>
     </div>
 
     <p class="text-sm text-gray-600 mb-4">
@@ -417,60 +417,113 @@
         </script>
     @endif
 
-@endpush
-
-@push('scripts')
     <script>
+        let referensi = @json($referensi);
+        let selectedProvinsiId = null;
+        let selectedKabupatenId = null;
+
         function toggleReferensiModal() {
             const modal = document.getElementById('referensiModal');
             modal.classList.toggle('hidden');
+            // Reset
+            document.getElementById('referensiTable').innerHTML =
+                '<p class="text-gray-500">Pilih salah satu tab di atas untuk melihat datanya.</p>';
+            selectedProvinsiId = null;
+            selectedKabupatenId = null;
         }
 
         function showReferensiTab(tabName, btn) {
-            // Style tombol aktif
+            // Highlight tab aktif
             document.querySelectorAll('.tab-btn').forEach(el => {
                 el.classList.remove('bg-[#00A181]', 'text-white');
                 el.classList.add('bg-gray-200', 'text-black');
             });
             btn.classList.remove('bg-gray-200', 'text-black');
-            btn.classList.add('bg-[#00A181]', 'text-white');
+            btn.classList.add('bg-[#00A181]', 'text-white', 'font-semibold', 'shadow-md', 'scale-105', 'border-b-4',
+                'border-[#00745e]');
 
-            // Ambil data dari Blade ke JS
-            let data = @json($referensi);
+            let html = '';
+            let headers = ['ID', 'Nama'];
+            let rows = [];
 
+            if (tabName === 'provinsi') {
+                rows = referensi.provinsi.map(item => {
+                    return `<tr onclick="handleSelectProvinsi(${item.id})" class="cursor-pointer hover:bg-[#00A181] hover:text-white">
+                        <td class="border px-3 py-1.5">${item.id}</td>
+                        <td class="border px-3 py-1.5">${item.nama}</td>
+                    </tr>`;
+                });
+            } else if (tabName === 'kabupaten' && selectedProvinsiId) {
+                headers = ['ID', 'Nama', 'ID Provinsi', 'Nama Provinsi'];
+                rows = referensi.kabupaten
+                    .filter(item => String(item.id_provinsi) === String(selectedProvinsiId))
+                    .map(item => {
+                        return `<tr onclick="handleSelectKabupaten(${item.id})" class="cursor-pointer hover:bg-[#00A181] hover:text-white">
+                            <td class="border px-3 py-1.5">${item.id}</td>
+                            <td class="border px-3 py-1.5">${item.nama}</td>
+                            <td class="border px-3 py-1.5">${item.id_provinsi}</td>
+                            <td class="border px-3 py-1.5">${item.nama_provinsi}</td>
+                        </tr>`;
+                    });
+            } else if (tabName === 'kecamatan' && selectedKabupatenId) {
+                headers = ['ID', 'Nama', 'ID Kabupaten', 'Nama Kabupaten'];
+                rows = referensi.kecamatan
+                    .filter(item => String(item.id_kabupaten) === String(selectedKabupatenId))
+                    .map(item => {
+                        return `<tr class="hover:bg-[#f0fdfa]">
+                            <td class="border px-3 py-1.5">${item.id}</td>
+                            <td class="border px-3 py-1.5">${item.nama}</td>
+                            <td class="border px-3 py-1.5">${item.id_kabupaten}</td>
+                            <td class="border px-3 py-1.5">${item.nama_kabupaten}</td>
+                        </tr>`;
+                    });
+            } else if (['golongan', 'jabatan', 'unitkerja'].includes(tabName)) {
+                rows = referensi[tabName].map(item => {
+                    return `<tr class="hover:bg-[#f0fdfa]">
+                        <td class="border px-3 py-1.5">${item.id}</td>
+                        <td class="border px-3 py-1.5">${item.nama}</td>
+                    </tr>`;
+                });
+            } else {
+                document.getElementById('referensiTable').innerHTML =
+                    `<p class="text-gray-500">Silakan pilih Provinsi dulu.</p>`;
+                return;
+            }
 
-            let currentData = data[tabName] || [];
-
-            // Buat tabel
-            let html = `<table id="referensiTableContent" class="min-w-full table-auto border">
-            <thead>
-                <tr class="bg-gray-100 text-left text-xs text-gray-700 uppercase">
-                    <th class="border px-3 py-2">ID</th>
-                    <th class="border px-3 py-2">Nama</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${currentData.map(item => `
-                            <tr>
-                                <td class="border px-3 py-1.5">${item.id}</td>
-                                <td class="border px-3 py-1.5">${item.nama}</td>
-                            </tr>
-                        `).join('')}
-            </tbody>
-        </table>`;
-
+            html = `
+                <table id="referensiTableContent" class="min-w-full table-auto border">
+                    <thead>
+                        <tr class="bg-gray-100 text-left text-xs text-gray-700 uppercase">
+                            ${headers.map(header => `<th class="border px-3 py-2">${header}</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rows.join('')}
+                    </tbody>
+                </table>`;
             document.getElementById('referensiTable').innerHTML = html;
             document.getElementById('searchInput').value = '';
+        }
+
+        function handleSelectProvinsi(id) {
+            selectedProvinsiId = id;
+            selectedKabupatenId = null;
+            showReferensiTab('kabupaten', document.querySelector("[onclick*='kabupaten']"));
+        }
+
+        function handleSelectKabupaten(id) {
+            selectedKabupatenId = id;
+            showReferensiTab('kecamatan', document.querySelector("[onclick*='kecamatan']"));
         }
 
         function filterReferensiTable() {
             const input = document.getElementById("searchInput").value.toLowerCase();
             const rows = document.querySelectorAll("#referensiTableContent tbody tr");
-
             rows.forEach(row => {
-                const nama = row.cells[1].innerText.toLowerCase();
+                const nama = row.cells[1]?.innerText.toLowerCase() || '';
                 row.style.display = nama.includes(input) ? "" : "none";
             });
         }
     </script>
 @endpush
+

@@ -241,6 +241,67 @@
                         <span class="flex-1 ms-3 whitespace-nowrap">Laporan</span>
                     </a>
                 </li>
+                <li x-data="{ open: {{ Route::is('admin.provinsi', 'admin.kabupaten', 'admin.kecamatan') ? 'true' : 'false' }} }">
+                    <button @click="open = !open"
+                        class="w-full flex items-center justify-between p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+                        <div class="flex items-center">
+                            <!-- Icon Daerah -->
+                            <svg class="w-6 h-6 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M1 6l7-2 7 2 7-2v13l-7 2-7-2-7 2V6" />
+                                <path d="M8 4v13" />
+                                <path d="M16 6v13" />
+                            </svg>
+                            <span class="ms-3">Daerah</span>
+                        </div>
+                        <svg :class="{ 'rotate-180': open }" class="w-4 h-4 transition-transform transform"
+                            fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+
+                    <ul x-show="open" x-transition class="pl-8 mt-2 space-y-1">
+                        <li>
+                            <a href="{{ route('admin.provinsi') }}"
+                                class="flex items-center gap-2 p-2 text-sm rounded-lg
+                                    {{ Request::routeIs('admin.provinsi') ? 'bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <path d="M4 4h16v2H4z" />
+                                    <path d="M6 6v14h12V6" />
+                                </svg>
+                                Provinsi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.kabupaten') }}"
+                                class="flex items-center gap-2 p-2 text-sm rounded-lg
+                                    {{ Request::routeIs('admin.kabupaten') ? 'bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="3" />
+                                    <path d="M19.4 15a7 7 0 00-14.8 0" />
+                                    <path d="M4.6 9a9 9 0 0114.8 0" />
+                                </svg>
+                                Kabupaten
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.kecamatan') }}"
+                                class="flex items-center gap-2 p-2 text-sm rounded-lg
+                                    {{ Request::routeIs('admin.kecamatan') ? 'bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <path d="M12 2C8.1 2 5 5.1 5 9c0 5.3 7 13 7 13s7-7.7 7-13c0-3.9-3.1-7-7-7z" />
+                                    <circle cx="12" cy="9" r="2.5" />
+                                </svg>
+                                Kecamatan
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
                 <li>
                     <a href="{{ route('admin.settings') }}"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
@@ -345,7 +406,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
 
-    
+
     @stack('scripts')
 </body>
 

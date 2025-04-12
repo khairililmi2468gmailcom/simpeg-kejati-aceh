@@ -16,7 +16,9 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
 use App\Exports\PegawaiExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TemplatePegawaiExport;
-
+use App\Http\Controllers\KabupatenController;
+use App\Http\Controllers\KecamatanController;
+use App\Http\Controllers\ProvinsiController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -120,3 +122,17 @@ Route::get('admin/profile', [ProfileController::class, 'index'])->name('admin.pr
 
 Route::get('admin/account-settting', [AccountSettingsController::class, 'index'])->name('admin.account-setting');
 
+Route::get('admin/pronvisi', [ProvinsiController::class, 'index'])->name('admin.provinsi');
+Route::get('/admin/provinsi/{id}/edit', [ProvinsiController::class, 'edit'])->name('admin.provinsi.edit');
+Route::put('/admin/provinsi/{id}', [ProvinsiController::class, 'update'])->name('admin.provinsi.update');
+Route::delete('/admin/provinsi/{id}', [ProvinsiController::class, 'destroy'])->name('admin.provinsi.destroy');
+Route::post('/admin/provinsi/bulk-delete', [ProvinsiController::class, 'bulkDelete'])->name('admin.provinsi.bulkDelete');
+Route::get('/admin/provinsi/create', [ProvinsiController::class, 'create'])->name('admin.provinsi.create');
+Route::post('/admin/provinsi/store', [ProvinsiController::class, 'store'])->name('admin.provinsi.store');
+Route::post('/admin/provinsi/import', [ProvinsiController::class, 'import'])->name('admin.provinsi.import');
+Route::get('/admin/provinsi/template', [ProvinsiController::class, 'downloadTemplate'])->name('admin.provinsi.download-template');
+Route::get('/admin/provinsi/cari', [ProvinsiController::class, 'search'])->name('admin.provinsi.search');
+
+
+Route::get('admin/kabupaten', [KabupatenController::class, 'index'])->name('admin.kabupaten');
+Route::get('admin/kecamatan', [KecamatanController::class, 'index'])->name('admin.kecamatan');

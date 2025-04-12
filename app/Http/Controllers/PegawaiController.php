@@ -31,8 +31,23 @@ class PegawaiController extends Controller
             ->paginate($perPage);
         $referensi = [
             'provinsi' => \App\Models\Provinsi::select('id', 'nama_provinsi as nama')->get(),
-            'kabupaten' => \App\Models\Kabupaten::select('id', 'nama_kabupaten as nama')->get(),
-            'kecamatan' => \App\Models\Kecamatan::select('id', 'nama_kecamatan as nama')->get(),
+            'kabupaten' => \App\Models\Kabupaten::select(
+                'kabupaten.id as id',
+                'kabupaten.nama_kabupaten as nama',
+                'kabupaten.id_provinsi',
+                'provinsi.nama_provinsi as nama_provinsi'
+            )
+                ->join('provinsi', 'kabupaten.id_provinsi', '=', 'provinsi.id')
+                ->get(),
+
+            'kecamatan' => \App\Models\Kecamatan::select(
+                'kecamatan.id as id',
+                'kecamatan.nama_kecamatan as nama',
+                'kecamatan.id_kabupaten',
+                'kabupaten.nama_kabupaten as nama_kabupaten'
+            )
+                ->join('kabupaten', 'kecamatan.id_kabupaten', '=', 'kabupaten.id')
+                ->get(),
             'golongan' => \App\Models\Golongan::select('id_golongan as id', 'jabatan_fungsional as nama')->get(),
             'jabatan' => \App\Models\Jabatan::select('id_jabatan as id', 'nama_jabatan as nama')->get(),
             'unitkerja' => \App\Models\UnitKerja::select('kode_kantor as id', 'nama_kantor as nama')->get(),
