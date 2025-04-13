@@ -12,11 +12,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         .scrollbar-hidden {
-            scrollbar-width: none;       /* Firefox */
-            -ms-overflow-style: none;    /* IE 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+            -ms-overflow-style: none;
+            /* IE 10+ */
         }
+
         .scrollbar-hidden::-webkit-scrollbar {
-            display: none;               /* Chrome, Safari, Opera */
+            display: none;
+            /* Chrome, Safari, Opera */
         }
     </style>
 </head>
@@ -195,7 +199,7 @@
                     </a>
                 </li>
 
-                <li x-data="{ open: {{ Route::is('admin.diklat.master', 'admin.diklat.riwayat') ? 'true' : 'false' }} }">
+                <li x-data="{ open: {{ Route::is('admin.diklat.*') ? 'true' : 'false' }} }">
                     <button @click="open = !open"
                         class="w-full flex items-center justify-between p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
                         <div class="flex items-center">
@@ -285,7 +289,7 @@
                         <span class="flex-1 ms-3 whitespace-nowrap">Laporan</span>
                     </a>
                 </li>
-                <li x-data="{ open: {{ Route::is('admin.provinsi', 'admin.kabupaten', 'admin.kecamatan') ? 'true' : 'false' }} }">
+                <li x-data="{ open: {{ Route::is('admin.provinsi.*', 'admin.kabupaten.*', 'admin.kecamatan.*') ? 'true' : 'false' }} }">
                     <button @click="open = !open"
                         class="w-full flex items-center justify-between p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
                         <div class="flex items-center">

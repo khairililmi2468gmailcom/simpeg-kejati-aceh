@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\MengikutiDiklat;
 use App\Models\Pegawai;
 use App\Models\Diklat;
+use Illuminate\Support\Facades\DB;
 
 class MengikutiDiklatController extends Controller
 {
@@ -40,7 +41,11 @@ class MengikutiDiklatController extends Controller
     {
         $pegawai = Pegawai::orderBy('nama')->get();
         $diklat = Diklat::orderBy('nama_diklat')->get();
-        return view('admin.diklat.riwayat.create', compact('pegawai', 'diklat'));
+
+        return view('admin.diklat.riwayat.create', [
+            'pegawaiList' => $pegawai,
+            'diklatList' => $diklat
+        ]);
     }
 
     /**
@@ -49,7 +54,6 @@ class MengikutiDiklatController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'no_sttpp' => 'required|string|max:50|unique:mengikuti_diklat,no_sttpp',
             'nip' => 'required|exists:pegawai,nip',
             'diklat_id' => 'required|exists:diklat,id',
             'tempat_diklat' => 'required|string|max:255',
@@ -57,13 +61,45 @@ class MengikutiDiklatController extends Controller
             'angkatan' => 'nullable|string|max:50',
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
-            'jumlah_jam' => 'required|numeric|min:1',
+            'jumlah_jam' => 'required|numeric|min:1|max:999999',
             'tanggal_sttpp' => 'required|date',
         ]);
 
-        MengikutiDiklat::create($request->all());
+        // Jalankan dalam transaksi agar aman dari race condition
+        DB::beginTransaction();
 
-        return redirect()->route('admin.diklat.riwayat')->with('success', 'Data riwayat diklat berhasil ditambahkan.');
+        try {
+            $maxAttempts = 5;
+            $attempt = 0;
+
+            do {
+                $timestamp = now()->format('YmdHisv'); // YmdHis + microseconds
+                $noSttpp = 'STTPP-' . $timestamp;
+
+                $exists = MengikutiDiklat::where('no_sttpp', $noSttpp)->exists();
+
+                if (!$exists) break;
+
+                usleep(1000); // delay 1ms sebelum coba lagi
+                $attempt++;
+            } while ($attempt < $maxAttempts);
+
+            if ($attempt === $maxAttempts) {
+                throw new \Exception('Gagal menghasilkan nomor STTPP unik. Silakan coba lagi.');
+            }
+
+            $data = $request->all();
+            $data['no_sttpp'] = $noSttpp;
+
+            MengikutiDiklat::create($data);
+
+            DB::commit();
+
+            return redirect()->route('admin.diklat.riwayat.index')->with('success', 'Data riwayat diklat berhasil ditambahkan.');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -84,7 +120,11 @@ class MengikutiDiklatController extends Controller
         $pegawai = Pegawai::orderBy('nama')->get();
         $diklat = Diklat::orderBy('nama_diklat')->get();
 
-        return view('admin.diklat.riwayat.edit', compact('data', 'pegawai', 'diklat'));
+        return view('admin.diklat.riwayat.edit', [
+            'data' => $data,
+            'pegawaiList' => $pegawai,
+            'diklatList' => $diklat
+        ]);
     }
 
     /**
@@ -100,14 +140,14 @@ class MengikutiDiklatController extends Controller
             'angkatan' => 'nullable|string|max:50',
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
-            'jumlah_jam' => 'required|numeric|min:1',
+            'jumlah_jam' => 'required|numeric|min:1|max:2147483647',
             'tanggal_sttpp' => 'required|date',
         ]);
 
         $data = MengikutiDiklat::findOrFail($no_sttpp);
         $data->update($request->all());
 
-        return redirect()->route('admin.diklat.riwayat')->with('success', 'Data riwayat diklat berhasil diperbarui.');
+        return redirect()->route('admin.diklat.riwayat.index')->with('success', 'Data riwayat diklat berhasil diperbarui.');
     }
 
     /**
@@ -118,7 +158,7 @@ class MengikutiDiklatController extends Controller
         $data = MengikutiDiklat::findOrFail($no_sttpp);
         $data->delete();
 
-        return redirect()->route('admin.diklat.riwayat')->with('success', 'Data riwayat diklat berhasil dihapus.');
+        return redirect()->route('admin.diklat.riwayat.index')->with('success', 'Data riwayat diklat berhasil dihapus.');
     }
 
     public function bulkDelete(Request $request)
@@ -130,6 +170,6 @@ class MengikutiDiklatController extends Controller
 
         MengikutiDiklat::whereIn('no_sttpp', $request->id)->delete();
 
-        return redirect()->route('admin.diklat.riwayat')->with('success', count($request->id) . ' data riwayat diklat berhasil dihapus.');
+        return redirect()->route('admin.diklat.riwayat.index')->with('success', count($request->id) . ' data riwayat diklat berhasil dihapus.');
     }
 }

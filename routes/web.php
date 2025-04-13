@@ -91,15 +91,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('cuti', [CutiController::class, 'index'])->name('cuti');
 
     Route::get('mutasi', [MutasiController::class, 'index'])->name('mutasi');
-    
+
     Route::get('kepangkatan', [KepangkatanController::class, 'index'])->name('kepangkatan');
-    
+
     Route::get('laporan', [LaporanController::class, 'index'])->name('laporan');
-    
+
     Route::get('profile', [ProfileController::class, 'index'])->name('profile');
-    
+
     Route::get('account-settting', [AccountSettingsController::class, 'index'])->name('account-setting');
-    
+
 
     Route::prefix('pegawai')->name('pegawai.')->group(function () {
         Route::get('/', [PegawaiController::class, 'index'])->name('index');
@@ -133,6 +133,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/', [MengikutiDiklatController::class, 'index'])->name('index');
             Route::get('/create', [MengikutiDiklatController::class, 'create'])->name('create');
             Route::post('/store', [MengikutiDiklatController::class, 'store'])->name('store');
+            Route::get('/{id}', [MengikutiDiklatController::class, 'show'])->name('show');
             Route::get('/{id}/edit', [MengikutiDiklatController::class, 'edit'])->name('edit');
             Route::put('/{id}', [MengikutiDiklatController::class, 'update'])->name('update');
             Route::delete('/{id}', [MengikutiDiklatController::class, 'destroy'])->name('destroy');
