@@ -18,7 +18,7 @@
     <div class="flex flex-wrap justify-between items-center mb-4 mt-4">
         <!-- Input Search -->
         <div class="w-full md:w-1/3 mb-4 md:mb-0 relative">
-            <form action="{{ route('admin.kabupaten') }}" method="GET">
+            <form action="{{ route('admin.kabupaten.index') }}" method="GET">
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Kabupaten..."
                     class="px-4 py-2 mb-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00A181] w-full">
                 <select name="per_page" onchange="this.form.submit()"
@@ -81,51 +81,54 @@
     </div>
 
     <!-- Tabel Provinsi -->
-    <table class="w-full text-base text-left text-gray-700 bg-white shadow-lg rounded-xl overflow-hidden">
-        <thead class="text-white bg-[#00A181]">
-            <tr>
-                <th class="px-5 py-4 text-center"><input type="checkbox" id="checkAll"></th>
-                <th class="px-5 py-4">ID Kabupaten</th>
-                <th class="px-5 py-4">Nama Kabupaten</th>
-                <th class="px-5 py-4">ID Provinsi</th>
-                <th class="px-5 py-4">Nama Provinsi</th>
-                <th class="px-5 py-4">Aksi</th>
-            </tr>
-        </thead>
+    <div class="overflow-auto max-h-[70vh] rounded-xl scrollbar-hidden">
 
-        <tbody class="divide-y divide-gray-200" id="provinsiTableBody">
-            @forelse ($kabupaten as $item)
-                <tr class="hover:bg-gray-50 transition-all duration-150">
-                    <td class="px-5 py-4 text-center">
-                        <input type="checkbox" class="checkbox-item" value="{{ $item->id }}">
-                    </td>
-                    <td class="px-5 py-4">{{ $item->id }}</td>
-                    <td class="px-5 py-4">{{ $item->nama_kabupaten }}</td>
-                    <td class="px-5 py-4">{{ $item->provinsi->id }}</td>
-                    <td class="px-5 py-4">{{ $item->provinsi->nama_provinsi }}</td>
-                    <td class="px-5 py-4 space-y-2">
-                        <a href="{{ route('admin.kabupaten.edit', $item->id) }}"
-                            class="inline-flex items-center text-white bg-yellow-500 hover:bg-yellow-600 font-semibold rounded-md text-sm px-4 py-2">
-                            Edit
-                        </a>
-                        <form action="{{ route('admin.kabupaten.destroy', $item->id) }}" method="POST"
-                            class="inline delete-form">
-                            @csrf
-                            @method('DELETE')
-                            <button type="button"
-                                class="cursor-pointer btn-delete inline-flex items-center text-white bg-red-500 hover:bg-red-600 font-semibold rounded-md text-sm px-4 py-2">
-                                Hapus
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            @empty
+        <table class="w-full text-base text-left text-gray-700 bg-white shadow-lg rounded-xl overflow-hidden">
+            <thead class="text-white bg-[#00A181]">
                 <tr>
-                    <td colspan="4" class="text-center py-6 text-gray-500">Data tidak ditemukan.</td>
+                    <th class="px-5 py-4 text-center"><input type="checkbox" id="checkAll"></th>
+                    <th class="px-5 py-4">ID Kabupaten</th>
+                    <th class="px-5 py-4">Nama Kabupaten</th>
+                    <th class="px-5 py-4">ID Provinsi</th>
+                    <th class="px-5 py-4">Nama Provinsi</th>
+                    <th class="px-5 py-4">Aksi</th>
                 </tr>
-            @endforelse
-        </tbody>
-    </table>
+            </thead>
+
+            <tbody class="divide-y divide-gray-200" id="provinsiTableBody">
+                @forelse ($kabupaten as $item)
+                    <tr class="hover:bg-gray-50 transition-all duration-150">
+                        <td class="px-5 py-4 text-center">
+                            <input type="checkbox" class="checkbox-item" value="{{ $item->id }}">
+                        </td>
+                        <td class="px-5 py-4">{{ $item->id }}</td>
+                        <td class="px-5 py-4">{{ $item->nama_kabupaten }}</td>
+                        <td class="px-5 py-4">{{ $item->provinsi->id }}</td>
+                        <td class="px-5 py-4">{{ $item->provinsi->nama_provinsi }}</td>
+                        <td class="px-5 py-4 space-y-2">
+                            <a href="{{ route('admin.kabupaten.edit', $item->id) }}"
+                                class="w-full sm:w-auto inline-flex justify-center items-center text-white bg-yellow-500 hover:bg-yellow-600 font-semibold rounded-md text-sm px-4 py-2">
+                                Edit
+                            </a>
+                            <form action="{{ route('admin.kabupaten.destroy', $item->id) }}" method="POST"
+                                class="w-full sm:w-auto inline delete-form">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button"
+                                    class="cursor-pointer w-full sm:w-auto btn-delete inline-flex justify-center items-center text-white bg-red-500 hover:bg-red-600 font-semibold rounded-md text-sm px-4 py-2">
+                                    Hapus
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4" class="text-center py-6 text-gray-500">Data tidak ditemukan.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
     {{-- Pagination --}}
     <div class="mt-6 flex justify-end">
         {{ $kabupaten->links() }}

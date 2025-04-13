@@ -21,7 +21,7 @@ class KabupatenController extends Controller
                 $query->where('id', 'like', "%$search%")
                     ->orWhere('nama_kabupaten', 'like', "%$search%");
             })
-            ->orderBy('id')
+            ->orderBy('id','desc')
             ->paginate($perPage);
         $referensi = [
             'provinsi' => \App\Models\Provinsi::select('id', 'nama_provinsi as nama')->get(),
@@ -60,7 +60,7 @@ class KabupatenController extends Controller
             'id_provinsi' => $request->id_provinsi,
         ]);
 
-        return redirect()->route('admin.kabupaten')->with('success', 'Kabupaten berhasil ditambahkan.');
+        return redirect()->route('admin.kabupaten.index')->with('success', 'Kabupaten berhasil ditambahkan.');
     }
 
 
@@ -82,13 +82,13 @@ class KabupatenController extends Controller
 
         $kabupaten->update($request->all());
 
-        return redirect()->route('admin.kabupaten')->with('success', 'Kabupaten berhasil diperbarui.');
+        return redirect()->route('admin.kabupaten.index')->with('success', 'Kabupaten berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
         Kabupaten::findOrFail($id)->delete();
-        return redirect()->route('admin.kabupaten')->with('success', 'Kabupaten berhasil dihapus.');
+        return redirect()->route('admin.kabupaten.index')->with('success', 'Kabupaten berhasil dihapus.');
     }
 
     public function bulkDelete(Request $request)
@@ -100,7 +100,7 @@ class KabupatenController extends Controller
 
         Kabupaten::whereIn('id', $request->id)->delete();
 
-        return redirect()->route('admin.kabupaten')->with('success', count($request->id) . ' data kabupaten berhasil dihapus.');
+        return redirect()->route('admin.kabupaten.index')->with('success', count($request->id) . ' data kabupaten berhasil dihapus.');
     }
     public function import(Request $request)
     {

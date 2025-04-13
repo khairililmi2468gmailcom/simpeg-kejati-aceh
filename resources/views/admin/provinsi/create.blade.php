@@ -22,7 +22,7 @@
         </div>
 
         <div class="flex justify-end">
-            <a href="{{ route('admin.provinsi') }}"
+            <a href="{{ route('admin.provinsi.index') }}"
                class="px-4 py-2 mr-2 text-[#00A181] border border-[#00A181] rounded-lg hover:bg-[#00A181] hover:text-white transition">
                Batal
             </a>

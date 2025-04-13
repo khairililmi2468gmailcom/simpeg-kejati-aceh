@@ -6,7 +6,7 @@
     <div class="flex flex-wrap justify-between items-center mb-4 mt-4">
         <!-- Input Search -->
         <div class="w-full md:w-1/3 mb-4 md:mb-0">
-            <form action="{{ route('admin.provinsi') }}" method="GET">
+            <form action="{{ route('admin.provinsi.index') }}" method="GET">
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Provinsi..."
                     class="px-4 py-2 mb-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00A181] w-full">
                 <select name="per_page" onchange="this.form.submit()"
@@ -89,15 +89,15 @@
                     <td class="px-5 py-4">{{ $item->nama_provinsi }}</td>
                     <td class="px-5 py-4 space-y-2">
                         <a href="{{ route('admin.provinsi.edit', $item->id) }}"
-                            class="inline-flex items-center text-white bg-yellow-500 hover:bg-yellow-600 font-semibold rounded-md text-sm px-4 py-2">
+                            class="w-full sm:w-auto inline-flex justify-center items-center text-white bg-yellow-500 hover:bg-yellow-600 font-semibold rounded-md text-sm px-4 py-2">
                             Edit
                         </a>
                         <form action="{{ route('admin.provinsi.destroy', $item->id) }}" method="POST"
-                            class="inline delete-form">
+                            class="w-full sm:w-auto inline delete-form">
                             @csrf
                             @method('DELETE')
                             <button type="button"
-                                class="cursor-pointer btn-delete inline-flex items-center text-white bg-red-500 hover:bg-red-600 font-semibold rounded-md text-sm px-4 py-2">
+                                class="cursor-pointer w-full sm:w-auto btn-delete inline-flex justify-center items-center text-white bg-red-500 hover:bg-red-600 font-semibold rounded-md text-sm px-4 py-2">
                                 Hapus
                             </button>
                         </form>

@@ -30,8 +30,10 @@ class ProvinsiImport implements ToCollection
             // Ambil ID otomatis
             $lastId = Provinsi::orderBy('id')->pluck('id')->toArray();
             for ($i = 1; $i <= 99; $i++) {
-                $newId = str_pad($i, 2, '0', STR_PAD_LEFT);
-                if (!in_array($newId, $lastId)) break;
+                if (!in_array($i, $lastId)) {
+                    $newId = $i;
+                    break;
+                }
             }
 
             Provinsi::create([

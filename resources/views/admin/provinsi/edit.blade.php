@@ -23,11 +23,11 @@
         </div>
 
         <div class="flex justify-end">
-            <a href="{{ route('admin.provinsi') }}"
+            <a href="{{ route('admin.provinsi.index') }}"
                class="px-4 py-2 mr-2 text-[#00A181] border border-[#00A181] rounded-lg hover:bg-[#00A181] hover:text-white transition">
                Batal
             </a>
-            <button type="submit"
+            <button type="button" id="submitBtn"
                 class="cursor-pointer px-4 py-2 bg-[#00A181] text-white rounded-lg hover:bg-[#009171] transition">
                 Simpan Perubahan
             </button>
@@ -35,3 +35,38 @@
     </form>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+     document.getElementById('submitBtn').addEventListener('click', function(e) {
+            const nama = document.getElementById('nama_provinsi').value.trim();
+
+            if (!nama) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lengkapi data',
+                    text: 'Nama Provinsi wajib diisi.',
+                    confirmButtonColor: '#00A181',
+                });
+                return;
+            }
+
+            // Menampilkan konfirmasi SweetAlert
+            Swal.fire({
+                title: 'Perbarui Data?',
+                text: 'Apakah Anda yakin ingin memperbarui data ini?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#00A181',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Simpan',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Jika konfirmasi, kirim form
+                    document.querySelector('form').submit();
+                }
+            });
+        });
+</script>
+@endpush

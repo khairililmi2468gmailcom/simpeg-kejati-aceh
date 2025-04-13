@@ -10,7 +10,15 @@
     @vite('resources/css/app.css')
     @vite(['resources/js/app.js'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
+    <style>
+        .scrollbar-hidden {
+            scrollbar-width: none;       /* Firefox */
+            -ms-overflow-style: none;    /* IE 10+ */
+        }
+        .scrollbar-hidden::-webkit-scrollbar {
+            display: none;               /* Chrome, Safari, Opera */
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100">
@@ -186,16 +194,52 @@
                             class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">3</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('admin.diklat') }}"
-                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                        <svg class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                            viewBox="0 0 24 24">
-                            <path d="M2 20h20v2H2v-2ZM4 4h16v2H4V4ZM6 8h12v2H6V8ZM8 12h8v2H8v-2Z" />
+
+                <li x-data="{ open: {{ Route::is('admin.diklat.master', 'admin.diklat.riwayat') ? 'true' : 'false' }} }">
+                    <button @click="open = !open"
+                        class="w-full flex items-center justify-between p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path d="M2 20h20v2H2v-2ZM4 4h16v2H4V4ZM6 8h12v2H6V8ZM8 12h8v2H8v-2Z" />
+                            </svg>
+                            <span class="ms-3">Diklat</span>
+                        </div>
+                        <svg :class="{ 'rotate-180': open }" class="w-4 h-4 transition-transform transform"
+                            fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M19 9l-7 7-7-7" />
                         </svg>
-                        <span class="flex-1 ms-3 whitespace-nowrap">Diklat</span>
-                    </a>
+                    </button>
+
+                    <ul x-show="open" x-transition class="pl-8 mt-2 space-y-1">
+                        <li>
+                            <a href="{{ route('admin.diklat.master.index') }}"
+                                class="flex items-center gap-2 p-2 text-sm rounded-lg
+                                    {{ Request::routeIs('admin.provinsi') ? 'bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <path d="M4 4h16v2H4z" />
+                                    <path d="M6 6v14h12V6" />
+                                </svg>
+                                Master Diklat
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.diklat.riwayat.index') }}"
+                                class="flex items-center gap-2 p-2 text-sm rounded-lg
+                                    {{ Request::routeIs('admin.kabupaten') ? 'bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="3" />
+                                    <path d="M19.4 15a7 7 0 00-14.8 0" />
+                                    <path d="M4.6 9a9 9 0 0114.8 0" />
+                                </svg>
+                                Riwayat Diklat
+                            </a>
+                        </li>
+
+                    </ul>
                 </li>
                 <li>
                     <a href="{{ route('admin.mutasi') }}"
@@ -245,7 +289,6 @@
                     <button @click="open = !open"
                         class="w-full flex items-center justify-between p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
                         <div class="flex items-center">
-                            <!-- Icon Daerah -->
                             <svg class="w-6 h-6 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" viewBox="0 0 24 24">
@@ -263,7 +306,7 @@
 
                     <ul x-show="open" x-transition class="pl-8 mt-2 space-y-1">
                         <li>
-                            <a href="{{ route('admin.provinsi') }}"
+                            <a href="{{ route('admin.provinsi.index') }}"
                                 class="flex items-center gap-2 p-2 text-sm rounded-lg
                                     {{ Request::routeIs('admin.provinsi') ? 'bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
@@ -275,7 +318,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('admin.kabupaten') }}"
+                            <a href="{{ route('admin.kabupaten.index') }}"
                                 class="flex items-center gap-2 p-2 text-sm rounded-lg
                                     {{ Request::routeIs('admin.kabupaten') ? 'bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
@@ -288,7 +331,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('admin.kecamatan') }}"
+                            <a href="{{ route('admin.kecamatan.index') }}"
                                 class="flex items-center gap-2 p-2 text-sm rounded-lg
                                     {{ Request::routeIs('admin.kecamatan') ? 'bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"

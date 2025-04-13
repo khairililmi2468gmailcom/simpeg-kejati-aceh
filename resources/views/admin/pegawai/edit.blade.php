@@ -358,7 +358,7 @@
                     class="cursor-pointer inline-block bg-gray-300 hover:bg-gray-400 text-gray-700 px-5 py-2 rounded shadow">
                     Batal
                 </a>
-                <button type="submit"
+                <button type="submit" 
                     class="cursor-pointer bg-[#00A181] hover:bg-[#009171] text-white px-6 py-2 rounded shadow">
                     Simpan Perubahan
                 </button>

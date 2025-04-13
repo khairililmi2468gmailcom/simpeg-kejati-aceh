@@ -48,11 +48,11 @@
             </div>
 
             <div class="flex justify-end">
-                <a href="{{ route('admin.kabupaten') }}"
+                <a href="{{ route('admin.kabupaten.index') }}"
                     class="px-4 py-2 mr-2 text-[#00A181] border border-[#00A181] rounded-lg hover:bg-[#00A181] hover:text-white transition">
                     Batal
                 </a>
-                <button type="submit"
+                <button type="button" id="submitBtn"
                     class="cursor-pointer px-4 py-2 bg-[#00A181] text-white rounded-lg hover:bg-[#009171] transition">
                     Simpan Perubahan
                 </button>
@@ -105,7 +105,7 @@
     }
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@push('scripts')
 <script>
     document.querySelector('form').addEventListener('submit', function(e) {
         const selectedProvinsi = document.querySelector('input[name="id_provinsi"]').value;
@@ -119,4 +119,41 @@
             });
         }
     });
+    document.addEventListener('DOMContentLoaded', function () {
+        const submitBtn = document.getElementById('submitBtn');
+        if (submitBtn) {
+            submitBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const nama = document.getElementById('nama_kabupaten').value.trim();
+                const jenis = document.querySelector('input[name="id_provinsi"]').value.trim();
+
+                if (!nama || !jenis) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lengkapi data',
+                        text: 'Nama dan Provinsi wajib diisi.',
+                        confirmButtonColor: '#00A181',
+                    });
+                    return;
+                }
+
+                Swal.fire({
+                    title: 'Perbarui Data?',
+                    text: 'Apakah Anda yakin ingin memperbarui data ini?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#00A181',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Simpan',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.querySelector('form').submit();
+                    }
+                });
+            });
+        }
+    });
 </script>
+@endpush

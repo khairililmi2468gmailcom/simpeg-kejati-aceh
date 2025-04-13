@@ -13,19 +13,19 @@ class ProvinsiController extends Controller
     {
         $search = $request->search;
         $perPage = $request->per_page ?? 10;
-    
+
         $provinsi = Provinsi::query()
             ->when($search, function ($query) use ($search) {
                 $query->where('id', 'like', "%$search%")
-                      ->orWhere('nama_provinsi', 'like', "%$search%");
+                    ->orWhere('nama_provinsi', 'like', "%$search%");
             })
-            ->orderBy('id')
+            ->orderBy('id','desc')
             ->paginate($perPage)
             ->appends($request->all()); // penting untuk tetap menyimpan query string saat pagination
-    
+
         return view('admin.provinsi.index', compact('provinsi'));
     }
-    
+
 
     public function create()
     {
@@ -39,7 +39,7 @@ class ProvinsiController extends Controller
 
         for ($i = 1; $i <= 99; $i++) {
             if (!in_array($i, $usedIds)) {
-                return str_pad($i, 2, '0', STR_PAD_LEFT); // hasilkan id seperti '01', '02', dst
+                return $i;
             }
         }
 
@@ -57,7 +57,7 @@ class ProvinsiController extends Controller
 
         Provinsi::create($data);
 
-        return redirect()->route('admin.provinsi')->with('success', 'Provinsi berhasil ditambahkan.');
+        return redirect()->route('admin.provinsi.index')->with('success', 'Provinsi berhasil ditambahkan.');
     }
 
 
@@ -83,13 +83,13 @@ class ProvinsiController extends Controller
 
         $provinsi->update($request->all());
 
-        return redirect()->route('admin.provinsi')->with('success', 'Provinsi berhasil diperbarui.');
+        return redirect()->route('admin.provinsi.index')->with('success', 'Provinsi berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
         Provinsi::findOrFail($id)->delete();
-        return redirect()->route('admin.provinsi')->with('success', 'Provinsi berhasil dihapus.');
+        return redirect()->route('admin.provinsi.index')->with('success', 'Provinsi berhasil dihapus.');
     }
     public function bulkDelete(Request $request)
     {
@@ -106,7 +106,7 @@ class ProvinsiController extends Controller
             $provinsi->delete();
         }
 
-        return redirect()->route('admin.provinsi')->with('success', count($id) . ' data provinsi berhasil dihapus.');
+        return redirect()->route('admin.provinsi.index')->with('success', count($id) . ' data provinsi berhasil dihapus.');
     }
 
     public function import(Request $request)

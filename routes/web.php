@@ -18,7 +18,9 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TemplatePegawaiExport;
 use App\Http\Controllers\KabupatenController;
 use App\Http\Controllers\KecamatanController;
+use App\Http\Controllers\MengikutiDiklatController;
 use App\Http\Controllers\ProvinsiController;
+use App\Models\MengikutiDiklat;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -100,7 +102,6 @@ Route::prefix('admin/pegawai')->name('admin.pegawai.')->group(function () {
     Route::get('export/pdf', [PegawaiController::class, 'exportPdf'])->name('export.pdf');
     Route::get('export/excel', [PegawaiController::class, 'exportExcel'])->name('export.excel');
     Route::post('import/excel', [PegawaiController::class, 'importExcel'])->name('import.excel');
-
 });
 
 Route::get('/pegawai/template/excel', function () {
@@ -110,7 +111,6 @@ Route::get('/pegawai/template/excel', function () {
 
 Route::get('admin/cuti', [CutiController::class, 'index'])->name('admin.cuti');
 
-Route::get('admin/diklat',[DiklatController::class, 'index'])->name('admin.diklat');
 
 Route::get('admin/mutasi', [MutasiController::class, 'index'])->name('admin.mutasi');
 
@@ -122,33 +122,67 @@ Route::get('admin/profile', [ProfileController::class, 'index'])->name('admin.pr
 
 Route::get('admin/account-settting', [AccountSettingsController::class, 'index'])->name('admin.account-setting');
 
-Route::get('admin/pronvisi', [ProvinsiController::class, 'index'])->name('admin.provinsi');
-Route::get('/admin/provinsi/{id}/edit', [ProvinsiController::class, 'edit'])->name('admin.provinsi.edit');
-Route::put('/admin/provinsi/{id}', [ProvinsiController::class, 'update'])->name('admin.provinsi.update');
-Route::delete('/admin/provinsi/{id}', [ProvinsiController::class, 'destroy'])->name('admin.provinsi.destroy');
-Route::post('/admin/provinsi/bulk-delete', [ProvinsiController::class, 'bulkDelete'])->name('admin.provinsi.bulkDelete');
-Route::get('/admin/provinsi/create', [ProvinsiController::class, 'create'])->name('admin.provinsi.create');
-Route::post('/admin/provinsi/store', [ProvinsiController::class, 'store'])->name('admin.provinsi.store');
-Route::post('/admin/provinsi/import', [ProvinsiController::class, 'import'])->name('admin.provinsi.import');
-Route::get('/admin/provinsi/template', [ProvinsiController::class, 'downloadTemplate'])->name('admin.provinsi.download-template');
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('diklat')->name('diklat.')->group(function () {
+        // Master Diklat Routes
+        Route::prefix('master')->name('master.')->group(function () {
+            Route::get('/', [DiklatController::class, 'index'])->name('index'); // Akses dengan 'admin.diklat.master.index'
+            Route::get('/create', [DiklatController::class, 'create'])->name('create');
+            Route::post('/store', [DiklatController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [DiklatController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [DiklatController::class, 'update'])->name('update');
+            Route::delete('/{id}', [DiklatController::class, 'destroy'])->name('destroy');
+            Route::post('/bulk-delete', [DiklatController::class, 'bulkDelete'])->name('bulkDelete');
+        });
 
+        // Riwayat Diklat Routes
+        Route::prefix('riwayat')->name('riwayat.')->group(function () {
+            Route::get('/', [MengikutiDiklatController::class, 'index'])->name('index');
+            Route::get('/create', [MengikutiDiklatController::class, 'create'])->name('create');
+            Route::post('/store', [MengikutiDiklatController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [MengikutiDiklatController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [MengikutiDiklatController::class, 'update'])->name('update');
+            Route::delete('/{id}', [MengikutiDiklatController::class, 'destroy'])->name('destroy');
+            Route::post('/bulk-delete', [MengikutiDiklatController::class, 'bulkDelete'])->name('bulkDelete');
+        });
+    });
 
-Route::get('admin/kabupaten', [KabupatenController::class, 'index'])->name('admin.kabupaten');
-Route::get('/admin/kabupaten/{id}/edit', [KabupatenController::class, 'edit'])->name('admin.kabupaten.edit');
-Route::put('/admin/kabupaten/{id}', [KabupatenController::class, 'update'])->name('admin.kabupaten.update');
-Route::delete('/admin/kabupaten/{id}', [KabupatenController::class, 'destroy'])->name('admin.kabupaten.destroy');
-Route::post('/admin/kabupaten/bulk-delete', [KabupatenController::class, 'bulkDelete'])->name('admin.kabupaten.bulkDelete');
-Route::get('/admin/kabupaten/create', [KabupatenController::class, 'create'])->name('admin.kabupaten.create');
-Route::post('/admin/kabupaten/store', [KabupatenController::class, 'store'])->name('admin.kabupaten.store');
-Route::post('/admin/kabupaten/import', [KabupatenController::class, 'import'])->name('admin.kabupaten.import');
-Route::get('/admin/kabupaten/template', [KabupatenController::class, 'downloadTemplate'])->name('admin.kabupaten.download-template');
+    // Provinsi Routes
+    Route::prefix('provinsi')->name('provinsi.')->group(function () {
+        Route::get('/', [ProvinsiController::class, 'index'])->name('index');
+        Route::get('/create', [ProvinsiController::class, 'create'])->name('create');
+        Route::post('/store', [ProvinsiController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [ProvinsiController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [ProvinsiController::class, 'update'])->name('update');
+        Route::delete('/{id}', [ProvinsiController::class, 'destroy'])->name('destroy');
+        Route::post('/bulk-delete', [ProvinsiController::class, 'bulkDelete'])->name('bulkDelete');
+        Route::post('/import', [ProvinsiController::class, 'import'])->name('import');
+        Route::get('/template', [ProvinsiController::class, 'downloadTemplate'])->name('download-template');
+    });
 
-Route::get('admin/kecamatan', [KecamatanController::class, 'index'])->name('admin.kecamatan');
-Route::get('/admin/kecamatan/{id}/edit', [KecamatanController::class, 'edit'])->name('admin.kecamatan.edit');
-Route::put('/admin/kecamatan/{id}', [KecamatanController::class, 'update'])->name('admin.kecamatan.update');
-Route::delete('/admin/kecamatan/{id}', [KecamatanController::class, 'destroy'])->name('admin.kecamatan.destroy');
-Route::post('/admin/kecamatan/bulk-delete', [KecamatanController::class, 'bulkDelete'])->name('admin.kecamatan.bulkDelete');
-Route::get('/admin/kecamatan/create', [KecamatanController::class, 'create'])->name('admin.kecamatan.create');
-Route::post('/admin/kecamatan/store', [KecamatanController::class, 'store'])->name('admin.kecamatan.store');
-Route::post('/admin/kecamatan/import', [KecamatanController::class, 'import'])->name('admin.kecamatan.import');
-Route::get('/admin/kecamatan/template', [KecamatanController::class, 'downloadTemplate'])->name('admin.kecamatan.download-template');
+    // Kabupaten Routes
+    Route::prefix('kabupaten')->name('kabupaten.')->group(function () {
+        Route::get('/', [KabupatenController::class, 'index'])->name('index');
+        Route::get('/create', [KabupatenController::class, 'create'])->name('create');
+        Route::post('/store', [KabupatenController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [KabupatenController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [KabupatenController::class, 'update'])->name('update');
+        Route::delete('/{id}', [KabupatenController::class, 'destroy'])->name('destroy');
+        Route::post('/bulk-delete', [KabupatenController::class, 'bulkDelete'])->name('bulkDelete');
+        Route::post('/import', [KabupatenController::class, 'import'])->name('import');
+        Route::get('/template', [KabupatenController::class, 'downloadTemplate'])->name('download-template');
+    });
+
+    // Kecamatan Routes
+    Route::prefix('kecamatan')->name('kecamatan.')->group(function () {
+        Route::get('/', [KecamatanController::class, 'index'])->name('index');
+        Route::get('/create', [KecamatanController::class, 'create'])->name('create');
+        Route::post('/store', [KecamatanController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [KecamatanController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [KecamatanController::class, 'update'])->name('update');
+        Route::delete('/{id}', [KecamatanController::class, 'destroy'])->name('destroy');
+        Route::post('/bulk-delete', [KecamatanController::class, 'bulkDelete'])->name('bulkDelete');
+        Route::post('/import', [KecamatanController::class, 'import'])->name('import');
+        Route::get('/template', [KecamatanController::class, 'downloadTemplate'])->name('download-template');
+    });
+});
