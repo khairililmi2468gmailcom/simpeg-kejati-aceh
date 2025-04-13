@@ -25,15 +25,15 @@
             <td>{{ $pegawai->tmpt_lahir }}</td>
             <td>{{ $pegawai->tgl_lahir }}</td>
             <td>{{ $pegawai->jk == 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
-            <td>{{ $pegawai->provinsi->nama ?? '' }}</td>
-            <td>{{ $pegawai->kabupaten->nama ?? '' }}</td>
-            <td>{{ $pegawai->kecamatan->nama ?? '' }}</td>
+            <td>{{ $pegawai->provinsi->nama_provinsi ?? '' }}</td>
+            <td>{{ $pegawai->kabupaten->nama_kabupaten ?? '' }}</td>
+            <td>{{ $pegawai->kecamatan->nama_kecamatan ?? '' }}</td>
             <td>{{ $pegawai->alamat }}</td>
             <td>{{ $pegawai->no_hp }}</td>
             <td>{{ $pegawai->email }}</td>
-            <td>{{ $pegawai->golongan->nama ?? '' }}</td>
-            <td>{{ $pegawai->jabatan->nama ?? '' }}</td>
-            <td>{{ $pegawai->unitKerja->nama ?? '' }}</td>
+            <td>{{ $pegawai->golongan->jabatan_fungsional ?? '' }}</td>
+            <td>{{ $pegawai->jabatan->nama_jabatan ?? '' }}</td>
+            <td>{{ $pegawai->unitKerja->nama_kantor ?? '' }}</td>
         </tr>
         @endforeach
     </tbody>

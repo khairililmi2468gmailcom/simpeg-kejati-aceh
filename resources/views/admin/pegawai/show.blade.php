@@ -93,7 +93,7 @@
 
         {{-- Tombol Kembali --}}
         <div class="mt-8">
-            <a href="{{ route('admin.pegawai') }}"
+            <a href="{{ route('admin.pegawai.index') }}"
                 class="inline-block bg-[#00A181] hover:bg-[#009171] text-white px-6 py-2 rounded-md shadow transition cursor-pointer">
                 ← Kembali
             </a>

@@ -27,7 +27,7 @@ class PegawaiController extends Controller
                 $query->where('nip', 'like', "%$search%")
                     ->orWhere('nama', 'like', "%$search%");
             })
-            ->orderBy('nama')
+            ->orderBy('nip','desc')
             ->paginate($perPage);
         $referensi = [
             'provinsi' => \App\Models\Provinsi::select('id', 'nama_provinsi as nama')->get(),
@@ -105,7 +105,7 @@ class PegawaiController extends Controller
 
         $pegawai = Pegawai::create(array_merge($request->all(), ['foto' => $fotoPath]));
 
-        return redirect()->route('admin.pegawai')->with('success', 'Pegawai berhasil ditambahkan.');
+        return redirect()->route('admin.pegawai.index')->with('success', 'Pegawai berhasil ditambahkan.');
     }
 
     public function show($nip)
@@ -153,7 +153,7 @@ class PegawaiController extends Controller
             'id_golongan' => 'required|string|exists:golongan,id_golongan',
             'kode_kantor' => 'nullable|string|max:10|exists:unit_kerja,kode_kantor',
             'id_jabatan' => 'nullable|integer|exists:jabatan,id_jabatan',
-            'ket' => 'nullable|string|max:25'
+            'ket' => 'nullable|string|max:150'
         ]);
 
         $data = $request->all();
@@ -168,7 +168,7 @@ class PegawaiController extends Controller
         $pegawai->update($data);
 
 
-        return redirect()->route('admin.pegawai')->with('success', 'Data pegawai berhasil diperbarui!');
+        return redirect()->route('admin.pegawai.index')->with('success', 'Data pegawai berhasil diperbarui!');
     }
 
     public function destroy($nip)
@@ -180,7 +180,7 @@ class PegawaiController extends Controller
         }
 
         $pegawai->delete();
-        return redirect()->route('admin.pegawai')->with('success', 'Pegawai berhasil dihapus.');
+        return redirect()->route('admin.pegawai.index')->with('success', 'Pegawai berhasil dihapus.');
     }
     public function bulkDelete(Request $request)
     {
@@ -199,7 +199,7 @@ class PegawaiController extends Controller
             $pegawai->delete();
         }
 
-        return redirect()->route('admin.pegawai')->with('success', count($nips) . ' data pegawai berhasil dihapus.');
+        return redirect()->route('admin.pegawai.index')->with('success', count($nips) . ' data pegawai berhasil dihapus.');
     }
     public function exportPdf()
     {
@@ -217,7 +217,7 @@ class PegawaiController extends Controller
     {
         if (!$request->hasFile('file')) {
             Log::error('No file uploaded for import.');
-            return redirect()->route('admin.pegawai')->with('error', 'Tidak ada file yang diupload.');
+            return redirect()->route('admin.pegawai.index')->with('error', 'Tidak ada file yang diupload.');
         }
 
         try {
@@ -226,7 +226,7 @@ class PegawaiController extends Controller
             Excel::import(new PegawaiImport, $request->file('file'));
 
             Log::info('Import pegawai selesai.');
-            return redirect()->route('admin.pegawai')->with('success', 'Data pegawai berhasil diimpor!');
+            return redirect()->route('admin.pegawai.index')->with('success', 'Data pegawai berhasil diimpor!');
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             $failures = $e->failures();
 
@@ -234,10 +234,10 @@ class PegawaiController extends Controller
                 return 'Baris ' . $fail->row() . ': ' . implode(', ', $fail->errors());
             })->implode('<br>');
 
-            return redirect()->route('admin.pegawai')->with('error', $messages);
+            return redirect()->route('admin.pegawai.index')->with('error', $messages);
         } catch (\Throwable $e) {
             Log::error('Gagal import pegawai: ' . $e->getMessage());
-            return redirect()->route('admin.pegawai')->with('error', 'Terjadi kesalahan saat mengimpor data.');
+            return redirect()->route('admin.pegawai.index')->with('error', 'Terjadi kesalahan saat mengimpor data.');
         }
     }
 }

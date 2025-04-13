@@ -402,7 +402,7 @@
             </div>
 
             <div class="mt-6 flex items-center justify-between">
-                <a href="{{ route('admin.pegawai') }}"
+                <a href="{{ route('admin.pegawai.index') }}"
                     class="cursor-pointer inline-block bg-gray-300 hover:bg-gray-400 text-gray-700 px-5 py-2 rounded shadow">
                     Batal
                 </a>

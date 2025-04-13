@@ -20,6 +20,7 @@ use App\Http\Controllers\KabupatenController;
 use App\Http\Controllers\KecamatanController;
 use App\Http\Controllers\MengikutiDiklatController;
 use App\Http\Controllers\ProvinsiController;
+use App\Http\Controllers\WilayahController;
 use App\Models\MengikutiDiklat;
 /*
 |--------------------------------------------------------------------------
@@ -57,72 +58,64 @@ Route::get('/register', function () {
     return view('register');
 });
 
-Route::get('/admin/home', [HomeController::class, 'index'])->name('admin.home');
-
 
 Route::get('/home', function () {
     return redirect()->route('home');
 });
-Route::get('/admin/home', [PegawaiBarchartController::class, 'index'])->name('admin.home');
 
-Route::get('/admin/settings', [SettingsController::class, 'index'])->name('admin.settings');
 
-// Route untuk halaman index pegawai
-Route::get('/admin/pegawai', [PegawaiController::class, 'index'])->name('admin.pegawai');
-
-// Route untuk menampilkan form tambah pegawai
-Route::get('/admin/pegawai/create', [PegawaiController::class, 'create'])->name('admin.pegawai.create');
-// Route untuk menyimpan pegawai baru
-Route::post('/admin/pegawai/store', [PegawaiController::class, 'store'])->name('admin.pegawai.store');
-// Route untuk menampilkan detail pegawai
-Route::get('/admin/pegawai/{nip}', [PegawaiController::class, 'show'])->name('admin.pegawai.show');
-// Route untuk menampilkan form edit pegawai
-Route::get('/admin/pegawai/{nip}/edit', [PegawaiController::class, 'edit'])->name('admin.pegawai.edit');
-// Route untuk update data pegawai
-Route::put('/admin/pegawai/{nip}', [PegawaiController::class, 'update'])->name('admin.pegawai.update');
-// Route untuk menghapus pegawai
-Route::delete('/admin/pegawai/{nip}', [PegawaiController::class, 'destroy'])->name('admin.pegawai.destroy');
-Route::post('/admin/pegawai/bulk-delete', [PegawaiController::class, 'bulkDelete'])->name('admin.pegawai.bulkDelete');
-Route::get('/data/provinsi', function () {
-    return response()->json(\App\Models\Provinsi::select('id', 'nama_provinsi')->get());
-});
-Route::prefix('data')->group(function () {
-    Route::view('/provinsi', 'referensi.provinsi')->name('referensi.provinsi');
-    Route::view('/kabupaten', 'referensi.kabupaten')->name('referensi.kabupaten');
-    Route::view('/kecamatan', 'referensi.kecamatan')->name('referensi.kecamatan');
-    Route::view('/golongan', 'referensi.golongan')->name('referensi.golongan');
-    Route::view('/jabatan', 'referensi.jabatan')->name('referensi.jabatan');
-    Route::view('/unit-kerja', 'referensi.unitkerja')->name('referensi.unitkerja');
-});
-
-Route::get('/get-kabupaten/{id_provinsi}', [App\Http\Controllers\WilayahController::class, 'getKabupaten']);
-Route::get('/get-kecamatan/{id_kabupaten}', [App\Http\Controllers\WilayahController::class, 'getKecamatan']);
-
-Route::prefix('admin/pegawai')->name('admin.pegawai.')->group(function () {
-    Route::get('export/pdf', [PegawaiController::class, 'exportPdf'])->name('export.pdf');
-    Route::get('export/excel', [PegawaiController::class, 'exportExcel'])->name('export.excel');
-    Route::post('import/excel', [PegawaiController::class, 'importExcel'])->name('import.excel');
-});
-
+// Template Excel Pegawai (download)
 Route::get('/pegawai/template/excel', function () {
     return Excel::download(new TemplatePegawaiExport, 'template_pegawai.xlsx');
+})->name('pegawai.template.excel');
+
+// API Wilayah (untuk dropdown dinamis)
+Route::get('/get-kabupaten/{id_provinsi}', [WilayahController::class, 'getKabupaten']);
+Route::get('/get-kecamatan/{id_kabupaten}', [WilayahController::class, 'getKecamatan']);
+
+// Referensi Views (bisa diakses di modal atau helper)
+Route::prefix('data')->name('referensi.')->group(function () {
+    Route::view('/provinsi', 'referensi.provinsi')->name('provinsi');
+    Route::view('/kabupaten', 'referensi.kabupaten')->name('kabupaten');
+    Route::view('/kecamatan', 'referensi.kecamatan')->name('kecamatan');
+    Route::view('/golongan', 'referensi.golongan')->name('golongan');
+    Route::view('/jabatan', 'referensi.jabatan')->name('jabatan');
+    Route::view('/unit-kerja', 'referensi.unitkerja')->name('unitkerja');
 });
 
-
-Route::get('admin/cuti', [CutiController::class, 'index'])->name('admin.cuti');
-
-
-Route::get('admin/mutasi', [MutasiController::class, 'index'])->name('admin.mutasi');
-
-Route::get('admin/kepangkatan', [KepangkatanController::class, 'index'])->name('admin.kepangkatan');
-
-Route::get('admin/laporan', [LaporanController::class, 'index'])->name('admin.laporan');
-
-Route::get('admin/profile', [ProfileController::class, 'index'])->name('admin.profile');
-
-Route::get('admin/account-settting', [AccountSettingsController::class, 'index'])->name('admin.account-setting');
-
 Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/home', [PegawaiBarchartController::class, 'index'])->name('home');
+
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+    Route::get('cuti', [CutiController::class, 'index'])->name('cuti');
+
+    Route::get('mutasi', [MutasiController::class, 'index'])->name('mutasi');
+    
+    Route::get('kepangkatan', [KepangkatanController::class, 'index'])->name('kepangkatan');
+    
+    Route::get('laporan', [LaporanController::class, 'index'])->name('laporan');
+    
+    Route::get('profile', [ProfileController::class, 'index'])->name('profile');
+    
+    Route::get('account-settting', [AccountSettingsController::class, 'index'])->name('account-setting');
+    
+
+    Route::prefix('pegawai')->name('pegawai.')->group(function () {
+        Route::get('/', [PegawaiController::class, 'index'])->name('index');
+        Route::get('/create', [PegawaiController::class, 'create'])->name('create');
+        Route::post('/store', [PegawaiController::class, 'store'])->name('store');
+        Route::get('/{nip}', [PegawaiController::class, 'show'])->name('show');
+        Route::get('/{nip}/edit', [PegawaiController::class, 'edit'])->name('edit');
+        Route::put('/{nip}', [PegawaiController::class, 'update'])->name('update');
+        Route::delete('/{nip}', [PegawaiController::class, 'destroy'])->name('destroy');
+        Route::post('/bulk-delete', [PegawaiController::class, 'bulkDelete'])->name('bulkDelete');
+
+        // Ekspor & Impor
+        Route::get('export/pdf', [PegawaiController::class, 'exportPdf'])->name('export.pdf');
+        Route::get('export/excel', [PegawaiController::class, 'exportExcel'])->name('export.excel');
+        Route::post('import/excel', [PegawaiController::class, 'importExcel'])->name('import.excel');
+    });
     Route::prefix('diklat')->name('diklat.')->group(function () {
         // Master Diklat Routes
         Route::prefix('master')->name('master.')->group(function () {

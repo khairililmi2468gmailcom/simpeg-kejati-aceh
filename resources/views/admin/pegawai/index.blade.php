@@ -15,7 +15,7 @@
         <span class="text-sm text-gray-600 hidden md:inline">Petunjuk Pengisian Excel</span>
     </div>
     {{-- Filter & Search --}}
-    <form method="GET" action="{{ route('admin.pegawai') }}"
+    <form method="GET" action="{{ route('admin.pegawai.index') }}"
         class="flex flex-wrap md:flex-nowrap items-center justify-between gap-2 mb-6">
 
         <div class="relative w-full md:w-1/3">
@@ -111,7 +111,7 @@
 
         <!-- Tombol Hapus -->
         <button id="bulkDeleteBtn"
-            class="inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-2.5 disabled:opacity-50"
+            class="cursor-pointer inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-2.5 disabled:opacity-50"
             disabled>
             <!-- Icon hapus -->
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
