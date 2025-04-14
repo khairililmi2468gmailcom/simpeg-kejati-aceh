@@ -18,6 +18,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TemplatePegawaiExport;
 use App\Http\Controllers\KabupatenController;
 use App\Http\Controllers\KecamatanController;
+use App\Http\Controllers\MenerimaCutiController;
 use App\Http\Controllers\MengikutiDiklatController;
 use App\Http\Controllers\ProvinsiController;
 use App\Http\Controllers\WilayahController;
@@ -116,6 +117,32 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('export/excel', [PegawaiController::class, 'exportExcel'])->name('export.excel');
         Route::post('import/excel', [PegawaiController::class, 'importExcel'])->name('import.excel');
     });
+    
+    Route::prefix('cuti')->name('cuti.')->group(function () {
+        // Master Cuti Routes
+        Route::prefix('jeniscuti')->name('jeniscuti.')->group(function () {
+            Route::get('/', [CutiController::class, 'index'])->name('index'); // Akses dengan 'admin.diklat.master.index'
+            Route::get('/create', [CutiController::class, 'create'])->name('create');
+            Route::post('/store', [CutiController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [CutiController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [CutiController::class, 'update'])->name('update');
+            Route::delete('/{id}', [CutiController::class, 'destroy'])->name('destroy');
+            Route::post('/bulk-delete', [CutiController::class, 'bulkDelete'])->name('bulkDelete');
+        });
+
+        // Riwayat Cuti Routes
+        Route::prefix('riwayatcuti')->name('riwayatcuti.')->group(function () {
+            Route::get('/', [MenerimaCutiController::class, 'index'])->name('index');
+            Route::get('/create', [MenerimaCutiController::class, 'create'])->name('create');
+            Route::post('/store', [MenerimaCutiController::class, 'store'])->name('store');
+            Route::get('/{id}', [MenerimaCutiController::class, 'show'])->name('show');
+            Route::get('/{id}/edit', [MenerimaCutiController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [MenerimaCutiController::class, 'update'])->name('update');
+            Route::delete('/{id}', [MenerimaCutiController::class, 'destroy'])->name('destroy');
+            Route::post('/bulk-delete', [MenerimaCutiController::class, 'bulkDelete'])->name('bulkDelete');
+        });
+    });
+
     Route::prefix('diklat')->name('diklat.')->group(function () {
         // Master Diklat Routes
         Route::prefix('master')->name('master.')->group(function () {

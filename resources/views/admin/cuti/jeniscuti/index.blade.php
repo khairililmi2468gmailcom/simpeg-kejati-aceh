@@ -1,14 +1,14 @@
 @extends('layouts.app-admin')
 
 @section('content')
-    <h1 class="text-3xl font-bold text-[#00A181]">Riwayat Diklat</h1>
-    <p class="text-gray-600">Halaman Riwayat Diklat</p>
+    <h1 class="text-3xl font-bold text-[#00A181]">Jenis Cuti</h1>
+    <p class="text-gray-600">Halaman Jenis Cuti</p>
 
     <div class="flex flex-wrap justify-between items-center mb-4 mt-4">
         <!-- Input Search -->
         <div class="w-full md:w-1/3 mb-4 md:mb-0 relative">
-            <form action="{{ route('admin.diklat.riwayat.index') }}" method="GET">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Diklat..."
+            <form action="{{ route('admin.cuti.jeniscuti.index') }}" method="GET">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Jenis Cuti..."
                     class="px-4 py-2 mb-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00A181] w-full">
                 <select name="per_page" onchange="this.form.submit()"
                     class="border border-gray-300 px-3 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00A181] w-full">
@@ -25,14 +25,14 @@
 
 
 
-            <!-- Tambah Kecamatan -->
-            <a href="{{ route('admin.diklat.riwayat.create') }}"
+            <!-- Tambah Master Diklat -->
+            <a href="{{ route('admin.cuti.jeniscuti.create') }}"
                 class="inline-flex items-center text-white bg-[#00A181] hover:bg-[#008f73] focus:outline-none focus:ring-4 focus:ring-[#00A181]/50 font-medium rounded-lg text-sm px-6 py-2.5 text-center mb-2 md:mb-0">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
                 </svg>
-                Tambah Riwayat Diklat
+                Tambah Diklat
             </a>
 
             <!-- Hapus Data -->
@@ -52,104 +52,74 @@
     </div>
 
     <!-- Tabel Provinsi -->
-    <div class="overflow-auto max-h-[70vh] rounded-xl scrollbar-hidden">
+    <table class="w-full text-base text-left text-gray-700 bg-white shadow-lg rounded-xl overflow-hidden">
+        <thead class="text-white bg-[#00A181]">
+            <tr>
+                <th class="px-5 py-4 text-center"><input type="checkbox" id="checkAll"></th>
+                <th class="px-5 py-4">Jenis Cuti</th>
+                <th class="px-5 py-4">Aksi</th>
+            </tr>
+        </thead>
 
-        <table class="w-full text-base text-left text-gray-700 bg-white shadow-lg rounded-xl overflow-hidden">
-            <thead class="text-white bg-[#00A181]">
-                <tr>
-                    <th class="px-5 py-4 text-center"><input type="checkbox" id="checkAll"></th>
-                    <th class="px-5 py-4">NIP</th>
-                    <th class="px-5 py-4">Nama Pegawai</th>
-                    <th class="px-5 py-4">Nama Diklat</th>
-                    <th class="px-5 py-4">Jenis Diklat</th>
-                    <th class="px-5 py-4">Tanggal Mulai</th>
-                    <th class="px-5 py-4">Tanggal Selesai</th>
-                    <th class="px-5 py-4">Aksi</th>
+        <tbody class="divide-y divide-gray-200">
+            @forelse ($cuti as $item)
+                <tr class="hover:bg-gray-50 transition-all duration-150">
+                    <td class="px-5 py-4 text-center">
+                        <input type="checkbox" class="checkbox-item" value="{{ $item->id }}">
+                    </td>
+                    <td class="px-5 py-4">{{ $item->jenis_cuti }}</td>
+                    <td class="px-5 py-4 space-y-2">
+                        <a href="{{ route('admin.cuti.jeniscuti.edit', $item->id) }}"
+                            class="w-full sm:w-auto inline-flex justify-center items-center text-white bg-yellow-500 hover:bg-yellow-600 font-semibold rounded-md text-sm px-4 py-2">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828A4 4 0 019 17H5v-4a4 4 0 014-4z" />
+                            </svg>
+                            Edit
+                        </a>
+                        <form action="{{ route('admin.cuti.jeniscuti.destroy', $item->id) }}" method="POST"
+                            class="w-full sm:w-auto inline delete-form">
+                            @csrf
+                            @method('DELETE')
+                            <button type="button"
+                                class="cursor-pointer w-full sm:w-auto btn-delete inline-flex justify-center items-center text-white bg-red-500 hover:bg-red-600 font-semibold rounded-md text-sm px-4 py-2">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a1 1 0 011 1v1H9V4a1 1 0 011-1zM4 7h16" />
+                                </svg>
+                                Hapus
+                            </button>
+                        </form>
+                    </td>
                 </tr>
-            </thead>
-
-            <tbody class="divide-y divide-gray-200">
-                @forelse ($data as $item)
-                    <tr class="hover:bg-gray-50 transition-all duration-150">
-                        <td class="px-5 py-4 text-center">
-                            <input type="checkbox" class="checkbox-item" value="{{ $item->no_sttpp }}">
-                        </td>
-                        <td class="px-5 py-4">{{ $item->pegawai->nip }}</td>
-                        <td class="px-5 py-4">{{ $item->pegawai->nama }}</td>
-                        <td class="px-5 py-4">{{ $item->diklat->nama_diklat }}</td>
-                        <td class="px-5 py-4">{{ $item->diklat->jenis_diklat }}</td>
-                        <td class="px-5 py-4">
-                            {{ \Carbon\Carbon::parse($item->tanggal_mulai)->translatedFormat('d F Y') }}
-                        </td>
-                        <td class="px-5 py-4">
-                            {{ \Carbon\Carbon::parse($item->tanggal_selesai)->translatedFormat('d F Y') }}
-                        </td>
-                        <td class="px-5 py-4 space-y-2">
-                            <a href="{{ route('admin.diklat.riwayat.show', $item->no_sttpp) }}"
-                                class="w-full sm:w-auto inline-flex justify-center items-center text-white bg-blue-500 hover:bg-blue-600 font-semibold rounded-md text-sm px-4 py-2">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                                Detail
-                            </a>
-
-                            <a href="{{ route('admin.diklat.riwayat.edit', $item->no_sttpp) }}"
-                                class="w-full sm:w-auto inline-flex justify-center items-center text-white bg-yellow-500 hover:bg-yellow-600 font-semibold rounded-md text-sm px-4 py-2">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828A4 4 0 019 17H5v-4a4 4 0 014-4z" />
-                                </svg>
-                                Edit
-                            </a>
-                            <form action="{{ route('admin.diklat.riwayat.destroy', $item->no_sttpp) }}" method="POST"
-                                class="w-full sm:w-auto inline delete-form">
-                                @csrf
-                                @method('DELETE')
-                                <button type="button"
-                                    class="cursor-pointer w-full sm:w-auto btn-delete inline-flex justify-center items-center text-white bg-red-500 hover:bg-red-600 font-semibold rounded-md text-sm px-4 py-2">
-                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a1 1 0 011 1v1H9V4a1 1 0 011-1zM4 7h16" />
-                                    </svg>
-                                    Hapus
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="4" class="text-center py-6 text-gray-500">Data tidak ditemukan.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+            @empty
+                <tr>
+                    <td colspan="4" class="text-center py-6 text-gray-500">Data tidak ditemukan.</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
     {{-- Pagination --}}
     <div class="mt-6 flex justify-end">
-        {{ $data->links() }}
+        {{ $cuti->links() }}
     </div>
-    @if ($data->hasPages())
+    @if ($cuti->hasPages())
         <div class="mt-6 flex justify-end">
             <nav class="flex items-center space-x-1 text-sm">
                 {{-- Tombol Previous --}}
-                @if ($data->onFirstPage())
+                @if ($cuti->onFirstPage())
                     <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded-md cursor-not-allowed">← Prev</span>
                 @else
-                    <a href="{{ $data->previousPageUrl() }}"
+                    <a href="{{ $cuti->previousPageUrl() }}"
                         class="px-3 py-1 bg-white border rounded-md text-[#00A181] hover:bg-[#00A181]/10">← Prev</a>
                 @endif
 
                 {{-- Angka halaman --}}
-                @foreach ($data->getUrlRange(1, $data->lastPage()) as $page => $url)
-                    @if ($page == $data->currentPage())
-                        <span
-                            class="px-3 py-1 bg-[#00A181] text-white rounded-md font-semibold">{{ $page }}</span>
+                @foreach ($cuti->getUrlRange(1, $cuti->lastPage()) as $page => $url)
+                    @if ($page == $cuti->currentPage())
+                        <span class="px-3 py-1 bg-[#00A181] text-white rounded-md font-semibold">{{ $page }}</span>
                     @else
                         <a href="{{ $url }}"
                             class="px-3 py-1 bg-white border rounded-md hover:bg-[#00A181]/10 text-[#00A181]">{{ $page }}</a>
@@ -157,8 +127,8 @@
                 @endforeach
 
                 {{-- Tombol Next --}}
-                @if ($data->hasMorePages())
-                    <a href="{{ $data->nextPageUrl() }}"
+                @if ($cuti->hasMorePages())
+                    <a href="{{ $cuti->nextPageUrl() }}"
                         class="px-3 py-1 bg-white border rounded-md text-[#00A181] hover:bg-[#00A181]/10">Next →</a>
                 @else
                     <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded-md cursor-not-allowed">Next →</span>
@@ -261,7 +231,7 @@
                     // Kirim ke server via form dinamis
                     const form = document.createElement('form');
                     form.method = 'POST';
-                    form.action = "{{ route('admin.diklat.riwayat.bulkDelete') }}";
+                    form.action = "{{ route('admin.cuti.jeniscuti.bulkDelete') }}";
 
                     const token = document.createElement('input');
                     token.type = 'hidden';

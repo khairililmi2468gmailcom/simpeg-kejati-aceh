@@ -183,22 +183,58 @@
                             class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">Pro</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('admin.cuti') }}"
-                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                        <svg class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                            viewBox="0 0 24 24">
-                            <path d="M12 2a4 4 0 1 1-4 4 4 4 0 0 1 4-4Z" />
-                            <path d="M4 20c0-3 4-5 8-5s8 2 8 5v2H4v-2Z" />
-                            <path d="M8 10h8v2H8zM8 14h8v2H8z" />
-                        </svg>
-                        <span class="flex-1 ms-3 whitespace-nowrap">Cuti</span>
-                        <span
-                            class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">3</span>
-                    </a>
-                </li>
 
+                <li x-data="{ open: {{ Route::is('admin.cuti.*') ? 'true' : 'false' }} }">
+                    <button @click="open = !open"
+                        class="w-full flex items-center justify-between p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path d="M12 2a4 4 0 1 1-4 4 4 4 0 0 1 4-4Z" />
+                                <path d="M4 20c0-3 4-5 8-5s8 2 8 5v2H4v-2Z" />
+                                <path d="M8 10h8v2H8zM8 14h8v2H8z" />
+                            </svg>
+                            <span class="ms-3">Cuti</span>
+                        </div>
+                        <svg :class="{ 'rotate-180': open }" class="w-4 h-4 transition-transform transform"
+                            fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+
+                    <ul x-show="open" x-transition class="pl-8 mt-2 space-y-1">
+                        <li>
+                            <a href="{{ route('admin.cuti.jeniscuti.index') }}"
+                                class="flex items-center gap-2 p-2 text-sm rounded-lg
+                                    {{ Request::routeIs('admin.provinsi') ? 'bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <path d="M9 12l2 2l4 -4" />
+                                    <path d="M3 6h18" />
+                                    <path d="M3 12h6" />
+                                    <path d="M3 18h6" />
+                                </svg>
+
+                                Jenis Cuti
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.cuti.riwayatcuti.index') }}"
+                                class="flex items-center gap-2 p-2 text-sm rounded-lg
+                                    {{ Request::routeIs('admin.kabupaten') ? 'bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <path d="M12 8v4l3 3" />
+                                    <circle cx="12" cy="12" r="10" />
+                                </svg>
+
+                                Riwayat Cuti
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
                 <li x-data="{ open: {{ Route::is('admin.diklat.*') ? 'true' : 'false' }} }">
                     <button @click="open = !open"
                         class="w-full flex items-center justify-between p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">

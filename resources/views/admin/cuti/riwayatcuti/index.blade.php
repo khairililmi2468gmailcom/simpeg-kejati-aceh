@@ -7,8 +7,8 @@
     <div class="flex flex-wrap justify-between items-center mb-4 mt-4">
         <!-- Input Search -->
         <div class="w-full md:w-1/3 mb-4 md:mb-0 relative">
-            <form action="{{ route('admin.diklat.riwayat.index') }}" method="GET">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Diklat..."
+            <form action="{{ route('admin.cuti.riwayatcuti.index') }}" method="GET">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Riwayat Cuti..."
                     class="px-4 py-2 mb-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00A181] w-full">
                 <select name="per_page" onchange="this.form.submit()"
                     class="border border-gray-300 px-3 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00A181] w-full">
@@ -26,7 +26,7 @@
 
 
             <!-- Tambah Kecamatan -->
-            <a href="{{ route('admin.diklat.riwayat.create') }}"
+            <a href="{{ route('admin.cuti.riwayatcuti.create') }}"
                 class="inline-flex items-center text-white bg-[#00A181] hover:bg-[#008f73] focus:outline-none focus:ring-4 focus:ring-[#00A181]/50 font-medium rounded-lg text-sm px-6 py-2.5 text-center mb-2 md:mb-0">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg">
@@ -58,10 +58,10 @@
             <thead class="text-white bg-[#00A181]">
                 <tr>
                     <th class="px-5 py-4 text-center"><input type="checkbox" id="checkAll"></th>
+                    <th class="px-5 py-4">No. Surat</th>
                     <th class="px-5 py-4">NIP</th>
                     <th class="px-5 py-4">Nama Pegawai</th>
-                    <th class="px-5 py-4">Nama Diklat</th>
-                    <th class="px-5 py-4">Jenis Diklat</th>
+                    <th class="px-5 py-4">Jenis Cuti</th>
                     <th class="px-5 py-4">Tanggal Mulai</th>
                     <th class="px-5 py-4">Tanggal Selesai</th>
                     <th class="px-5 py-4">Aksi</th>
@@ -69,15 +69,15 @@
             </thead>
 
             <tbody class="divide-y divide-gray-200">
-                @forelse ($data as $item)
+                @forelse ($menerimaCuti as $item)
                     <tr class="hover:bg-gray-50 transition-all duration-150">
                         <td class="px-5 py-4 text-center">
-                            <input type="checkbox" class="checkbox-item" value="{{ $item->no_sttpp }}">
+                            <input type="checkbox" class="checkbox-item" value="{{ $item->no_surat }}">
                         </td>
+                        <td class="px-5 py-4">{{ $item->no_surat }}</td>
                         <td class="px-5 py-4">{{ $item->pegawai->nip }}</td>
                         <td class="px-5 py-4">{{ $item->pegawai->nama }}</td>
-                        <td class="px-5 py-4">{{ $item->diklat->nama_diklat }}</td>
-                        <td class="px-5 py-4">{{ $item->diklat->jenis_diklat }}</td>
+                        <td class="px-5 py-4">{{ $item->cuti->jenis_cuti }}</td>
                         <td class="px-5 py-4">
                             {{ \Carbon\Carbon::parse($item->tanggal_mulai)->translatedFormat('d F Y') }}
                         </td>
@@ -85,7 +85,7 @@
                             {{ \Carbon\Carbon::parse($item->tanggal_selesai)->translatedFormat('d F Y') }}
                         </td>
                         <td class="px-5 py-4 space-y-2">
-                            <a href="{{ route('admin.diklat.riwayat.show', $item->no_sttpp) }}"
+                            <a href="{{ route('admin.cuti.riwayatcuti.show', $item->no_surat) }}"
                                 class="w-full sm:w-auto inline-flex justify-center items-center text-white bg-blue-500 hover:bg-blue-600 font-semibold rounded-md text-sm px-4 py-2">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
                                     viewBox="0 0 24 24">
@@ -97,7 +97,7 @@
                                 Detail
                             </a>
 
-                            <a href="{{ route('admin.diklat.riwayat.edit', $item->no_sttpp) }}"
+                            <a href="{{ route('admin.cuti.riwayatcuti.edit', $item->no_surat) }}"
                                 class="w-full sm:w-auto inline-flex justify-center items-center text-white bg-yellow-500 hover:bg-yellow-600 font-semibold rounded-md text-sm px-4 py-2">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
                                     viewBox="0 0 24 24">
@@ -106,7 +106,7 @@
                                 </svg>
                                 Edit
                             </a>
-                            <form action="{{ route('admin.diklat.riwayat.destroy', $item->no_sttpp) }}" method="POST"
+                            <form action="{{ route('admin.cuti.riwayatcuti.destroy', $item->no_surat) }}" method="POST"
                                 class="w-full sm:w-auto inline delete-form">
                                 @csrf
                                 @method('DELETE')
@@ -132,22 +132,22 @@
     </div>
     {{-- Pagination --}}
     <div class="mt-6 flex justify-end">
-        {{ $data->links() }}
+        {{ $menerimaCuti->links() }}
     </div>
-    @if ($data->hasPages())
+    @if ($menerimaCuti->hasPages())
         <div class="mt-6 flex justify-end">
             <nav class="flex items-center space-x-1 text-sm">
                 {{-- Tombol Previous --}}
-                @if ($data->onFirstPage())
+                @if ($menerimaCuti->onFirstPage())
                     <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded-md cursor-not-allowed">← Prev</span>
                 @else
-                    <a href="{{ $data->previousPageUrl() }}"
+                    <a href="{{ $menerimaCuti->previousPageUrl() }}"
                         class="px-3 py-1 bg-white border rounded-md text-[#00A181] hover:bg-[#00A181]/10">← Prev</a>
                 @endif
 
                 {{-- Angka halaman --}}
-                @foreach ($data->getUrlRange(1, $data->lastPage()) as $page => $url)
-                    @if ($page == $data->currentPage())
+                @foreach ($menerimaCuti->getUrlRange(1, $menerimaCuti->lastPage()) as $page => $url)
+                    @if ($page == $menerimaCuti->currentPage())
                         <span
                             class="px-3 py-1 bg-[#00A181] text-white rounded-md font-semibold">{{ $page }}</span>
                     @else
@@ -157,8 +157,8 @@
                 @endforeach
 
                 {{-- Tombol Next --}}
-                @if ($data->hasMorePages())
-                    <a href="{{ $data->nextPageUrl() }}"
+                @if ($menerimaCuti->hasMorePages())
+                    <a href="{{ $menerimaCuti->nextPageUrl() }}"
                         class="px-3 py-1 bg-white border rounded-md text-[#00A181] hover:bg-[#00A181]/10">Next →</a>
                 @else
                     <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded-md cursor-not-allowed">Next →</span>
@@ -261,7 +261,7 @@
                     // Kirim ke server via form dinamis
                     const form = document.createElement('form');
                     form.method = 'POST';
-                    form.action = "{{ route('admin.diklat.riwayat.bulkDelete') }}";
+                    form.action = "{{ route('admin.cuti.riwayatcuti.bulkDelete') }}";
 
                     const token = document.createElement('input');
                     token.type = 'hidden';
