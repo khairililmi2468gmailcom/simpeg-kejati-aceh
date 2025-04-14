@@ -9,7 +9,7 @@
     </div>
     <div class="flex justify-end w-full sm:w-auto mb-4">
         <button id="filterToggle"
-            class=" sm:static sm:px-4 sm:py-2 p-2 bg-[#00A181] text-white  rounded-lg shadow-md focus:outline-none flex items-center justify-center">
+            class="cursor-pointer sm:static sm:px-4 sm:py-2 p-2 bg-[#00A181] text-white  rounded-lg shadow-md focus:outline-none flex items-center justify-center">
             <i class="fas fa-filter text-lg sm:mr-2"></i>
             <span class="hidden sm:inline">Filter</span>
         </button>
@@ -21,7 +21,7 @@
             <i
                 class="absolute left-3 top-1/2 -translate-y-1/2 text-blue-500 fas fa-map-marker-alt text-sm sm:text-lg pointer-events-none"></i>
             <select id="filterKabupaten"
-                class="appearance-none px-3 py-1 sm:px-4 sm:py-2 pl-8 sm:pl-10 border border-blue-500 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring focus:ring-blue-500 focus:outline-none w-full text-sm sm:text-base">
+                class="cursor-pointer appearance-none px-3 py-1 sm:px-4 sm:py-2 pl-8 sm:pl-10 border border-blue-500 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring focus:ring-blue-500 focus:outline-none w-full text-sm sm:text-base">
                 <option value="all">Semua Kabupaten</option>
                 @foreach ($data as $row)
                     <option value="{{ $row['kabupaten'] }}">{{ $row['kabupaten'] }}</option>
@@ -34,7 +34,7 @@
             <i
                 class="absolute left-3 top-1/2 -translate-y-1/2 text-green-500 fas fa-sort-amount-down text-sm sm:text-lg pointer-events-none"></i>
             <select id="sortOrder"
-                class="appearance-none px-3 py-1 sm:px-4 sm:py-2 pl-8 sm:pl-10 border border-green-500 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring focus:ring-green-500 focus:outline-none w-full text-sm sm:text-base">
+                class="cursor-pointer appearance-none px-3 py-1 sm:px-4 sm:py-2 pl-8 sm:pl-10 border border-green-500 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring focus:ring-green-500 focus:outline-none w-full text-sm sm:text-base">
                 <option value="default">Urutan Default</option>
                 <option value="desc">Besar → Kecil</option>
                 <option value="asc">Kecil → Besar</option>
@@ -46,7 +46,7 @@
             <i
                 class="absolute left-3 top-1/2 -translate-y-1/2 text-red-500 fas fa-palette text-sm sm:text-lg pointer-events-none"></i>
             <select id="colorTheme"
-                class="appearance-none px-3 py-1 sm:px-4 sm:py-2 pl-8 sm:pl-10 border border-red-500 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring focus:ring-red-500 focus:outline-none w-full text-sm sm:text-base">
+                class="cursor-pointer appearance-none px-3 py-1 sm:px-4 sm:py-2 pl-8 sm:pl-10 border border-red-500 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring focus:ring-red-500 focus:outline-none w-full text-sm sm:text-base">
                 <option value="default">Warna Default</option>
                 <option value="blue">Biru</option>
                 <option value="green">Hijau</option>

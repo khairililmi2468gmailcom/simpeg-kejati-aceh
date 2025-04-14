@@ -20,7 +20,7 @@ class PegawaiController extends Controller
     public function index(Request $request)
     {
         $search = $request->search;
-        $perPage = $request->per_page ?? 10;
+        $perPage = $request->per_page ?? 5;
 
         $pegawai = Pegawai::with(['golongan', 'jabatan', 'unitKerja'])
             ->when($search, function ($query) use ($search) {

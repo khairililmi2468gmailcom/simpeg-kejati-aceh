@@ -49,7 +49,7 @@
                 <div class="flex items-center">
                     <div class="flex items-center ms-4 gap-8 sm:gap-2">
                         <button id="mailButton" type="button"
-                            class="flex sm:mr-8 text-sm bg-transparent rounded-full  focus:ring-gray-300 dark:focus:ring-gray-600 
+                            class="cursor-pointer flex sm:mr-8 text-sm bg-transparent rounded-full  focus:ring-gray-300 dark:focus:ring-gray-600 
                                 active:scale-90 transition-transform duration-400 ease-in-out">
                             <svg class="h-8 w-8 text-gray-500" width="24" height="24" viewBox="0 0 24 24"
                                 stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
