@@ -83,7 +83,7 @@
                 {!! row('Jurusan', $pegawai->jurusan) !!}
                 {!! row('Tahun Masuk', $pegawai->tahun_masuk) !!}
                 {!! row('Tahun Lulus', $pegawai->t_lulus) !!}
-                {!! row('TMT Jabatan', \Carbon\Carbon::parse($pegawai->tmt_jabatan)->format('d-m-Y')) !!}
+                {!! row('TMT Jabatan', \Carbon\Carbon::parse($pegawai->tmt_jabatan)->format('d M Y')) !!}
                 {!! row('Jabatan', $pegawai->jabatan->nama_jabatan ?? '-') !!}
                 {!! row('Golongan', $pegawai->golongan->pangkat ?? '-') !!}
                 {!! row('Unit Kerja', $pegawai->unitKerja->nama_kantor ?? '-') !!}

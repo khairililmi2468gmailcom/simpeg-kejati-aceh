@@ -282,15 +282,15 @@
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
-                <div>
+                {{-- <div>
                     <label class="block font-semibold text-gray-700">TMT Jabatan</label>
                     <input type="date" name="tmt_jabatan" value="{{ $pegawai->tmt_jabatan }}"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
-                </div>
+                </div> --}}
 
                 {{-- Golongan --}}
-                <div>
+                {{-- <div>
                     <label class="block font-semibold text-gray-700">Golongan</label>
                     <select name="id_golongan"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
@@ -300,10 +300,10 @@
                         </option>
                     @endforeach
                     </select>
-                </div>
+                </div> --}}
 
                 {{-- Jabatan --}}
-                <div>
+                {{-- <div>
                     <label class="block font-semibold text-gray-700">Jabatan</label>
                     <select name="id_jabatan"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
@@ -313,10 +313,10 @@
                         </option>
                     @endforeach
                     </select>
-                </div>
+                </div> --}}
 
                 {{-- Unit Kerja --}}
-                <div>
+                {{-- <div>
                     <label class="block font-semibold text-gray-700">Unit Kerja</label>
                     <select name="kode_kantor"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
@@ -326,7 +326,7 @@
                             {{ $unit->nama_kantor }}</option>
                     @endforeach
                     </select>
-                </div>
+                </div> --}}
 
                 {{-- Keterangan --}}
                 <div class="md:col-span-2">

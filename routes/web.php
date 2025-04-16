@@ -168,6 +168,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
         });
     });
 
+    Route::prefix('mutasi')->name('mutasi.')->group(function () {
+        Route::get('/', [MutasiController::class, 'index'])->name('index');
+        Route::get('/create', [MutasiController::class, 'create'])->name('create');
+        Route::post('/store', [MutasiController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [MutasiController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [MutasiController::class, 'update'])->name('update');
+        Route::get('/{id}', [MutasiController::class, 'show'])->name('show');
+        Route::delete('/{id}', [MutasiController::class, 'destroy'])->name('destroy');
+        Route::post('/bulk-delete', [MutasiController::class, 'bulkDelete'])->name('bulkDelete');
+    });
+
     // Provinsi Routes
     Route::prefix('provinsi')->name('provinsi.')->group(function () {
         Route::get('/', [ProvinsiController::class, 'index'])->name('index');

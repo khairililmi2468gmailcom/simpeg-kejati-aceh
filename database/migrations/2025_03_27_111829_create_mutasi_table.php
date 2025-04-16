@@ -15,10 +15,10 @@ return new class extends Migration
             $table->string('no_sk', 50)->primary();
             $table->string('nip', 18);
             $table->unsignedBigInteger('id_jabatan');
-            $table->string('jabatan_l', 50);
-            $table->string('tempat_l', 100);
+            $table->string('jabatan_l', 50)->nullable();
+            $table->string('tempat_l', 100)->nullable();
             $table->date('tanggal_sk');
-            $table->date('tmt_l'); // Tanggal Mulai Tugas Lama
+            $table->date('tmt_l')->nullable(); // Tanggal Mulai Tugas Lama
             $table->date('tmt_jabatan');
 
             // Foreign keys

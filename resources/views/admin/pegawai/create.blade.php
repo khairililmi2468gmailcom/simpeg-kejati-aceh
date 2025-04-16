@@ -310,13 +310,13 @@
 
 
                 {{-- Golongan --}}
-                <div>
+                {{-- <div>
                     <label class="block font-semibold text-gray-700">TMT Jabatan</label>
                     <input type="date" name="tmt_jabatan" value="{{ old('tmt_jabatan') }}"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
-                </div>
-                <div>
+                </div> --}}
+                {{-- <div>
                     <label class="block font-semibold text-gray-700 mb-2">Golongan</label>
                     <select name="id_golongan" id="id_golongan"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]">
@@ -332,11 +332,11 @@
                         Golongan wajib dipilih.
                     </p>
 
-                </div>
+                </div> --}}
 
 
                 {{-- Jabatan --}}
-                <div>
+                {{-- <div>
                     <label class="block font-semibold text-gray-700">Jabatan</label>
                     <select name="id_jabatan" id="id_jabatan"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]">
@@ -352,10 +352,10 @@
                         Jabatan wajib dipilih.
                     </p>
 
-                </div>
+                </div> --}}
 
                 {{-- Unit Kerja --}}
-                <div>
+                {{-- <div>
                     <label class="block font-semibold text-gray-700">Unit Kerja</label>
                     <select name="kode_kantor" id="kode_kantor"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]">
@@ -371,7 +371,7 @@
                         Unit Kerja wajib dipilih.
                     </p>
 
-                </div>
+                </div> --}}
             </div>
             <h3 class="text-2xl font-extrabold dark:text-white md:mb-4 md:mt-8">Data Tambahan</h3>
 

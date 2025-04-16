@@ -49,4 +49,8 @@ class Pegawai extends Model
     {
         return $this->belongsTo(Jabatan::class, 'id_jabatan', 'id_jabatan');
     }
+    public function mutasiTerakhir()
+    {
+        return $this->hasOne(Mutasi::class, 'nip', 'nip')->latest('tmt_jabatan');
+    }
 }

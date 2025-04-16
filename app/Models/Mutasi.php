@@ -26,4 +26,8 @@ class Mutasi extends Model
     {
         return $this->belongsTo(Jabatan::class, 'id_jabatan', 'id_jabatan');
     }
+    public function unitKerja()
+    {
+        return $this->hasOneThrough(UnitKerja::class, Jabatan::class, 'kode_kantor', 'kode_kantor', 'id_jabatan', 'kode_kantor');
+    }
 }

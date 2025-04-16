@@ -27,7 +27,7 @@ class PegawaiController extends Controller
                 $query->where('nip', 'like', "%$search%")
                     ->orWhere('nama', 'like', "%$search%");
             })
-            ->orderBy('nip','desc')
+            ->orderBy('nip', 'desc')
             ->paginate($perPage);
         $referensi = [
             'provinsi' => \App\Models\Provinsi::select('id', 'nama_provinsi as nama')->get(),
@@ -64,7 +64,6 @@ class PegawaiController extends Controller
 
         return view('admin.pegawai.create', compact('provinsi', 'golongan', 'unitKerja', 'jabatan'));
     }
-
     public function store(Request $request)
     {
         $request->validate([
@@ -90,23 +89,26 @@ class PegawaiController extends Controller
             't_lulus' => 'nullable|integer',
             'tahun_masuk' => 'nullable|integer',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'tmt_jabatan' => 'required|date',
-            'id_golongan' => 'required|string|exists:golongan,id_golongan',
+            'tmt_jabatan' => 'nullable|date',
+            'id_golongan' => 'nullable|string|exists:golongan,id_golongan',
             'kode_kantor' => 'nullable|string|max:10|exists:unit_kerja,kode_kantor',
             'id_jabatan' => 'nullable|integer|exists:jabatan,id_jabatan',
             'ket' => 'nullable|string|max:150'
         ]);
 
-        // Simpan foto jika ada
         $fotoPath = null;
         if ($request->hasFile('foto')) {
             $fotoPath = $request->file('foto')->store('pegawai', 'public');
         }
 
-        $pegawai = Pegawai::create(array_merge($request->all(), ['foto' => $fotoPath]));
+        $data = $request->except(['id_jabatan', 'kode_kantor', 'tmt_jabatan']);
+        $data['foto'] = $fotoPath;
+
+        $pegawai = Pegawai::create($data);
 
         return redirect()->route('admin.pegawai.index')->with('success', 'Pegawai berhasil ditambahkan.');
     }
+
 
     public function show($nip)
     {
@@ -149,14 +151,13 @@ class PegawaiController extends Controller
             't_lulus' => 'nullable|integer',
             'tahun_masuk' => 'nullable|integer',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'tmt_jabatan' => 'required|date',
-            'id_golongan' => 'required|string|exists:golongan,id_golongan',
+            'tmt_jabatan' => 'nullable|date',
+            'id_golongan' => 'nullable|string|exists:golongan,id_golongan',
             'kode_kantor' => 'nullable|string|max:10|exists:unit_kerja,kode_kantor',
             'id_jabatan' => 'nullable|integer|exists:jabatan,id_jabatan',
             'ket' => 'nullable|string|max:150'
         ]);
-
-        $data = $request->all();
+        $data = $request->except(['id_jabatan', 'kode_kantor', 'tmt_jabatan']);
 
         if ($request->hasFile('foto')) {
             if ($pegawai->foto) {
