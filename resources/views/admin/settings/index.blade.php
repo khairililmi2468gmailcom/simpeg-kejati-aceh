@@ -38,7 +38,7 @@
                 @include('admin.settings.golongan.index')
             </div>
             <div data-content="unitkerja" class="tab-content hidden">
-                @include('admin.settings.unitkerja.index')
+                @include('admin.settings.unitkerja.index', ['unitkerjas' => $unitkerjas ?? null])
             </div>
         </div>
     </div>

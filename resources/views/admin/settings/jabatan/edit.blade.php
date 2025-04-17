@@ -41,7 +41,7 @@
                         class="dropdown-content hidden absolute w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto">
                         <input type="text"
                             class="search-input w-full px-3 py-2 border-b border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#00A181] rounded-t-lg"
-                            placeholder="Cari Unit Kera..." onkeyup="filterOptions('unitkerja', this.value)">
+                            placeholder="Cari Unit Kerja..." onkeyup="filterOptions('unitkerja', this.value)">
                         <div class="options" id="unitkerja-options">
                             @foreach ($unitKerjaList as $unitkerja)
                                 <div class="option-item px-3 py-2 hover:bg-gray-100 cursor-pointer transition-colors {{ old('kode_kantor', $data->kode_kantor) == $unitkerja->kode_kantor ? 'bg-[#00A181] text-white hover:bg-[#009171]' : '' }}"

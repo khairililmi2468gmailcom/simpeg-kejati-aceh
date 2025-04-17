@@ -11,7 +11,8 @@
             <select name="per_page_unit_kerja" onchange="this.form.submit()"
                 class="border border-gray-300 px-3 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00A181] w-full">
                 @foreach ([5, 10, 25, 50, 100, 250, 500, 1000, 2000, 5000, 10000] as $size)
-                    <option value="{{ $size }}" {{ request('per_page_unit_kerja', 5) == $size ? 'selected' : '' }}>
+                    <option value="{{ $size }}"
+                        {{ request('per_page_unit_kerja', 5) == $size ? 'selected' : '' }}>
                         {{ $size }} / halaman
                     </option>
                 @endforeach
@@ -32,8 +33,8 @@
 
         <!-- Hapus Data -->
         <button id="bulkDeleteBtn"
-            class="cursor-pointer inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-2.5 disabled:opacity-50 mb-2 md:mb-0"
-            disabled>
+            class="bulk-delete-btn cursor-pointer inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-2.5 opacity-50 mb-2 md:mb-0"
+            data-action="{{ route('admin.settings.unitkerja.bulkDelete') }}" data-token="{{ csrf_token() }}" disabled>
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -52,7 +53,7 @@
     <table class="w-full text-base text-left text-gray-700 bg-white shadow-lg rounded-xl overflow-hidden">
         <thead class="text-white bg-[#00A181]">
             <tr>
-                <th class="px-5 py-4 text-center"><input type="checkbox" id="checkAll"></th>
+                <th class="px-5 py-4 text-center"><input type="checkbox" class="check-all" id="checkAll"></th>
                 <th class="px-5 py-4">Kode Kantor</th>
                 <th class="px-5 py-4">Nama Kantor</th>
                 <th class="px-5 py-4">Provinsi</th>
@@ -65,9 +66,9 @@
                     <td class="px-5 py-4 text-center">
                         <input type="checkbox" class="checkbox-item" value="{{ $item->kode_kantor }}">
                     </td>
-                    <td class="px-5 py-4">{{ $item->kode_kantor }}</td>
-                    <td class="px-5 py-4">{{ $item->nama_kantor }}</td>
-                    <td class="px-5 py-4">{{ $item->provinsi->nama_provinsi }}</td>
+                    <td class="px-5 py-4">{{ $item->kode_kantor ?? '-' }}</td>
+                    <td class="px-5 py-4">{{ $item->nama_kantor ?? '-' }}</td>
+                    <td class="px-5 py-4">{{ $item->provinsi->nama_provinsi  ?? '-'}}</td>
                     <td class="px-5 py-4 space-y-2">
                         <a href="{{ route('admin.settings.unitkerja.edit', $item->kode_kantor) }}"
                             class="w-full sm:w-auto inline-flex justify-center items-center text-white bg-yellow-500 hover:bg-yellow-600 font-semibold rounded-md text-sm px-4 py-2">
@@ -78,8 +79,8 @@
                             </svg>
                             Edit
                         </a>
-                        <form action="{{ route('admin.settings.unitkerja.destroy', $item->kode_kantor) }}" method="POST"
-                            class="w-full sm:w-auto inline delete-form">
+                        <form action="{{ route('admin.settings.unitkerja.destroy', $item->kode_kantor) }}"
+                            method="POST" class="w-full sm:w-auto inline delete-form">
                             @csrf
                             @method('DELETE')
                             <button type="button"
@@ -149,9 +150,35 @@
 
 
 
-
-
 @push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteButtons = document.querySelectorAll('.btn-delete');
+
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const form = this.closest('form');
+
+                    Swal.fire({
+                        title: 'Yakin ingin menghapus?',
+                        text: "Data yang dihapus tidak bisa dikembalikan!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
     @if (session('success'))
         <script>
             Swal.fire({
@@ -164,94 +191,3 @@
         </script>
     @endif
 @endpush
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const deleteButtons = document.querySelectorAll('.btn-delete');
-
-        deleteButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                const form = this.closest('form');
-
-                Swal.fire({
-                    title: 'Yakin ingin menghapus?',
-                    text: "Data yang dihapus tidak bisa dikembalikan!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Ya, hapus!',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    }
-                });
-            });
-        });
-    });
-    document.addEventListener('DOMContentLoaded', function() {
-        const checkAll = document.getElementById('checkAll');
-        const checkboxes = document.querySelectorAll('.checkbox-item');
-        const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
-
-        // Toggle semua checkbox
-        checkAll.addEventListener('change', function() {
-            checkboxes.forEach(cb => cb.checked = checkAll.checked);
-            toggleBulkDeleteBtn();
-        });
-
-        // Toggle tombol hapus jika ada yang dicentang
-        checkboxes.forEach(cb => {
-            cb.addEventListener('change', toggleBulkDeleteBtn);
-        });
-
-        function toggleBulkDeleteBtn() {
-            const checked = [...checkboxes].some(cb => cb.checked);
-            bulkDeleteBtn.disabled = !checked;
-        }
-
-        // Tombol Bulk Delete
-        bulkDeleteBtn.addEventListener('click', function() {
-            const selected = [...checkboxes].filter(cb => cb.checked).map(cb => cb.value);
-
-            if (selected.length === 0) return;
-
-            Swal.fire({
-                title: 'Yakin ingin menghapus data terpilih?',
-                text: `${selected.length} data akan dihapus!`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Kirim ke server via form dinamis
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = "{{ route('admin.settings.unitkerja.bulkDelete') }}";
-
-                    const token = document.createElement('input');
-                    token.type = 'hidden';
-                    token.name = '_token';
-                    token.value = '{{ csrf_token() }}';
-                    form.appendChild(token);
-
-                    selected.forEach(id => {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = 'id[]';
-                        input.value = id;
-                        form.appendChild(input);
-                    });
-
-                    document.body.appendChild(form);
-                    form.submit();
-                }
-            });
-        });
-    });
-</script>

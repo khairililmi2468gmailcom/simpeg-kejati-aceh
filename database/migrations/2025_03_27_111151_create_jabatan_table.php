@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->id('id_jabatan');
             $table->string('nama_jabatan', 100);
             $table->text('ket')->nullable();
-            $table->string('kode_kantor', 10);
+            $table->string('kode_kantor', 10)->nullable();
             $table->timestamps();
         });
 

@@ -183,6 +183,17 @@ class SettingsController extends Controller
         return redirect()->route('admin.settings.index')->with('success', 'Data jabatan berhasil dihapus.');
     }
 
+    public function destroyUnitKerja($id)
+    {
+        $unitkerja = UnitKerja::findOrFail($id);
+        // Kosongkan jabatan pegawai terkait
+        Pegawai::where('kode_kantor', $unitkerja->id_jabatan)->update(['kode_kantor' => null]);
+        Jabatan::where('kode_kantor', $unitkerja->id_jabatan)->update(['kode_kantor' => null]);
+
+        $unitkerja->delete();
+
+        return redirect()->route('admin.settings.index')->with('success', 'Data unit kerja berhasil dihapus.');
+    }
     public function bulkDeleteJabatan(Request $request)
     {
         try {
@@ -195,6 +206,26 @@ class SettingsController extends Controller
             Mutasi::whereIn('id_jabatan', $request->id)->update(['id_jabatan' => null]);
             // Hapus data jabatan
             Jabatan::whereIn('id_jabatan', $request->id)->delete();
+
+            return redirect()->route('admin.settings.index')
+                ->with('success', count($request->id) . ' data berhasil dihapus');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Error: ' . $e->getMessage());
+        }
+    }
+    public function bulkDeleteUnitKerja(Request $request)
+    {
+        try {
+            $request->validate([
+                'id' => 'required|array',
+                'id.*' => 'exists:unit_kerja,kode_kantor',
+            ]);
+            Pegawai::whereIn('kode_kantor', $request->id)->update(['kode_kantor' => null]);
+            Jabatan::whereIn('kode_kantor', $request->id)->update(['kode_kantor' => null]);
+
+            UnitKerja::whereIn('kode_kantor', $request->id)->delete();
+
 
             return redirect()->route('admin.settings.index')
                 ->with('success', count($request->id) . ' data berhasil dihapus');

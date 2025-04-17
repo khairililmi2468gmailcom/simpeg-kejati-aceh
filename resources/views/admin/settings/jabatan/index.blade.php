@@ -66,9 +66,9 @@
                     <td class="px-5 py-4 text-center">
                         <input type="checkbox" class="checkbox-item" value="{{ $item->id_jabatan }}">
                     </td>
-                    <td class="px-5 py-4">{{ $item->nama_jabatan }}</td>
-                    <td class="px-5 py-4">{{ $item->unitkerja->nama_kantor }}</td>
-                    <td class="px-5 py-4">{{ $item->ket }}</td>
+                    <td class="px-5 py-4">{{ $item->nama_jabatan ?? '-' }}</td>
+                    <td class="px-5 py-4">{{ $item->unitkerja->nama_kantor ?? '-' }}</td>
+                    <td class="px-5 py-4">{{ $item->ket ?? '-' }}</td>
                     <td class="px-5 py-4 space-y-2">
 
                         <a href="{{ route('admin.settings.jabatan.edit', $item->id_jabatan) }}"
@@ -152,7 +152,6 @@
 
 
 @push('scripts')
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

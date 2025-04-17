@@ -23,8 +23,6 @@
                     value="{{ old('nama_kantor', $data->nama_kantor) }}"
                     class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181]" >
             </div>
-
-
            
             {{-- Provinsi --}}
             <div class="mb-4">
@@ -33,7 +31,7 @@
                     <div class="selected-item flex items-center justify-between cursor-pointer w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm hover:border-gray-400"
                         onclick="toggleDropdown('provinsi')">
                         <span id="provinsi-display">
-                            {{ $provinsiList->firstWhere('id_provinsi', old('id_provinsi', $data->id_provinsi))?->nama_provinsi ?? 'Pilih Pilih' }}
+                            {{ $provinsiList->firstWhere('id', old('id_provinsi', $data->id_provinsi))?->nama_provinsi ?? 'Pilih Pilih' }}
                         </span>
                         <svg class="w-5 h-5 text-gray-400 transform transition-transform" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24" :class="{ 'rotate-180': dropdowns.provinsi }">
