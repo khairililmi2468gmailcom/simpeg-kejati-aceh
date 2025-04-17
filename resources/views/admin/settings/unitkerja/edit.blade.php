@@ -15,15 +15,19 @@
                 <label for="kode_kantor" class="block text-sm font-medium text-gray-700">Kode Kantor</label>
                 <input type="text" name="kode_kantor" id="kode_kantor"
                     value="{{ old('kode_kantor', $data->kode_kantor) }}"
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181]" disabled>
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181]"
+                    disabled>
             </div>
             <div class="mb-4">
                 <label for="nama_kantor" class="block text-sm font-medium text-gray-700">Nama Kantor</label>
                 <input type="text" name="nama_kantor" id="nama_kantor"
                     value="{{ old('nama_kantor', $data->nama_kantor) }}"
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181]" >
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181]">
+                @error('nama_kantor')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
             </div>
-           
+
             {{-- Provinsi --}}
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Provinsi</label>
@@ -56,6 +60,9 @@
                 </div>
                 <input type="hidden" name="id_provinsi" id="provinsi-input"
                     value="{{ old('id_provinsi', $data->id_provinsi) }}">
+                @error('id_provinsi')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- Tombol --}}

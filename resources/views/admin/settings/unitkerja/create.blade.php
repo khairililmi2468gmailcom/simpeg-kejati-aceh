@@ -14,12 +14,18 @@
                 <label for="kode_kantor" class="block text-sm font-medium text-gray-700">Kode Kantor</label>
                 <input type="text" name="kode_kantor" id="kode_kantor" value="{{ old('kode_kantor') }}"
                     class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181]">
+                @error('kode_kantor')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             <div class="mb-4">
                 <label for="nama_kantor" class="block text-sm font-medium text-gray-700">Nama Kantor</label>
                 <input type="text" name="nama_kantor" id="nama_kantor" value="{{ old('nama_kantor') }}"
                     class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181]">
+                @error('nama_kantor')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
 
@@ -52,6 +58,9 @@
                     </div>
                 </div>
                 <input type="hidden" name="id_provinsi" id="provinsi-input" value="{{ old('id_provinsi') }}">
+                @error('id_provinsi')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- Tombol --}}
@@ -126,7 +135,8 @@
         window.addEventListener('load', () => {
             ['unitkerja', 'provinsi'].forEach(type => {
                 const val = document.getElementById(`${type}-input`).value;
-                const selected = document.querySelector(`#${type}-dropdown .option-item[data-value="${val}"]`);
+                const selected = document.querySelector(
+                    `#${type}-dropdown .option-item[data-value="${val}"]`);
                 if (selected) {
                     selected.classList.add('bg-[#00A181]', 'text-white');
                     document.getElementById(`${type}-display`).textContent = selected.textContent;
