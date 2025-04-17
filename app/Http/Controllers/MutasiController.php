@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Mutasi;
 use App\Models\Pegawai;
 use App\Models\Jabatan;
+use App\Models\UnitKerja;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -22,13 +23,27 @@ class MutasiController extends Controller
                 })->orWhereHas('jabatan', function ($q) use ($search) {
                     $q->where('nama_jabatan', 'like', "%$search%")
                         ->orWhere('ket', 'like', "%$search%");
-                });
+                })->orWhere('nip', 'like', "%$search%");
             })
             ->orderBy('created_at', 'desc')
             ->paginate($perPage);
 
+        // Ambil mutasi terakhir berdasarkan created_at (waktu pencatatan mutasi)
+        $lastMutasi = Mutasi::select('nip', \DB::raw('MAX(created_at) as latest_created'))
+            ->groupBy('nip')
+            ->get()
+            ->keyBy('nip');
+
+        // Tandai mutasi terakhir
+        foreach ($data as $mutasi) {
+            $latestCreated = $lastMutasi[$mutasi->nip]->latest_created ?? null;
+            $mutasi->is_last = $mutasi->created_at == $latestCreated;
+        }
+
+
         return view('admin.mutasi.index', compact('data'));
     }
+
 
     public function create()
     {
@@ -56,19 +71,25 @@ class MutasiController extends Controller
         $pegawai = Pegawai::findOrFail($request->nip);
         Log::info('Data pegawai ditemukan:', $pegawai->toArray());
 
-        $jabatanLama = Jabatan::findOrFail($pegawai->id_jabatan);
-        Log::info('Jabatan lama pegawai:', $jabatanLama->toArray());
-
+        $jabatanLama = null;
+        if ($pegawai->id_jabatan) {
+            $jabatanLama = Jabatan::find($pegawai->id_jabatan);
+            Log::info('Jabatan lama pegawai:', optional($jabatanLama)->toArray());
+        }
         $jabatanBaru = Jabatan::findOrFail($request->id_jabatan);
         Log::info('Jabatan baru yang dipilih:', $jabatanBaru->toArray());
 
-        $unitKerja = \App\Models\UnitKerja::where('kode_kantor', $pegawai->kode_kantor)->first();
-        $namaKantor = $unitKerja ? $unitKerja->nama_kantor : null;
-        Log::info('Unit kerja lama ditemukan:', ['nama_kantor' => $namaKantor]);
+        $unitKerja = null;
+        $namaKantor = null;
+        if ($pegawai->kode_kantor) {
+            $unitKerja = UnitKerja::where('kode_kantor', $pegawai->kode_kantor)->first();
+            $namaKantor = $unitKerja ? $unitKerja->nama_kantor : null;
+            Log::info('Unit kerja lama ditemukan:', ['nama_kantor' => $namaKantor]);
+        }
 
         $mutasiData = $request->all();
-        $mutasiData['jabatan_l'] = $jabatanLama->nama_jabatan;
-        $mutasiData['tmt_l'] = $pegawai->tmt_jabatan;
+        $mutasiData['jabatan_l'] = $jabatanLama?->nama_jabatan;
+        $mutasiData['tmt_l'] = $pegawai->tmt_jabatan ?? null;
         $mutasiData['tempat_l'] = $namaKantor;
 
         Log::info('Data yang akan disimpan ke tabel mutasi:', $mutasiData);
@@ -115,10 +136,7 @@ class MutasiController extends Controller
         $request->validate([
             'nip' => 'required|exists:pegawai,nip',
             'id_jabatan' => 'required|exists:jabatan,id_jabatan',
-            'jabatan_l' => 'nullable|string|max:255',
-            'tempat_l' => 'nullable|string|max:255',
             'tanggal_sk' => 'required|date',
-            'tmt_l' => 'required|date',
             'tmt_jabatan' => 'required|date',
         ]);
 
@@ -127,16 +145,17 @@ class MutasiController extends Controller
 
         // Ambil pegawai berdasarkan nip
         $pegawai = Pegawai::findOrFail($request->nip);
-
-        // Ambil jabatan baru dari request, bukan dari pegawai
-        $jabatanBaru = Jabatan::findOrFail($request->id_jabatan);
-
-        // Simpan nama jabatan lama dari pegawai saat ini
         $jabatanLama = Jabatan::findOrFail($pegawai->id_jabatan);
+        $jabatanBaru = Jabatan::findOrFail($request->id_jabatan);
+        $unitKerja = UnitKerja::where('kode_kantor', $pegawai->kode_kantor)->first();
+        $namaKantor = $unitKerja ? $unitKerja->nama_kantor : null;
+
 
         // Masukkan nama jabatan lama ke dalam jabatan_l
         $request->merge([
             'jabatan_l' => $jabatanLama->nama_jabatan,
+            'tmt_l' => $pegawai->tmt_jabatan,
+            'tempat_l' => $namaKantor,
         ]);
 
         // Update data mutasi
@@ -161,11 +180,22 @@ class MutasiController extends Controller
 
     public function bulkDelete(Request $request)
     {
-
+        // Validasi input
         $request->validate([
             'id' => 'required|array',
-            'id.*' => 'string|exists:mutasi,no_sk',
+            'id.*' => 'string|exists:mutasi,no_sk', // Pastikan id yang dikirim valid
         ]);
-        return redirect()->route('admin.mutasi.index')->with('succes', count($request->id) . ' data mutasi berhasil dihapus');
+
+        // Proses penghapusan data
+        $deletedCount = Mutasi::destroy($request->id);
+
+        // Mengirim pesan flash ke session untuk sukses atau gagal
+        if ($deletedCount) {
+            return redirect()->route('admin.mutasi.index')
+                ->with('success', $deletedCount . ' data mutasi berhasil dihapus');
+        } else {
+            return redirect()->route('admin.mutasi.index')
+                ->with('error', 'Gagal menghapus data mutasi');
+        }
     }
 }

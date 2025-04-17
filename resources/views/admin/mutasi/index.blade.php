@@ -22,9 +22,6 @@
         </div>
 
         <div class="flex flex-wrap justify-end space-x-2">
-
-
-
             <!-- Tambah Kecamatan -->
             <a href="{{ route('admin.mutasi.create') }}"
                 class="inline-flex items-center text-white bg-[#00A181] hover:bg-[#008f73] focus:outline-none focus:ring-4 focus:ring-[#00A181]/50 font-medium rounded-lg text-sm px-6 py-2.5 text-center mb-2 md:mb-0">
@@ -62,12 +59,12 @@
                     <th class="px-5 py-4">Nama Pegawai</th>
                     <th class="px-5 py-4">Jabatan Saat Ini</th>
                     <th class="px-5 py-4">Jabatan Lama</th>
+                    <th class="px-5 py-4">Unit Kerja Saat Ini</th>
                     <th class="px-5 py-4">Unit Kerja Lama</th>
                     <th class="px-5 py-4">Tanggal SK</th>
                     <th class="px-5 py-4 ">Aksi</th>
                 </tr>
             </thead>
-
             <tbody class="divide-y divide-gray-200">
                 @forelse ($data as $item)
                     <tr class="hover:bg-gray-50 transition-all duration-150">
@@ -80,9 +77,10 @@
                         <td class="px-5 py-4 ">
                             {{ $item->pegawai->jabatan->nama_jabatan ?? '-' }}
                         </td>
-                        <td class="px-5 py-4">{{ $item->jabatan_l }}</td>
-                        <td class="px-5 py-4">{{ $item->tempat_l }}</td>
-                        <td class="px-5 py-4">{{ \Carbon\Carbon::parse( $item->tanggal_sk)->format('d M Y') }}</td>
+                        <td class="px-5 py-4">{{ $item->jabatan_l ?? '-' }}</td>
+                        <td class="px-5 py-4">{{ $item->pegawai->unitkerja->nama_kantor ?? '-' }}</td>
+                        <td class="px-5 py-4">{{ $item->tempat_l ?? '-' }}</td>
+                        <td class="px-5 py-4">{{ \Carbon\Carbon::parse($item->tanggal_sk)->format('d M Y') ?? '-' }}</td>
 
                         <td class="px-5 py-4 space-y-2">
                             <a href="{{ route('admin.mutasi.show', $item->no_sk) }}"
@@ -96,30 +94,33 @@
                                 </svg>
                                 Detail
                             </a>
-
-                            <a href="{{ route('admin.mutasi.edit', $item->no_sk) }}"
-                                class="w-full sm:w-auto inline-flex justify-center items-center text-white bg-yellow-500 hover:bg-yellow-600 font-semibold rounded-md text-sm px-4 py-2">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828A4 4 0 019 17H5v-4a4 4 0 014-4z" />
-                                </svg>
-                                Edit
-                            </a>
-                            <form action="{{ route('admin.mutasi.destroy', $item->no_sk) }}" method="POST"
-                                class="w-full sm:w-auto inline delete-form">
-                                @csrf
-                                @method('DELETE')
-                                <button type="button"
-                                    class="cursor-pointer w-full sm:w-auto btn-delete inline-flex justify-center items-center text-white bg-red-500 hover:bg-red-600 font-semibold rounded-md text-sm px-4 py-2">
+                            @if ($item->is_last)
+                                <a href="{{ route('admin.mutasi.edit', $item->no_sk) }}"
+                                    class="w-full sm:w-auto inline-flex justify-center items-center text-white bg-yellow-500 hover:bg-yellow-600 font-semibold rounded-md text-sm px-4 py-2">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a1 1 0 011 1v1H9V4a1 1 0 011-1zM4 7h16" />
+                                            d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828A4 4 0 019 17H5v-4a4 4 0 014-4z" />
                                     </svg>
-                                    Hapus
-                                </button>
-                            </form>
+                                    Edit
+                                </a>
+                                <form action="{{ route('admin.mutasi.destroy', $item->no_sk) }}" method="POST"
+                                    class="w-full sm:w-auto inline delete-form">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button"
+                                        class="cursor-pointer w-full sm:w-auto btn-delete inline-flex justify-center items-center text-white bg-red-500 hover:bg-red-600 font-semibold rounded-md text-sm px-4 py-2">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a1 1 0 011 1v1H9V4a1 1 0 011-1zM4 7h16" />
+                                        </svg>
+                                        Hapus
+                                    </button>
+                                </form>
+                            @else
+                                <div class="text-gray-400 italic text-sm">Mutasi telah berakhir</div>
+                            @endif
                         </td>
                     </tr>
                 @empty
@@ -179,6 +180,7 @@
 @endsection
 
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 @push('scripts')
     @if (session('success'))
@@ -192,8 +194,18 @@
             });
         </script>
     @endif
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: '{{ session('error') }}',
+                timer: 2500,
+                showConfirmButton: false
+            });
+        </script>
+    @endif
 @endpush
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const deleteButtons = document.querySelectorAll('.btn-delete');
@@ -280,6 +292,7 @@
                     document.body.appendChild(form);
                     form.submit();
                 }
+
             });
         });
     });

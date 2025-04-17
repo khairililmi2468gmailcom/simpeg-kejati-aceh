@@ -13,10 +13,12 @@
             {{-- Tempat jabatan --}}
             <div class="mb-4">
                 <label for="no_sk" class="block text-sm font-medium text-gray-700">No. SK</label>
-                <input type="text" name="no_sk" id="no_sk" value="{{ old('no_sk') }}"
-                    maxlength="50"
+                <input type="text" name="no_sk" id="no_sk" value="{{ old('no_sk') }}" maxlength="50"
                     class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181]"
                     required>
+                @error('no_sk')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- Nama Pegawai --}}
@@ -48,6 +50,9 @@
                     </div>
                 </div>
                 <input type="hidden" name="nip" id="pegawai-input" value="{{ old('nip') }}">
+                @error('nip')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- Nama Jabatan --}}
@@ -79,12 +84,15 @@
                     </div>
                 </div>
                 <input type="hidden" name="id_jabatan" id="jabatan-input" value="{{ old('id_jabatan') }}">
+                @error('id_jabatan')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
-           
-           
+
+
             {{-- Tanggal SK, TMT Jabatan --}}
-            @foreach (['tanggal_sk' => 'Tanggal SK',  'tmt_jabatan' => 'TMT Jabatan'] as $field => $label)
+            @foreach (['tanggal_sk' => 'Tanggal SK', 'tmt_jabatan' => 'TMT Jabatan'] as $field => $label)
                 <div class="mb-4">
                     <label for="{{ $field }}"
                         class="block text-sm font-medium text-gray-700">{{ $label }}</label>
@@ -100,6 +108,9 @@
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5"
                             required>
                     </div>
+                    @error($field)
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
             @endforeach
 
