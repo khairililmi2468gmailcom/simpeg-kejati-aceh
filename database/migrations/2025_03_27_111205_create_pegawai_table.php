@@ -37,7 +37,7 @@ return new class extends Migration
             $table->year('tahun_masuk')->nullable();
             $table->string('foto', 100)->nullable();
             $table->date('tmt_jabatan')->nullable();
-            $table->string('id_golongan', 5);
+            $table->string('id_golongan', 5)->nullable();
             $table->string('kode_kantor', 10)->nullable();
             $table->unsignedBigInteger('id_jabatan')->nullable();
             $table->string('ket', 25)->nullable();

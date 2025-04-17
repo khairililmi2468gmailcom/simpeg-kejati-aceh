@@ -23,11 +23,15 @@ class UnitKerjaController extends Controller
         $request->validate([
             'kode_kantor' => 'required|string|unique:unit_kerja,kode_kantor',
             'nama_kantor' => 'required|string|max:255',
-            'provinsi' => 'required|string|max:255',
+            'id_provinsi' => 'required|exists:provinsi,id',
         ]);
 
-        UnitKerja::create($request->all());
-
+        UnitKerja::create([
+            'kode_kantor' => $request->kode_kantor,
+            'nama_kantor' => $request->nama_kantor,
+            'id_provinsi' => $request->id_provinsi,
+        ]);
+    
         return redirect()->route('unitkerja.index')->with('success', 'Data unit kerja berhasil ditambahkan.');
     }
 

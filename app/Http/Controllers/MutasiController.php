@@ -117,19 +117,22 @@ class MutasiController extends Controller
     {
         $data = Mutasi::findOrFail($id);
         $pegawai = Pegawai::findOrFail($data->nip);
-        $jabatan = Jabatan::findOrFail($pegawai->id_jabatan);
+
+        // Cek apakah pegawai punya id_jabatan
+        $jabatan = $pegawai->id_jabatan ? Jabatan::find($pegawai->id_jabatan) : null;
 
         $pegawais = Pegawai::all();
         $jabatans = Jabatan::all();
+
         return view('admin.mutasi.edit', [
             'data' => $data,
             'pegawaiList' => $pegawais,
             'jabatanList' => $jabatans,
             'pegawai' => $pegawai,
-            'jabatan_l' => $jabatan->nama_jabatan // Mengirimkan nama jabatan ke view
-
+            'jabatan_l' => $jabatan?->nama_jabatan // safe navigation operator
         ]);
     }
+
 
     public function update(Request $request, $id)
     {
@@ -145,15 +148,15 @@ class MutasiController extends Controller
 
         // Ambil pegawai berdasarkan nip
         $pegawai = Pegawai::findOrFail($request->nip);
-        $jabatanLama = Jabatan::findOrFail($pegawai->id_jabatan);
-        $jabatanBaru = Jabatan::findOrFail($request->id_jabatan);
+        $jabatanLama = $pegawai->id_jabatan ? Jabatan::find($pegawai->id_jabatan) : null;
+        $jabatanBaru = $request->id_jabatan ? Jabatan::find($request->id_jabatan) : null;
         $unitKerja = UnitKerja::where('kode_kantor', $pegawai->kode_kantor)->first();
         $namaKantor = $unitKerja ? $unitKerja->nama_kantor : null;
 
 
         // Masukkan nama jabatan lama ke dalam jabatan_l
         $request->merge([
-            'jabatan_l' => $jabatanLama->nama_jabatan,
+            'jabatan_l' => $jabatanLama ? $jabatanLama->nama_jabatan : null,
             'tmt_l' => $pegawai->tmt_jabatan,
             'tempat_l' => $namaKantor,
         ]);

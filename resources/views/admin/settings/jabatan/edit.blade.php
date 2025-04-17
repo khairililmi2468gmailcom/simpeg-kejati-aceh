@@ -17,6 +17,9 @@
                 <input type="text" name="nama_jabatan" id="nama_jabatan"
                     value="{{ old('nama_jabatan', $data->nama_jabatan) }}" maxlength="50"
                     class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181]">
+                @error('nama_jabatan')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
 
@@ -52,15 +55,24 @@
                 </div>
                 <input type="hidden" name="kode_kantor" id="unitkerja-input"
                     value="{{ old('kode_kantor', $data->kode_kantor) }}">
+                @error('kode_kantor')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
             </div>
             {{-- Keterangan --}}
 
             <div class="mb-4">
                 <label for="ket" class="block text-sm font-medium text-gray-700">Keterangan</label>
-                <textarea name="ket" id="ket" rows="4"
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181] resize-y">{{ old('ket', $data->ket) }}</textarea>
+                <textarea name="ket" id="ket" rows="4" maxlength="150"
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181] resize-y"
+                    oninput="updateCharCount()">{{ old('ket', $data->ket) }}</textarea>
+                <p id="charCount" class="text-sm text-gray-500 mt-1 text-right">0 / 200 karakter</p>
+                @error('ket')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
             </div>
-            
+
+
             {{-- Tombol --}}
             <div class="flex justify-end">
                 <a href="{{ route('admin.settings.index') }}"
@@ -75,6 +87,20 @@
         </form>
     </div>
 @endsection
+@if ($errors->any())
+    <script>
+        window.addEventListener('load', () => {
+            let errorMessages = `{{ implode('\n', $errors->all()) }}`;
+            Swal.fire({
+                title: 'Gagal Menyimpan',
+                text: errorMessages,
+                icon: 'error',
+                confirmButtonColor: '#00A181',
+            });
+        });
+    </script>
+@endif
+
 @push('scripts')
     <script>
         const dropdowns = {
@@ -152,5 +178,27 @@
                 }
             });
         });
+
+        function updateCharCount() {
+            const textarea = document.getElementById('ket');
+            const counter = document.getElementById('charCount');
+            const max = 150;
+            const current = textarea.value.length;
+
+            counter.textContent = `${current} / ${max} karakter`;
+
+            if (current >= max - 10) {
+                counter.classList.add('text-red-500');
+            } else {
+                counter.classList.remove('text-red-500');
+            }
+
+            if (current > max) {
+                textarea.value = textarea.value.substring(0, max);
+                counter.textContent = `${max} / ${max} karakter`;
+            }
+        }
+
+        window.addEventListener('load', updateCharCount);
     </script>
 @endpush

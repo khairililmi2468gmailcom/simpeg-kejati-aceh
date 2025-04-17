@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('mutasi', function (Blueprint $table) {
             $table->string('no_sk', 50)->primary();
             $table->string('nip', 18);
-            $table->unsignedBigInteger('id_jabatan');
+            $table->unsignedBigInteger('id_jabatan')->nullable();
             $table->string('jabatan_l', 50)->nullable();
             $table->string('tempat_l', 100)->nullable();
             $table->date('tanggal_sk');

@@ -32,8 +32,9 @@
 
         <!-- Hapus Data -->
         <button id="bulkDeleteBtn"
-            class="cursor-pointer inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-2.5 disabled:opacity-50 mb-2 md:mb-0"
-            disabled>
+            class="bulk-delete-btn cursor-pointer inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-2.5 opacity-50 mb-2 md:mb-0"
+           data-action="{{ route('admin.settings.jabatan.bulkDelete') }}"
+            data-token="{{ csrf_token() }}" disabled>
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -52,7 +53,7 @@
     <table class="w-full text-base text-left text-gray-700 bg-white shadow-lg rounded-xl overflow-hidden">
         <thead class="text-white bg-[#00A181]">
             <tr>
-                <th class="px-5 py-4 text-center"><input type="checkbox" id="checkAll"></th>
+                <th class="px-5 py-4 text-center"><input type="checkbox" class="check-all" id="checkAll"></th>
                 <th class="px-5 py-4">Nama Jabatan</th>
                 <th class="px-5 py-4">Unit Kerja</th>
                 <th class="px-5 py-4">Keterangan</th>
@@ -150,9 +151,36 @@
 
 
 
-
-
 @push('scripts')
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // === DELETE BUTTONS ===
+            const deleteButtons = document.querySelectorAll('.btn-delete');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const form = this.closest('form');
+                    Swal.fire({
+                        title: 'Yakin ingin menghapus?',
+                        text: "Data yang dihapus tidak bisa dikembalikan!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+
+        });
+    </script>
     @if (session('success'))
         <script>
             Swal.fire({
@@ -165,94 +193,3 @@
         </script>
     @endif
 @endpush
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const deleteButtons = document.querySelectorAll('.btn-delete');
-
-        deleteButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                const form = this.closest('form');
-
-                Swal.fire({
-                    title: 'Yakin ingin menghapus?',
-                    text: "Data yang dihapus tidak bisa dikembalikan!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Ya, hapus!',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    }
-                });
-            });
-        });
-    });
-    document.addEventListener('DOMContentLoaded', function() {
-        const checkAll = document.getElementById('checkAll');
-        const checkboxes = document.querySelectorAll('.checkbox-item');
-        const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
-
-        // Toggle semua checkbox
-        checkAll.addEventListener('change', function() {
-            checkboxes.forEach(cb => cb.checked = checkAll.checked);
-            toggleBulkDeleteBtn();
-        });
-
-        // Toggle tombol hapus jika ada yang dicentang
-        checkboxes.forEach(cb => {
-            cb.addEventListener('change', toggleBulkDeleteBtn);
-        });
-
-        function toggleBulkDeleteBtn() {
-            const checked = [...checkboxes].some(cb => cb.checked);
-            bulkDeleteBtn.disabled = !checked;
-        }
-
-        // Tombol Bulk Delete
-        bulkDeleteBtn.addEventListener('click', function() {
-            const selected = [...checkboxes].filter(cb => cb.checked).map(cb => cb.value);
-
-            if (selected.length === 0) return;
-
-            Swal.fire({
-                title: 'Yakin ingin menghapus data terpilih?',
-                text: `${selected.length} data akan dihapus!`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Kirim ke server via form dinamis
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = "{{ route('admin.settings.jabatan.bulkDelete') }}";
-
-                    const token = document.createElement('input');
-                    token.type = 'hidden';
-                    token.name = '_token';
-                    token.value = '{{ csrf_token() }}';
-                    form.appendChild(token);
-
-                    selected.forEach(id => {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = 'id[]';
-                        input.value = id;
-                        form.appendChild(input);
-                    });
-
-                    document.body.appendChild(form);
-                    form.submit();
-                }
-            });
-        });
-    });
-</script>

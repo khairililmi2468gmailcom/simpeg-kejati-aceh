@@ -220,18 +220,19 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/template', [KecamatanController::class, 'downloadTemplate'])->name('download-template');
     });
 
-    Route::prefix('settings')->name('settings.')->group(function () {
+    Route::prefix('settings')->name('settings.')->group(
+        function () {
 
             Route::get('/', [SettingsController::class, 'index'])->name('index');
 
             Route::prefix('admin')->name('admin.')->group(function () {
-                Route::get('/', [AdminController::class, 'index'])->name('index');
-                Route::get('/create', [AdminController::class, 'create'])->name('create');
-                Route::post('/store', [AdminController::class, 'store'])->name('store');
-                Route::get('/{id}/edit', [AdminController::class, 'edit'])->name('edit');
-                Route::put('/{id}', [AdminController::class, 'update'])->name('update');
-                Route::delete('/{id}', [AdminController::class, 'destroy'])->name('destroy');
-                Route::post('/bulk-delete', [AdminController::class, 'bulkDelete'])->name('bulkDelete');
+                Route::get('/', [SettingsController::class, 'index'])->name('index');
+                Route::get('/create', [SettingsController::class, 'create'])->name('create');
+                Route::post('/store', [SettingsController::class, 'store'])->name('store');
+                Route::get('/{id}/edit', [SettingsController::class, 'edit'])->name('edit');
+                Route::put('/{id}', [SettingsController::class, 'update'])->name('update');
+                Route::delete('/{id}', [SettingsController::class, 'destroy'])->name('destroy');
+                Route::post('/bulk-delete', [SettingsController::class, 'bulkDelete'])->name('bulkDelete');
             });
 
             Route::prefix('jabatan')->name('jabatan.')->group(function () {
@@ -245,25 +246,25 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 Route::post('/bulk-delete', [SettingsController::class, 'bulkDeleteJabatan'])->name('bulkDelete');
             });
             Route::prefix('golongan')->name('golongan.')->group(function () {
-                Route::get('/', [MengikutiDiklatController::class, 'index'])->name('index');
-                Route::get('/create', [MengikutiDiklatController::class, 'create'])->name('create');
-                Route::post('/store', [MengikutiDiklatController::class, 'store'])->name('store');
-                Route::get('/{id}', [MengikutiDiklatController::class, 'show'])->name('show');
-                Route::get('/{id}/edit', [MengikutiDiklatController::class, 'edit'])->name('edit');
-                Route::put('/{id}', [MengikutiDiklatController::class, 'update'])->name('update');
-                Route::delete('/{id}', [MengikutiDiklatController::class, 'destroy'])->name('destroy');
-                Route::post('/bulk-delete', [MengikutiDiklatController::class, 'bulkDelete'])->name('bulkDelete');
+                Route::get('/', [SettingsController::class, 'index'])->name('index');
+                Route::get('/create', [SettingsController::class, 'create'])->name('create');
+                Route::post('/store', [SettingsController::class, 'store'])->name('store');
+                Route::get('/{id}', [SettingsController::class, 'show'])->name('show');
+                Route::get('/{id}/edit', [SettingsController::class, 'edit'])->name('edit');
+                Route::put('/{id}', [SettingsController::class, 'update'])->name('update');
+                Route::delete('/{id}', [SettingsController::class, 'destroy'])->name('destroy');
+                Route::post('/bulk-delete', [SettingsController::class, 'bulkDelete'])->name('bulkDelete');
             });
 
             Route::prefix('unitkerja')->name('unitkerja.')->group(function () {
-                Route::get('/', [MengikutiDiklatController::class, 'index'])->name('index');
-                Route::get('/create', [MengikutiDiklatController::class, 'create'])->name('create');
-                Route::post('/store', [MengikutiDiklatController::class, 'store'])->name('store');
-                Route::get('/{id}', [MengikutiDiklatController::class, 'show'])->name('show');
-                Route::get('/{id}/edit', [MengikutiDiklatController::class, 'edit'])->name('edit');
-                Route::put('/{id}', [MengikutiDiklatController::class, 'update'])->name('update');
-                Route::delete('/{id}', [MengikutiDiklatController::class, 'destroy'])->name('destroy');
-                Route::post('/bulk-delete', [MengikutiDiklatController::class, 'bulkDelete'])->name('bulkDelete');
+                Route::get('/', [SettingsController::class, 'index'])->name('index');
+                Route::get('/create', [SettingsController::class, 'createUnitKerja'])->name('create');
+                Route::post('/store', [SettingsController::class, 'storeUnitKerja'])->name('store');
+                Route::get('/{id}', [SettingsController::class, 'showUnitKerja'])->name('show');
+                Route::get('/{id}/edit', [SettingsController::class, 'editUnitKerja'])->name('edit');
+                Route::put('/{id}', [SettingsController::class, 'updateUnitKerja'])->name('update');
+                Route::delete('/{id}', [SettingsController::class, 'destroyUnitKerja'])->name('destroy');
+                Route::post('/bulk-delete', [SettingsController::class, 'bulkDeleteUnitKerja'])->name('bulkDelete');
             });
         }
     );

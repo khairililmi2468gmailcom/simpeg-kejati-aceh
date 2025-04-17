@@ -2,8 +2,8 @@
 
 @section('content')
     <div>
-        <h1 class="text-3xl font-bold text-[#00A181]">Edit Riwayat Diklat</h1>
-        <p class="text-gray-600">Perbarui informasi riwayat diklat pegawai.</p>
+        <h1 class="text-3xl font-bold text-[#00A181]">Edit Riwayat Mutasi</h1>
+        <p class="text-gray-600">Perbarui informasi riwayat mutasi.</p>
     </div>
 
     <div class="max-w-3xl mx-auto mt-6 p-6 bg-white shadow-md rounded-xl">
@@ -51,6 +51,9 @@
                     </div>
                 </div>
                 <input type="hidden" name="nip" id="pegawai-input" value="{{ old('nip', $data->nip) }}">
+                @error('nip')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
             </div>
             {{-- Jabatan --}}
             <div class="mb-4">
@@ -84,8 +87,11 @@
                 </div>
                 <input type="hidden" name="id_jabatan" id="jabatan-input"
                     value="{{ old('id_jabatan', $data->id_jabatan) }}">
+                @error('id_jabatan')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
             </div>
-           
+
             {{-- Tanggal SK --}}
             <div class="mb-4">
                 <label for="tanggal_sk" class="block text-sm font-medium text-gray-700">Tanggal SK</label>
@@ -99,12 +105,16 @@
                     <input name="tanggal_sk" id="tanggal_sk" type="date"
                         value="{{ old('tanggal_sk', $data->tanggal_sk) }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5">
+                    @error('tanggal_sk')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 
             {{-- Tanggal Mulai Tugas --}}
             <div class="mb-4">
-                <label for="tmt_jabatan" class="block text-sm font-medium text-gray-700">Terhitung Mulai Tanggal Jabatan </label>
+                <label for="tmt_jabatan" class="block text-sm font-medium text-gray-700">Terhitung Mulai Tanggal Jabatan
+                </label>
                 <div class="relative max-w-sm">
                     <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                         <svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
@@ -115,6 +125,9 @@
                     <input name="tmt_jabatan" id="tmt_jabatan" type="date"
                         value="{{ old('tmt_jabatan', $data->tmt_jabatan) }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5">
+                    @error('tmt_jabatan')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 
@@ -132,6 +145,19 @@
         </form>
     </div>
 @endsection
+@if ($errors->any())
+    <script>
+        window.addEventListener('load', () => {
+            let errorMessages = `{{ implode('\n', $errors->all()) }}`;
+            Swal.fire({
+                title: 'Gagal Menyimpan',
+                text: errorMessages,
+                icon: 'error',
+                confirmButtonColor: '#00A181',
+            });
+        });
+    </script>
+@endif
 
 @push('scripts')
     <script>
@@ -210,6 +236,5 @@
                 }
             });
         });
-        
     </script>
 @endpush
