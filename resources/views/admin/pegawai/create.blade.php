@@ -304,7 +304,7 @@
                 </div>
 
             </div>
-            <h3 class="text-2xl font-extrabold dark:text-white md:mb-4 md:mt-8">Data Jabatan</h3>
+            {{-- <h3 class="text-2xl font-extrabold dark:text-white md:mb-4 md:mt-8">Data Jabatan</h3> --}}
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 

@@ -8,16 +8,28 @@ use Illuminate\Http\Request;
 
 class JabatanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $jabatans = Jabatan::with('unitKerja')->get();
-        return view('admin.jabatan.index', compact('jabatans'));
+        $search = $request->search;
+        $perPage = $request->per_page ?? 5;
+
+        $jabatans = Jabatan::with('unitKerja')
+            ->when($search, function ($query) use ($search) {
+                $query->where('nama_jabatan', 'like', "%$search%")
+                    ->orWhere('ket', 'like', "%$search%");
+            })
+            ->orderBy('nama_jabatan')
+            ->paginate($perPage);
+
+        return view('admin.settings.jabatan.index', compact('jabatans', 'search', 'perPage'));
     }
+
+
 
     public function create()
     {
         $unitKerjas = UnitKerja::all();
-        return view('admin.jabatan.create', compact('unitKerjas'));
+        return view('admin.settings.jabatan.create', compact('unitKerjas'));
     }
 
     public function store(Request $request)
@@ -36,14 +48,14 @@ class JabatanController extends Controller
     public function show($id)
     {
         $jabatan = Jabatan::with('unitKerja')->findOrFail($id);
-        return view('admin.jabatan.show', compact('jabatan'));
+        return view('admin.settings.jabatan.show', compact('jabatan'));
     }
 
     public function edit($id)
     {
         $jabatan = Jabatan::findOrFail($id);
         $unitKerjas = UnitKerja::all();
-        return view('admin.jabatan.edit', compact('jabatan', 'unitKerjas'));
+        return view('admin.settings.jabatan.edit', compact('jabatan', 'unitKerjas'));
     }
 
     public function update(Request $request, $id)
@@ -57,7 +69,7 @@ class JabatanController extends Controller
         $jabatan = Jabatan::findOrFail($id);
         $jabatan->update($request->all());
 
-        return redirect()->route('jabatan.index')->with('success', 'Data jabatan berhasil diperbarui.');
+        return redirect()->route('admin.settings.jabatan.index')->with('success', 'Data jabatan berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -65,6 +77,6 @@ class JabatanController extends Controller
         $jabatan = Jabatan::findOrFail($id);
         $jabatan->delete();
 
-        return redirect()->route('jabatan.index')->with('success', 'Data jabatan berhasil dihapus.');
+        return redirect()->route('admin.settings.jabatan.index')->with('success', 'Data jabatan berhasil dihapus.');
     }
 }

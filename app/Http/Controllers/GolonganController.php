@@ -10,12 +10,12 @@ class GolonganController extends Controller
     public function index()
     {
         $golongans = Golongan::all();
-        return view('golongan.index', compact('golongans'));
+        return view('admin.settings.golongan.index', compact('golongans'));
     }
 
     public function create()
     {
-        return view('golongan.create');
+        return view('admin.settings.golongan.create');
     }
 
     public function store(Request $request)
@@ -28,19 +28,19 @@ class GolonganController extends Controller
 
         Golongan::create($request->all());
 
-        return redirect()->route('golongan.index')->with('success', 'Data golongan berhasil ditambahkan.');
+        return redirect()->route('admin.settings.golongan.index')->with('success', 'Data golongan berhasil ditambahkan.');
     }
 
     public function show($id)
     {
         $golongan = Golongan::findOrFail($id);
-        return view('golongan.show', compact('golongan'));
+        return view('admin.settings.golongan.show', compact('golongan'));
     }
 
     public function edit($id)
     {
         $golongan = Golongan::findOrFail($id);
-        return view('golongan.edit', compact('golongan'));
+        return view('admin.settings.golongan.edit', compact('golongan'));
     }
 
     public function update(Request $request, $id)
@@ -53,7 +53,7 @@ class GolonganController extends Controller
         $golongan = Golongan::findOrFail($id);
         $golongan->update($request->only(['jabatan_fungsional', 'pangkat']));
 
-        return redirect()->route('golongan.index')->with('success', 'Data golongan berhasil diperbarui.');
+        return redirect()->route('admin.settings.golongan.index')->with('success', 'Data golongan berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -61,6 +61,6 @@ class GolonganController extends Controller
         $golongan = Golongan::findOrFail($id);
         $golongan->delete();
 
-        return redirect()->route('golongan.index')->with('success', 'Data golongan berhasil dihapus.');
+        return redirect()->route('admin.settings.golongan.index')->with('success', 'Data golongan berhasil dihapus.');
     }
 }

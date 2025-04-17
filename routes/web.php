@@ -16,6 +16,8 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
 use App\Exports\PegawaiExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TemplatePegawaiExport;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KabupatenController;
 use App\Http\Controllers\KecamatanController;
 use App\Http\Controllers\MenerimaCutiController;
@@ -117,7 +119,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('export/excel', [PegawaiController::class, 'exportExcel'])->name('export.excel');
         Route::post('import/excel', [PegawaiController::class, 'importExcel'])->name('import.excel');
     });
-    
+
     Route::prefix('cuti')->name('cuti.')->group(function () {
         // Master Cuti Routes
         Route::prefix('jeniscuti')->name('jeniscuti.')->group(function () {
@@ -217,4 +219,52 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/import', [KecamatanController::class, 'import'])->name('import');
         Route::get('/template', [KecamatanController::class, 'downloadTemplate'])->name('download-template');
     });
+
+    Route::prefix('settings')->name('settings.')->group(function () {
+
+            Route::get('/', [SettingsController::class, 'index'])->name('index');
+
+            Route::prefix('admin')->name('admin.')->group(function () {
+                Route::get('/', [AdminController::class, 'index'])->name('index');
+                Route::get('/create', [AdminController::class, 'create'])->name('create');
+                Route::post('/store', [AdminController::class, 'store'])->name('store');
+                Route::get('/{id}/edit', [AdminController::class, 'edit'])->name('edit');
+                Route::put('/{id}', [AdminController::class, 'update'])->name('update');
+                Route::delete('/{id}', [AdminController::class, 'destroy'])->name('destroy');
+                Route::post('/bulk-delete', [AdminController::class, 'bulkDelete'])->name('bulkDelete');
+            });
+
+            Route::prefix('jabatan')->name('jabatan.')->group(function () {
+                Route::get('/', [SettingsController::class, 'indexJabatan'])->name('index');
+                Route::get('/create', [SettingsController::class, 'createJabatan'])->name('create');
+                Route::post('/store', [SettingsController::class, 'storeJabatan'])->name('store');
+                Route::get('/{id}', [SettingsController::class, 'showJabatan'])->name('show');
+                Route::get('/{id}/edit', [SettingsController::class, 'editJabatan'])->name('edit');
+                Route::put('/{id}', [SettingsController::class, 'updateJabatan'])->name('update');
+                Route::delete('/{id}', [SettingsController::class, 'destroyJabatan'])->name('destroy');
+                Route::post('/bulk-delete', [SettingsController::class, 'bulkDeleteJabatan'])->name('bulkDelete');
+            });
+            Route::prefix('golongan')->name('golongan.')->group(function () {
+                Route::get('/', [MengikutiDiklatController::class, 'index'])->name('index');
+                Route::get('/create', [MengikutiDiklatController::class, 'create'])->name('create');
+                Route::post('/store', [MengikutiDiklatController::class, 'store'])->name('store');
+                Route::get('/{id}', [MengikutiDiklatController::class, 'show'])->name('show');
+                Route::get('/{id}/edit', [MengikutiDiklatController::class, 'edit'])->name('edit');
+                Route::put('/{id}', [MengikutiDiklatController::class, 'update'])->name('update');
+                Route::delete('/{id}', [MengikutiDiklatController::class, 'destroy'])->name('destroy');
+                Route::post('/bulk-delete', [MengikutiDiklatController::class, 'bulkDelete'])->name('bulkDelete');
+            });
+
+            Route::prefix('unitkerja')->name('unitkerja.')->group(function () {
+                Route::get('/', [MengikutiDiklatController::class, 'index'])->name('index');
+                Route::get('/create', [MengikutiDiklatController::class, 'create'])->name('create');
+                Route::post('/store', [MengikutiDiklatController::class, 'store'])->name('store');
+                Route::get('/{id}', [MengikutiDiklatController::class, 'show'])->name('show');
+                Route::get('/{id}/edit', [MengikutiDiklatController::class, 'edit'])->name('edit');
+                Route::put('/{id}', [MengikutiDiklatController::class, 'update'])->name('update');
+                Route::delete('/{id}', [MengikutiDiklatController::class, 'destroy'])->name('destroy');
+                Route::post('/bulk-delete', [MengikutiDiklatController::class, 'bulkDelete'])->name('bulkDelete');
+            });
+        }
+    );
 });
