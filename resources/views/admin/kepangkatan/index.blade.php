@@ -54,13 +54,14 @@
             <thead class="text-white bg-[#00A181]">
                 <tr>
                     <th class="px-5 py-4 text-center"><input type="checkbox" id="checkAll"></th>
+                    <th class="px-5 py-4">No. SK</th>
                     <th class="px-5 py-4">NIP</th>
                     <th class="px-5 py-4">Nama Pegawai</th>
-                    <th class="px-5 py-4">Jabatan Saat Ini</th>
-                    <th class="px-5 py-4">Jabatan Lama</th>
-                    <th class="px-5 py-4">Unit Kerja Saat Ini</th>
-                    <th class="px-5 py-4">Unit Kerja Lama</th>
-                    <th class="px-5 py-4">Tanggal SK</th>
+                    <th class="px-5 py-4">Jabatan Fungsional</th>
+                    <th class="px-5 py-4">Pangkat Saat Ini</th>
+                    <th class="px-5 py-4">Pangkat Lama</th>
+                    <th class="px-5 py-4">TMT SK Pangkat</th>
+                    <th class="px-5 py-4">Jenis Usulan</th>
                     <th class="px-5 py-4 ">Aksi</th>
                 </tr>
             </thead>
@@ -70,19 +71,23 @@
                         <td class="px-5 py-4 text-center">
                             <input type="checkbox" class="checkbox-item" value="{{ $item->no_sk }}">
                         </td>
+                        <td class="px-5 py-4">{{ $item->no_sk }}</td>
                         <td class="px-5 py-4">{{ $item->pegawai->nip }}</td>
                         <td class="px-5 py-4">{{ $item->pegawai->nama }}</td>
                         {{-- Jabatan Pegawai Saat Ini --}}
                         <td class="px-5 py-4 ">
-                            {{ $item->pegawai->jabatan->nama_jabatan ?? '-' }}
+                            {{ $item->pegawai->golongan->jabatan_fungsional ?? '-' }}
                         </td>
-                        <td class="px-5 py-4">{{ $item->jabatan_l ?? '-' }}</td>
-                        <td class="px-5 py-4">{{ $item->pegawai->unitkerja->nama_kantor ?? '-' }}</td>
-                        <td class="px-5 py-4">{{ $item->tempat_l ?? '-' }}</td>
-                        <td class="px-5 py-4">{{ \Carbon\Carbon::parse($item->tanggal_sk)->format('d M Y') ?? '-' }}</td>
+                        <td class="px-5 py-4 ">
+                            {{ $item->pegawai->golongan->pangkat ?? '-' }}
+                        </td>
+                        <td class="px-5 py-4">{{ $item->pangkat_l ?? '-' }}</td>
+                        <td class="px-5 py-4">{{ \Carbon\Carbon::parse($item->tmt_sk_pangkat)->format('d M Y') ?? '-' }}
+                        </td>
+                        <td class="px-5 py-4">{{ $item->jenis_usulan ?? '-' }}</td>
 
                         <td class="px-5 py-4 space-y-2">
-                            <a href="{{ route('admin.mutasi.show', $item->no_sk) }}"
+                            <a href="{{ route('admin.kepangkatan.show', $item->no_sk) }}"
                                 class="w-full sm:w-auto inline-flex justify-center items-center text-white bg-blue-500 hover:bg-blue-600 font-semibold rounded-md text-sm px-4 py-2">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
                                     viewBox="0 0 24 24">
@@ -272,7 +277,7 @@
                     // Kirim ke server via form dinamis
                     const form = document.createElement('form');
                     form.method = 'POST';
-                    form.action = "{{ route('admin.mutasi.bulkDelete') }}";
+                    form.action = "{{ route('admin.kepangkatan.bulkDelete') }}";
 
                     const token = document.createElement('input');
                     token.type = 'hidden';
