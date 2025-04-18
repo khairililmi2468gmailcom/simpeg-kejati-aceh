@@ -32,7 +32,8 @@
 
         <!-- Hapus Data -->
         <button id="bulkDeleteBtn"
-            class="cursor-pointer inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-2.5 disabled:opacity-50 mb-2 md:mb-0"
+            class="bulk-delete-btn cursor-pointer inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-2.5 disabled:opacity-50 mb-2 md:mb-0"
+            data-action="{{route('admin.settings.golongan.bulkDelete')}}" data-token="{{ csrf_token() }}"
             disabled>
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
@@ -52,7 +53,7 @@
     <table class="w-full text-base text-left text-gray-700 bg-white shadow-lg rounded-xl overflow-hidden">
         <thead class="text-white bg-[#00A181]">
             <tr>
-                <th class="px-5 py-4 text-center"><input type="checkbox" id="checkAll"></th>
+                <th class="px-5 py-4 text-center"><input type="checkbox" class="check-all" id="checkAll"></th>
                 <th class="px-5 py-4">Jabatan Fungsional</th>
                 <th class="px-5 py-4">Pangkat</th>
                 <th class="px-5 py-4">Aksi</th>
@@ -175,7 +176,7 @@
 
                 Swal.fire({
                     title: 'Yakin ingin menghapus?',
-                    text: "Data yang dihapus tidak bisa dikembalikan!",
+                    text: "Data golongan di pegawai dan kepangkatan juga akan dihapus dan tidak bisa dikembalikan!",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
@@ -219,7 +220,7 @@
 
             Swal.fire({
                 title: 'Yakin ingin menghapus data terpilih?',
-                text: `${selected.length} data akan dihapus!`,
+                text: `${selected.length} data golongan di pegawai dan kepangkatan juga akan dihapus akan dihapus!`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',

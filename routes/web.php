@@ -227,12 +227,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
             Route::prefix('admin')->name('admin.')->group(function () {
                 Route::get('/', [SettingsController::class, 'index'])->name('index');
-                Route::get('/create', [SettingsController::class, 'create'])->name('create');
-                Route::post('/store', [SettingsController::class, 'store'])->name('store');
-                Route::get('/{id}/edit', [SettingsController::class, 'edit'])->name('edit');
-                Route::put('/{id}', [SettingsController::class, 'update'])->name('update');
-                Route::delete('/{id}', [SettingsController::class, 'destroy'])->name('destroy');
-                Route::post('/bulk-delete', [SettingsController::class, 'bulkDelete'])->name('bulkDelete');
+                Route::get('/create', [SettingsController::class, 'createAdmin'])->name('create');
+                Route::post('/store', [SettingsController::class, 'storeAdmin'])->name('store');
+                Route::get('/{id}/edit', [SettingsController::class, 'editAdmin'])->name('edit');
+                Route::put('/{id}', [SettingsController::class, 'updateAdmin'])->name('update');
+                Route::delete('/{id}', [SettingsController::class, 'destroyAdmin'])->name('destroy');
+                Route::post('/bulk-delete', [SettingsController::class, 'bulkDeleteAdmin'])->name('bulkDelete');
             });
 
             Route::prefix('jabatan')->name('jabatan.')->group(function () {
@@ -247,13 +247,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
             });
             Route::prefix('golongan')->name('golongan.')->group(function () {
                 Route::get('/', [SettingsController::class, 'index'])->name('index');
-                Route::get('/create', [SettingsController::class, 'create'])->name('create');
-                Route::post('/store', [SettingsController::class, 'store'])->name('store');
-                Route::get('/{id}', [SettingsController::class, 'show'])->name('show');
-                Route::get('/{id}/edit', [SettingsController::class, 'edit'])->name('edit');
-                Route::put('/{id}', [SettingsController::class, 'update'])->name('update');
-                Route::delete('/{id}', [SettingsController::class, 'destroy'])->name('destroy');
-                Route::post('/bulk-delete', [SettingsController::class, 'bulkDelete'])->name('bulkDelete');
+                Route::get('/create', [SettingsController::class, 'createGolongan'])->name('create');
+                Route::post('/store', [SettingsController::class, 'storeGolongan'])->name('store');
+                Route::get('/{id}', [SettingsController::class, 'showGolongan'])->name('show');
+                Route::get('/{id}/edit', [SettingsController::class, 'editGolongan'])->name('edit');
+                Route::put('/{id}', [SettingsController::class, 'updateGolongan'])->name('update');
+                Route::delete('/{id}', [SettingsController::class, 'destroyGolongan'])->name('destroy');
+                Route::post('/bulk-delete', [SettingsController::class, 'bulkDeleteGolongan'])->name('bulkDelete');
             });
 
             Route::prefix('unitkerja')->name('unitkerja.')->group(function () {

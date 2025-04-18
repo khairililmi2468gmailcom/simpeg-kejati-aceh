@@ -14,16 +14,16 @@ return new class extends Migration
         // Tabel Kepangkatan
         Schema::create('kepangkatan', function (Blueprint $table) {
             $table->string('no_sk', 50)->primary();
-            $table->string('nip', 18);
-            $table->text('alasan');
-            $table->string('no_pertimbangan', 60);
-            $table->date('tanggal_sk');
-            $table->string('pembuat_sk', 50);
-            $table->date('tmt_sk_pangkat');
-            $table->string('no_usulan', 50);
-            $table->string('jenis_usulan', 25);
-            $table->string('pangkat_l', 25);
-            $table->string('id_golongan', 5);
+            $table->string('nip', 18)->nullable();
+            $table->text('alasan')->nullable();
+            $table->string('no_pertimbangan', 60)->nullable();
+            $table->date('tanggal_sk')->nullable();
+            $table->string('pembuat_sk', 50)->nullable();
+            $table->date('tmt_sk_pangkat')->nullable();
+            $table->string('no_usulan', 50)->nullable();
+            $table->string('jenis_usulan', 25)->nullable();
+            $table->string('pangkat_l', 25)->nullable();
+            $table->string('id_golongan', 5)->nullable();
 
             // Foreign keys
             $table->foreign('nip')->references('nip')->on('pegawai')->onDelete('cascade');
