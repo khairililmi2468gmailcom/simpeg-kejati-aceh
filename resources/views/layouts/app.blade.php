@@ -7,6 +7,7 @@
     <title>@yield('title')</title>
     <script src="https://unpkg.com/htmx.org@1.9.5"></script>
     @vite('resources/css/app.css')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
 </head>
 

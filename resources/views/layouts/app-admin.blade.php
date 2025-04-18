@@ -64,7 +64,7 @@
                         <div class="relative">
                             <!-- Button Foto Profil -->
                             <button id="profileButton" type="button"
-                                class="flex text-sm bg-[#F0F0F0] rounded-full  focus:ring-gray-300 dark:focus:ring-gray-600 
+                                class="cursor-pointer flex text-sm bg-[#F0F0F0] rounded-full  focus:ring-gray-300 dark:focus:ring-gray-600 
                                 active:scale-90 transition-transform duration-400 ease-in-out items-center justify-center sm:pr-4 sm:py-2 sm:pl-3 gap-4">
                                 <span class="sr-only">Open user menu</span>
                                 <img class="w-10 h-10 rounded-full"
@@ -111,10 +111,13 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#"
-                                            class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:text-red-400 dark:hover:bg-gray-600">
-                                            Log Out
-                                        </a>
+                                        <form method="POST" action="{{ route('logout') }}" id="logoutForm">
+                                            @csrf
+                                            <button type="button" id="logoutBtn"
+                                                class="cursor-pointer w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:text-red-400 dark:hover:bg-gray-600">
+                                                Log Out
+                                            </button>
+                                        </form>
                                     </li>
                                 </ul>
                             </div>
@@ -486,6 +489,53 @@
             });
         });
     </script>
+    <!-- Tambahkan SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const logoutBtn = document.getElementById("logoutBtn");
+            const logoutForm = document.getElementById("logoutForm");
+
+            if (logoutBtn) {
+                logoutBtn.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: 'Yakin ingin logout?',
+                        text: "Anda akan keluar dari dashboard.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#00A180',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, Logout',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            logoutForm.submit();
+                        }
+                    });
+                });
+            }
+
+            // Tampilkan SweetAlert jika logout berhasil
+            @if (session('logout_success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Logout Berhasil',
+                    text: "{{ session('logout_success') }}",
+                    confirmButtonColor: '#00A180'
+                });
+            @elseif (session('logout_failed'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Logout Gagal',
+                    text: "{{ session('logout_failed') }}",
+                    confirmButtonColor: '#00A180'
+                });
+            @endif
+        });
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
 

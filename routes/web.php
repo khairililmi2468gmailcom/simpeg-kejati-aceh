@@ -17,6 +17,7 @@ use App\Exports\PegawaiExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TemplatePegawaiExport;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KabupatenController;
 use App\Http\Controllers\KecamatanController;
@@ -49,23 +50,18 @@ Route::get('/font/{folder}/{filename}', function ($folder, $filename) {
 });
 
 
-Route::get('/', function () {
-    return view(view: 'home');
+Route::get('/', [AuthController::class, 'showLoginForm']);
+
+Route::match(['get'], '/login', function () {
+    abort(404);
 });
 
-Route::get('/about', function () {
-    return view('about');
+Route::match(['get'], '/logout', function () {
+    abort(404);
 });
 
-Route::get('/register', function () {
-    return view('register');
-});
-
-
-Route::get('/home', function () {
-    return redirect()->route('home');
-});
-
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Template Excel Pegawai (download)
 Route::get('/pegawai/template/excel', function () {
@@ -86,7 +82,7 @@ Route::prefix('data')->name('referensi.')->group(function () {
     Route::view('/unit-kerja', 'referensi.unitkerja')->name('unitkerja');
 });
 
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     // Route::get('/home', [PegawaiBarchartController::class, 'index'])->name('home');
 

@@ -4,6 +4,9 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Auth\AuthenticationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -21,10 +24,17 @@ class Handler extends ExceptionHandler
     /**
      * Register the exception handling callbacks for the application.
      */
-    public function register(): void
+    public function register()
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (NotFoundHttpException $e, $request) {
+            return response()->view('errors.404', [], 404);
+        });
+
+        $this->renderable(function (AuthenticationException $e, $request) {
+            return response()->view('errors.404', [], 404);
+        });
+        $this->renderable(function (MethodNotAllowedHttpException $e, $request) {
+            return response()->view('errors.404', [], 404);
         });
     }
 }
