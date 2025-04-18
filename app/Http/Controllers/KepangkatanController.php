@@ -9,10 +9,26 @@ use Illuminate\Http\Request;
 
 class KepangkatanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $kepangkatans = Kepangkatan::with(['pegawai', 'golongan'])->get();
-        return view('admin.kepangkatan.index', compact('kepangkatans'));
+        $search = $request ->search;
+        $perPage = $request->per_page ?? 5;
+
+
+        $data = Kepangkatan::with(['pegawai', 'golongan'])
+            ->when($search, function ($query) use ($search) {
+                $query->whereHas('pegawai', function ($q) use ($search) {
+                    $q->where('nama', 'like', "%$search%");
+                })->orWhereHas('golongan', function ($q) use ($search) {
+                    $q->where('jabatan_fungsional', 'like', "%$search%")
+                        ->orWhere('pangkat', 'like', "%$search%")
+                        ->orWhere('id_golongan', 'like', "%$search%");
+                })->orWhere('nip', 'like', "%$search%");
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
+
+        return view('admin.kepangkatan.index', compact('data'));
     }
 
     public function create()

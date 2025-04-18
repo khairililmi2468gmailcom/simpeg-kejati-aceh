@@ -180,6 +180,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('/{id}', [MutasiController::class, 'destroy'])->name('destroy');
         Route::post('/bulk-delete', [MutasiController::class, 'bulkDelete'])->name('bulkDelete');
     });
+    
+    Route::prefix('kepangkatan')->name('kepangkatan.')->group(function () {
+        Route::get('/', [KepangkatanController::class, 'index'])->name('index');
+        Route::get('/create', [KepangkatanController::class, 'create'])->name('create');
+        Route::post('/store', [KepangkatanController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [KepangkatanController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [KepangkatanController::class, 'update'])->name('update');
+        Route::get('/{id}', [KepangkatanController::class, 'show'])->name('show');
+        Route::delete('/{id}', [KepangkatanController::class, 'destroy'])->name('destroy');
+        Route::post('/bulk-delete', [KepangkatanController::class, 'bulkDelete'])->name('bulkDelete');
+    });
 
     // Provinsi Routes
     Route::prefix('provinsi')->name('provinsi.')->group(function () {
