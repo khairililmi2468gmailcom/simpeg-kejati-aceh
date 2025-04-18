@@ -88,7 +88,7 @@ Route::prefix('data')->name('referensi.')->group(function () {
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
-    Route::get('/home', [PegawaiBarchartController::class, 'index'])->name('home');
+    // Route::get('/home', [PegawaiBarchartController::class, 'index'])->name('home');
 
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     Route::get('cuti', [CutiController::class, 'index'])->name('cuti');
@@ -180,7 +180,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('/{id}', [MutasiController::class, 'destroy'])->name('destroy');
         Route::post('/bulk-delete', [MutasiController::class, 'bulkDelete'])->name('bulkDelete');
     });
-    
+
     Route::prefix('kepangkatan')->name('kepangkatan.')->group(function () {
         Route::get('/', [KepangkatanController::class, 'index'])->name('index');
         Route::get('/create', [KepangkatanController::class, 'create'])->name('create');

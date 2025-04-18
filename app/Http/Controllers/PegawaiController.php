@@ -27,7 +27,7 @@ class PegawaiController extends Controller
                 $query->where('nip', 'like', "%$search%")
                     ->orWhere('nama', 'like', "%$search%");
             })
-            ->orderBy('nip', 'desc')
+            ->orderBy('created_at', 'desc')
             ->paginate($perPage);
         $referensi = [
             'provinsi' => \App\Models\Provinsi::select('id', 'nama_provinsi as nama')->get(),

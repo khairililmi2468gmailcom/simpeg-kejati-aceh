@@ -44,7 +44,7 @@ class SettingsController extends Controller
             ->when($searchUnitKerja, function ($query) use ($searchUnitKerja) {
                 $query->where('nama_kantor', 'like', "%$searchUnitKerja%")
                     ->orWhere('kode_kantor', 'like', "%$searchUnitKerja%")
-                    ->orWhere('provinsi', 'like', "%$searchUnitKerja%");
+                    ->orWhere('id_provinsi', 'like', "%$searchUnitKerja%");
             })
             ->orderBy('nama_kantor')
             ->paginate($perPageUnitKerja);
