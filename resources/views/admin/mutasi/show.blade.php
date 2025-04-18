@@ -39,8 +39,8 @@
                         <x-display label="Unit Saat Ini" class="sm:col-span-3">{{ $data->pegawai->unitkerja->nama_kantor ?? '-' }}</x-display>
                         <x-display label="Unit Kerja Lama" class="sm:col-span-3">{{ $data->tempat_l ?? '-' }}</x-display>
                         <x-display label="Tanggal SK" class="sm:col-span-3">{{ \Carbon\Carbon::parse( $data->tanggal_sk ?? '-')->format('d M Y') }}</x-display>
-                        <x-display label="TMT Lama" class="sm:col-span-3">{{ \Carbon\Carbon::parse( $data->tmt_l ?? '-')->format('d M Y') }}</x-display>
-                        <x-display label="Terhitung Mulai Tanggal Jabatan" class="sm:col-span-3">{{ \Carbon\Carbon::parse( $data->tmt_jabatan ?? '-')->format('d M Y') }}</x-display>
+                        <x-display label="TMT Lama" class="sm:col-span-3">{{ \Carbon\Carbon::parse( $data->tmt_l )->format('d M Y') : '-'  }}</x-display>
+                        <x-display label="Terhitung Mulai Tanggal Jabatan" class="sm:col-span-3">{{ \Carbon\Carbon::parse( $data->tmt_jabatan )->format('d M Y') : '-' }}</x-display>
                     </div>
                 </div>
             </div>

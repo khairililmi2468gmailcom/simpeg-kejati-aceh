@@ -38,13 +38,14 @@
                         <x-display label="Pangkat Saat Ini"
                             class="sm:col-span-3">{{ $data->pegawai->golongan->pangkat ?? '-' }}</x-display>
                         <x-display label="Pangkat Lama" class="sm:col-span-3">{{ $data->pangkat_l ?? '-' }}</x-display>
-                        <x-display label="No Pertimbangan"
+                        <x-display label="No. Pertimbangan"
                             class="sm:col-span-3">{{ $data->no_pertimbangan ?? '-' }}</x-display>
                         <x-display label="Pembuat SK" class="sm:col-span-3">{{ $data->pembuat_sk ?? '-' }}</x-display>
+                        <x-display label="No. Usulan" class="sm:col-span-3">{{ $data->no_usulan ?? '-' }}</x-display>
+                        <x-display label="Jenis Usulan" class="sm:col-span-3">{{ $data->jenis_usulan ?? '-' }}</x-display>
                         <x-display label="Tanggal SK" class="sm:col-span-3">
                             {{ $data->tanggal_sk ? \Carbon\Carbon::parse($data->tanggal_sk)->format('d M Y') : '-' }}
                         </x-display>
-
                         <x-display label="TMT SK Pangkat" class="sm:col-span-3">
                             {{ $data->tmt_sk_pangkat ? \Carbon\Carbon::parse($data->tmt_sk_pangkat)->format('d M Y') : '-' }}
                         </x-display>

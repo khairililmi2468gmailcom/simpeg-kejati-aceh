@@ -88,7 +88,7 @@
 
                         <td class="px-5 py-4 space-y-2">
                             <a href="{{ route('admin.kepangkatan.show', $item->no_sk) }}"
-                                class="w-full sm:w-auto inline-flex justify-center items-center text-white bg-blue-500 hover:bg-blue-600 font-semibold rounded-md text-sm px-4 py-2">
+                                class="cursor-pointer w-full sm:w-auto inline-flex justify-center items-center text-white bg-blue-500 hover:bg-blue-600 font-semibold rounded-md text-sm px-4 py-2">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round"
