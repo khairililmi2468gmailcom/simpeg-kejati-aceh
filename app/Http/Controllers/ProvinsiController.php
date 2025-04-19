@@ -19,7 +19,7 @@ class ProvinsiController extends Controller
                 $query->where('id', 'like', "%$search%")
                     ->orWhere('nama_provinsi', 'like', "%$search%");
             })
-            ->orderBy('id','desc')
+            ->orderBy('nama_provinsi','asc')
             ->paginate($perPage)
             ->appends($request->all()); // penting untuk tetap menyimpan query string saat pagination
 

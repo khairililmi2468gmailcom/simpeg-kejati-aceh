@@ -108,11 +108,14 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     Route::get('kepangkatan', [KepangkatanController::class, 'index'])->name('kepangkatan');
 
-    Route::get('laporan', [LaporanController::class, 'index'])->name('laporan');
-
+    
     Route::get('profile', [ProfileController::class, 'index'])->name('profile');
 
-
+    Route::prefix('laporan')->name('laporan.')->group(function () {
+        Route::get('/', [LaporanController::class, 'index'])->name('index');
+        Route::get('/{nip}', [LaporanController::class, 'show'])->name('show');
+    
+    });
 
     Route::prefix('pegawai')->name('pegawai.')->group(function () {
         Route::get('/', [PegawaiController::class, 'index'])->name('index');
