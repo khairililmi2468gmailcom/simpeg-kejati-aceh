@@ -27,6 +27,7 @@ use App\Http\Controllers\MengikutiDiklatController;
 use App\Http\Controllers\ProvinsiController;
 use App\Http\Controllers\WilayahController;
 use App\Models\MengikutiDiklat;
+use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -60,7 +61,11 @@ Route::match(['get'], '/login', function () {
 Route::match(['get'], '/logout', function () {
     abort(404);
 });
-
+Route::fallback(function () {
+    return response()->view('errors.404', [
+        'user' => Auth::user(),
+    ], 404);
+})->middleware('web');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 

@@ -21,7 +21,12 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return response()->json(['success' => true]);
+
+            // Redirect ke halaman dashboard setelah login berhasil
+            return response()->json([
+                'success' => true,
+                'redirect' => route('admin.home')
+            ]);
         }
 
         return response()->json([
@@ -29,6 +34,7 @@ class AuthController extends Controller
             'message' => 'Email atau password tidak valid'
         ], 401);
     }
+
 
     public function logout(Request $request)
     {

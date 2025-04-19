@@ -205,7 +205,8 @@
                                     alt="user photo">
                                 <h3
                                     class="hidden md:block items-center justify-center font-poppins text-[16px] text-gray-900 font-medium ">
-                                    Nama</h3>
+                                    {{ Auth::user()->name }}
+                                </h3>
                                 <svg id="arrowDown" class="h-8 w-8 text-neutral-500 md:block hidden" width="24"
                                     height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                     fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -226,8 +227,11 @@
                                 class="absolute right-0 mt-2 w-48 bg-[#F0F0F0] shadow-lg rounded-lg dark:bg-gray-700 dark:shadow-md 
                                 opacity-0 scale-95 transform transition-all duration-300 ease-out pointer-events-none">
                                 <div class="px-4 py-3 border-b dark:border-gray-600">
-                                    <p class="text-sm font-semibold text-gray-900 dark:text-white">Neil Sims</p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-300 truncate">neil.sims@flowbite.com
+                                    <p class="text-sm font-semibold text-gray-900 dark:text-white">
+                                        {{ Auth::user()->name }}
+                                    </p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-300 truncate">
+                                        {{ Auth::user()->email }}
                                     </p>
                                 </div>
                                 <ul class="py-1">
@@ -803,7 +807,7 @@
                                     // Tambahkan event klik untuk overlay
                                     previewContainer.addEventListener('click', (e) => {
                                         e
-                                    .stopPropagation(); // ⛔ Mencegah event ini naik ke document
+                                            .stopPropagation(); // ⛔ Mencegah event ini naik ke document
                                         closePreview(); // ✅ Cuma tutup preview gambar
                                     });
                                     // Cegah klik di dalam gambar menutup preview
