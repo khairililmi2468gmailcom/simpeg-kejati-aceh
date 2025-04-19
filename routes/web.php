@@ -25,6 +25,7 @@ use App\Http\Controllers\KecamatanController;
 use App\Http\Controllers\MenerimaCutiController;
 use App\Http\Controllers\MengikutiDiklatController;
 use App\Http\Controllers\ProvinsiController;
+use App\Http\Controllers\UbahPasswordController;
 use App\Http\Controllers\WilayahController;
 use App\Models\MengikutiDiklat;
 use Illuminate\Support\Facades\Auth;
@@ -92,6 +93,13 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     // Route::get('/home', [PegawaiBarchartController::class, 'index'])->name('home');
     Route::get('/notifikasi-pensiun', [NotifikasiController::class, 'pensiun'])->name('notifikasi');
+    // profile
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
+    // ubah password
+    Route::get('/ubahpassword', [UbahPasswordController::class, 'index'])->name('ubahpassword.index');
+    Route::post('/ubahpassword/update', [UbahPasswordController::class, 'update'])->name('ubahpassword.update');
 
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     Route::get('cuti', [CutiController::class, 'index'])->name('cuti');
@@ -104,7 +112,6 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     Route::get('profile', [ProfileController::class, 'index'])->name('profile');
 
-    Route::get('account-settting', [AccountSettingsController::class, 'index'])->name('account-setting');
 
 
     Route::prefix('pegawai')->name('pegawai.')->group(function () {

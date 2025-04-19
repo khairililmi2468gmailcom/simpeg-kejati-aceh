@@ -224,7 +224,7 @@
 
                             <!-- Dropdown Menu -->
                             <div id="profileDropdown"
-                                class="absolute right-0 mt-2 w-48 bg-[#F0F0F0] shadow-lg rounded-lg dark:bg-gray-700 dark:shadow-md 
+                                class="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg dark:bg-gray-700 dark:shadow-md 
                                 opacity-0 scale-95 transform transition-all duration-300 ease-out pointer-events-none">
                                 <div class="px-4 py-3 border-b dark:border-gray-600">
                                     <p class="text-sm font-semibold text-gray-900 dark:text-white">
@@ -242,7 +242,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('admin.account-setting') }}"
+                                        <a href="{{ route('admin.ubahpassword.index') }}"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600">
                                             Ubah Password
                                         </a>
