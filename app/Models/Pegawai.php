@@ -19,7 +19,9 @@ class Pegawai extends Model
         'pendidikan', 'universitas', 'jurusan', 't_lulus', 'tahun_masuk', 'foto', 'tmt_jabatan', 
         'id_golongan', 'kode_kantor', 'id_jabatan', 'ket'
     ];
-
+    protected $casts = [
+        'tgl_lahir' => 'date',
+    ];
     public function provinsi()
     {
         return $this->belongsTo(Provinsi::class, 'id_provinsi', 'id');

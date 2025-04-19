@@ -22,7 +22,83 @@
             display: none;
             /* Chrome, Safari, Opera */
         }
+
+        #notifBox {
+            max-height: min(80vh, 400px);
+            /* Tinggi maksimum diperbesar */
+            min-height: 200px;
+            width: 380px;
+            position: absolute;
+            right: 0;
+            top: calc(100% + 0.5rem);
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: none;
+        }
+
+        #notifBox.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .notification-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+
+        .notification-modal {
+            position: absolute;
+            top: 0;
+            left: 100%;
+            width: 100%;
+            height: 100%;
+            background: white;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #notifModalContent {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .notification-modal.active {
+            transform: translateX(-100%);
+        }
+
+        .notification-item {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            transition: background-color 0.2s;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .notification-item:hover {
+            background-color: #f3f4f6;
+        }
     </style>
+    <script>
+        window.asset = function(path) {
+            return '{{ asset('') }}' + path;
+        }
+    </script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
 </head>
 
 <body class="bg-gray-100">
@@ -46,8 +122,9 @@
                         </svg>
                     </button>
                 </div>
+
                 <div class="flex items-center">
-                    <div class="flex items-center ms-4 gap-8 sm:gap-2">
+                    <div class="flex items-center ms-4 gap-8 sm:gap-2 relative">
                         <button id="mailButton" type="button"
                             class="cursor-pointer flex sm:mr-8 text-sm bg-transparent rounded-full  focus:ring-gray-300 dark:focus:ring-gray-600 
                                 active:scale-90 transition-transform duration-400 ease-in-out">
@@ -59,6 +136,26 @@
                                 <polyline points="3 7 12 13 21 7" />
                             </svg>
                         </button>
+                        <div id="notifBox">
+                            <div id="notificationList" class="notification-list">
+                                <!-- Daftar notifikasi akan dimuat di sini -->
+                            </div>
+
+                            <div id="notificationModal" class="notification-modal">
+                                <div class="modal-content">
+                                    <button id="modalBack"
+                                        class="cursor-pointer mb-4 flex items-center text-gray-600 hover:text-gray-800">
+                                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 19l-7-7 7-7" />
+                                        </svg>
+                                        Kembali ke List
+                                    </button>
+                                    <div id="notifModalContent"></div>
+                                </div>
+                            </div>
+                        </div>
 
 
                         <div class="relative">
@@ -121,18 +218,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            <!-- Mail Dropdown -->
-                            <div id="mailDropdown"
-                                class="absolute sm:right-20 right-10 mt-2 w-64 bg-[#F0F0F0] rounded-lg shadow-lg opacity-0 scale-95 pointer-events-none transition-all duration-300">
-                                <div class="flex p-4 items-center">
-                                    <img src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-                                        class="w-10 h-10 rounded-full mr-3" alt="user photo">
-                                    <div>
-                                        <p class="text-gray-900 font-medium">Nama</p>
-                                        <p class="text-gray-500 text-sm">Telah memasuki masa pensiun</p>
-                                    </div>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -488,9 +574,8 @@
                 }
             });
         });
-    </script>
-  
-    <script>
+
+        // logout
         document.addEventListener("DOMContentLoaded", function() {
             const logoutBtn = document.getElementById("logoutBtn");
             const logoutForm = document.getElementById("logoutForm");
@@ -533,7 +618,179 @@
             @endif
         });
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Pastikan semua element ada sebelum diakses
+            const mailButton = document.getElementById('mailButton');
+            const notifBox = document.getElementById('notifBox');
+            const notificationList = document.getElementById('notificationList');
+            const notificationModal = document.getElementById('notificationModal');
 
+            // Tambahkan pengecekan null
+            if (!mailButton || !notifBox || !notificationList || !notificationModal) {
+                console.error('Elemen penting tidak ditemukan!');
+                return;
+            }
+
+            // Toggle notifikasi dengan pengecekan classList
+            mailButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (notifBox) {
+                    notifBox.classList.toggle('active');
+
+                    if (notifBox.classList.contains('active') && notificationList.children.length === 0) {
+                        loadNotifications();
+                    }
+                }
+            });
+
+            // Tutup saat klik di luar dengan pengecekan null
+            document.addEventListener('click', (e) => {
+                if (notifBox && mailButton) {
+                    if (!notifBox.contains(e.target) && !mailButton.contains(e.target)) {
+                        notifBox.classList.remove('active');
+                        if (notificationModal) {
+                            notificationModal.classList.remove('active');
+                        }
+                    }
+                }
+            });
+
+            async function loadNotifications() {
+                try {
+                    notificationList.innerHTML = '<div class="p-4 text-gray-500">Memuat notifikasi...</div>';
+
+                    const response = await fetch("{{ route('admin.notifikasi') }}", {
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    const data = await response.json();
+
+                    notificationList.innerHTML = data.map(p => `
+                        <div class="notification-item open-notif-modal"
+                            data-nama="${p.nama}"
+                            data-nip="${p.nip}"
+                            data-tgl_lahir="${p.tgl_lahir}"
+                            data-tgl="${p.tgl_pensiun}"
+                            data-sisa="${p.sisa_hari}"
+                            data-foto="${p.foto}">
+                            <img src="${p.foto}" 
+                                class="w-12 h-12 rounded-full object-cover mr-3"
+                                onerror="this.src='{{ asset('/image/logo.png') }}'">
+                            <div>
+                                <div class="font-medium text-gray-900">${p.nama}</div>
+                                <div class="text-sm text-gray-500">${p.nip}</div>
+                                <div class="text-xs text-gray-400 mt-1">
+                                    Pensiun dalam ${p.sisa_hari} hari
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    // Event delegation untuk dynamic elements
+                    notificationList.addEventListener('click', (e) => {
+                        const target = e.target.closest('.open-notif-modal');
+                        if (target && notificationModal) {
+                            const dataset = target.dataset;
+                            notificationModal.innerHTML = `
+                                <div class="space-y-4">
+                                    <button id="modalBack" class="cursor-pointer mb-4 flex items-center text-gray-600 hover:text-gray-800">
+                                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                        </svg>
+                                        Kembali ke List
+                                    </button>
+                                    <div class="text-center">
+                                        <img src="${dataset.foto || '{{ asset('/image/logo.png') }}'}" 
+                                            class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
+                                        <h2 class="text-xl font-bold text-gray-800">${dataset.nama}</h2>
+                                        <p class="text-gray-600">NIP: ${dataset.nip}</p>
+                                    </div>
+                                    
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                       <div class="flex justify-between items-center">
+                                            <span class="font-medium">Tanggal Lahir:</span>
+                                            <span class="text-gray-600">${formatTanggalIndoFromISO(dataset.tgl_lahir)}</span>
+                                        </div>
+                                        <div class="flex justify-between items-center mt-2">
+                                            <span class="font-medium">Tanggal Pensiun:</span>
+                                            <span class="text-gray-600">${formatTanggalIndoFromISO(dataset.tgl)}</span>
+                                        </div>
+
+                                        <div class="flex justify-center items-center mt-2">
+                                            <span class="font-medium">Sisa Waktu</span>
+                                        </div>
+                                        <div class="flex justify-center items-center mt-2">
+                                            <span id="countdownTimer" class="justify-center text-blue-600 font-bold text-[18px]">Menghitung...</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            `;
+                            notificationModal.classList.add('active');
+                            const countdownEl = document.getElementById('countdownTimer');
+
+                            if (dataset.tgl) {
+                                const [year, month, day] = dataset.tgl.split('-');
+                                const targetDate = new Date(year, month - 1, day);
+
+                                function updateCountdown() {
+                                    const now = new Date();
+                                    const totalSeconds = Math.floor((targetDate - now) / 1000);
+
+                                    if (totalSeconds <= 0) {
+                                        countdownEl.textContent = 'Sudah Pensiun';
+                                        clearInterval(interval);
+                                        return;
+                                    }
+
+                                    const days = Math.floor(totalSeconds / 86400);
+                                    const hours = Math.floor((totalSeconds % 86400) / 3600);
+                                    const minutes = Math.floor((totalSeconds % 3600) / 60);
+                                    const seconds = totalSeconds % 60;
+
+                                    countdownEl.textContent =
+                                        `${days} Hari ${hours} Jam ${minutes} Menit ${seconds} Detik`;
+                                }
+
+                                updateCountdown(); // Initial run
+                                const interval = setInterval(updateCountdown, 1000);
+
+                                // Clear interval ketika modal ditutup
+                                document.getElementById('modalBack')?.addEventListener('click', () => {
+                                    clearInterval(interval);
+                                    notificationModal.classList.remove('active');
+                                });
+                            }
+
+                            // Handle tombol kembali
+                            document.getElementById('modalBack')?.addEventListener('click', () => {
+                                notificationModal.classList.remove('active');
+                            });
+                        }
+                    });
+
+                    function formatTanggalIndoFromISO(isoDate) {
+                        const bulanIndo = [
+                            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+                        ];
+
+                        const [year, month, day] = isoDate.split('-');
+                        return `${parseInt(day)} ${bulanIndo[parseInt(month) - 1]} ${year}`;
+                    }
+
+
+
+                } catch (err) {
+                    notificationList.innerHTML = '<div class="p-4 text-red-500">Gagal memuat notifikasi</div>';
+                }
+            }
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
 

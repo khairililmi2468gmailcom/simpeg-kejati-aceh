@@ -16,6 +16,7 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
 use App\Exports\PegawaiExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TemplatePegawaiExport;
+use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\JabatanController;
@@ -85,6 +86,7 @@ Route::prefix('data')->name('referensi.')->group(function () {
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     // Route::get('/home', [PegawaiBarchartController::class, 'index'])->name('home');
+    Route::get('/notifikasi-pensiun', [NotifikasiController::class, 'pensiun'])->name('notifikasi');
 
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     Route::get('cuti', [CutiController::class, 'index'])->name('cuti');
