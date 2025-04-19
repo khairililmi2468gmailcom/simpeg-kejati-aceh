@@ -23,7 +23,8 @@
                 {{-- NRP --}}
                 <div>
                     <label class="block font-semibold text-gray-700">NRP</label>
-                    <input type="text" name="nrp" value="{{ $pegawai->nrp }}"  maxlength="25" oninput="this.value = this.value.slice(0, 25);"
+                    <input type="text" name="nrp" value="{{ $pegawai->nrp }}" maxlength="25"
+                        oninput="this.value = this.value.slice(0, 25);"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
@@ -31,7 +32,8 @@
                 {{-- Karpeg --}}
                 <div>
                     <label class="block font-semibold text-gray-700">Karpeg</label>
-                    <input type="text" name="karpeg" value="{{ $pegawai->karpeg }}"  maxlength="25" oninput="this.value = this.value.slice(0, 25);"
+                    <input type="text" name="karpeg" value="{{ $pegawai->karpeg }}" maxlength="25"
+                        oninput="this.value = this.value.slice(0, 25);"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
@@ -39,7 +41,8 @@
                 {{-- Nama --}}
                 <div>
                     <label class="block font-semibold text-gray-700">Nama</label>
-                    <input type="text" name="nama" value="{{ $pegawai->nama }}" maxlength="100" oninput="this.value = this.value.slice(0, 100);"
+                    <input type="text" name="nama" value="{{ $pegawai->nama }}" maxlength="100"
+                        oninput="this.value = this.value.slice(0, 100);"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
@@ -47,7 +50,8 @@
                 {{-- Tempat Lahir --}}
                 <div>
                     <label class="block font-semibold text-gray-700">Tempat Lahir</label>
-                    <input type="text" name="tmpt_lahir" value="{{ $pegawai->tmpt_lahir }}" maxlength="25" oninput="this.value = this.value.slice(0, 25);"
+                    <input type="text" name="tmpt_lahir" value="{{ $pegawai->tmpt_lahir }}" maxlength="25"
+                        oninput="this.value = this.value.slice(0, 25);"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
@@ -55,7 +59,8 @@
                 {{-- Tanggal Lahir --}}
                 <div>
                     <label class="block font-semibold text-gray-700">Tanggal Lahir</label>
-                    <input type="date" name="tgl_lahir" value="{{ $pegawai->tgl_lahir }}"
+                    <input type="date" name="tgl_lahir"
+                        value="{{ old('tgl_lahir', \Carbon\Carbon::parse($pegawai->tgl_lahir)->format('Y-m-d')) }}"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
@@ -76,7 +81,8 @@
                 </div>
                 <div>
                     <label class="block font-semibold text-gray-700">Suku</label>
-                    <input type="text" name="suku" value="{{ $pegawai->suku }}" maxlength="25" oninput="this.value = this.value.slice(0, 25);"
+                    <input type="text" name="suku" value="{{ $pegawai->suku }}" maxlength="25"
+                        oninput="this.value = this.value.slice(0, 25);"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
@@ -116,7 +122,8 @@
                 </div>
                 <div>
                     <label class="block font-semibold text-gray-700">Jumlah Anak</label>
-                    <input type="number" name="j_anak" value="{{ $pegawai->j_anak }}" maxlength="11" oninput="this.value = this.value.slice(0, 11);"
+                    <input type="number" name="j_anak" value="{{ $pegawai->j_anak }}" maxlength="11"
+                        oninput="this.value = this.value.slice(0, 11);"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
@@ -236,13 +243,15 @@
                 {{-- Kode Pos, No HP --}}
                 <div>
                     <label class="block font-semibold text-gray-700">Kode Pos</label>
-                    <input type="text" name="kode_pos" value="{{ $pegawai->kode_pos }}" maxlength="12" oninput="this.value = this.value.slice(0, 12);"
+                    <input type="text" name="kode_pos" value="{{ $pegawai->kode_pos }}" maxlength="12"
+                        oninput="this.value = this.value.slice(0, 12);"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
                 <div>
                     <label class="block font-semibold text-gray-700">No. HP</label>
-                    <input type="text" name="hp" value="{{ $pegawai->hp }}" maxlength="12" oninput="this.value = this.value.slice(0, 12);"
+                    <input type="text" name="hp" value="{{ $pegawai->hp }}" maxlength="12"
+                        oninput="this.value = this.value.slice(0, 12);"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
@@ -250,13 +259,15 @@
                 {{-- Pendidikan, Universitas --}}
                 <div>
                     <label class="block font-semibold text-gray-700">Pendidikan Terakhir</label>
-                    <input type="text" name="pendidikan" value="{{ $pegawai->pendidikan }}" maxlength="25" oninput="this.value = this.value.slice(0, 25);"
+                    <input type="text" name="pendidikan" value="{{ $pegawai->pendidikan }}" maxlength="25"
+                        oninput="this.value = this.value.slice(0, 25);"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
                 <div>
                     <label class="block font-semibold text-gray-700">Universitas</label>
-                    <input type="text" name="universitas" value="{{ $pegawai->universitas }}" maxlength="99" oninput="this.value = this.value.slice(0, 99);"
+                    <input type="text" name="universitas" value="{{ $pegawai->universitas }}" maxlength="99"
+                        oninput="this.value = this.value.slice(0, 99);"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
@@ -264,13 +275,15 @@
                 {{-- Jurusan, Tahun Lulus --}}
                 <div>
                     <label class="block font-semibold text-gray-700">Jurusan</label>
-                    <input type="text" name="jurusan" value="{{ $pegawai->jurusan }}" maxlength="100" oninput="this.value = this.value.slice(0, 100);"
+                    <input type="text" name="jurusan" value="{{ $pegawai->jurusan }}" maxlength="100"
+                        oninput="this.value = this.value.slice(0, 100);"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
                 <div>
                     <label class="block font-semibold text-gray-700">Tahun Lulus</label>
-                    <input type="number" name="t_lulus" value="{{ $pegawai->t_lulus }}" oninput="this.value = this.value.slice(0, 4);"
+                    <input type="number" name="t_lulus" value="{{ $pegawai->t_lulus }}"
+                        oninput="this.value = this.value.slice(0, 4);"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
@@ -278,7 +291,8 @@
                 {{-- Tahun Masuk, TMT Jabatan --}}
                 <div>
                     <label class="block font-semibold text-gray-700">Tahun Masuk</label>
-                    <input type="number" name="tahun_masuk" value="{{ $pegawai->tahun_masuk }}" maxlength="4" oninput="this.value = this.value.slice(0, 4);"
+                    <input type="number" name="tahun_masuk" value="{{ $pegawai->tahun_masuk }}" maxlength="4"
+                        oninput="this.value = this.value.slice(0, 4);"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]" />
 
                 </div>
@@ -358,7 +372,7 @@
                     class="cursor-pointer inline-block bg-gray-300 hover:bg-gray-400 text-gray-700 px-5 py-2 rounded shadow">
                     Batal
                 </a>
-                <button type="submit" 
+                <button type="submit"
                     class="cursor-pointer bg-[#00A181] hover:bg-[#009171] text-white px-6 py-2 rounded shadow">
                     Simpan Perubahan
                 </button>

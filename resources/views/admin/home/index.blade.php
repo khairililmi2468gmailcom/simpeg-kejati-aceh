@@ -2,9 +2,9 @@
 
 @section('content')
     <div class="container mx-auto px-4">
-        <h1 class="text-2xl font-bold mb-6">Dashboard</h1>
 
-
+        <h1 class="text-3xl font-bold text-[#00A181]">Dashboard</h1>
+        <p class="mb-8 text-gray-500">Halaman dashboard simpeg Kejaksaan Tinggi</p>
         {{-- Summary Cards --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-10">
             {{-- Total Pegawai --}}

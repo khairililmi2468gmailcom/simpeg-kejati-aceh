@@ -721,7 +721,7 @@
                                         </div>
 
                                         <div class="flex justify-center items-center mt-2">
-                                            <span class="font-medium">Sisa Waktu</span>
+                                            <span class="font-normal italic text-gray-500">Sisa Waktu</span>
                                         </div>
                                         <div class="flex justify-center items-center mt-2">
                                             <span id="countdownTimer" class="justify-center text-blue-600 font-bold text-[18px]">Menghitung...</span>
@@ -730,6 +730,7 @@
                                     </div>
                                 </div>
                             `;
+                            
                             notificationModal.classList.add('active');
                             const countdownEl = document.getElementById('countdownTimer');
 

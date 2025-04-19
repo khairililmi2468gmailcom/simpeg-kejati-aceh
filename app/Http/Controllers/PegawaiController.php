@@ -119,6 +119,7 @@ class PegawaiController extends Controller
     public function edit($nip)
     {
         $pegawai = Pegawai::findOrFail($nip);
+        $pegawai->tgl_lahir = \Carbon\Carbon::parse($pegawai->tgl_lahir)->format('Y-m-d');
         $provinsi = Provinsi::all();
         $golongan = Golongan::all();
         $unitKerja = UnitKerja::all();
