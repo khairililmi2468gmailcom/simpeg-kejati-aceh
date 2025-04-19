@@ -32,7 +32,8 @@
 
         <!-- Hapus Data -->
         <button id="bulkDeleteBtn"
-            class="cursor-pointer inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-2.5 disabled:opacity-50 mb-2 md:mb-0"
+            class="bulk-delete-btn cursor-pointer inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-2.5 disabled:opacity-50 mb-2 md:mb-0"
+            data-action="{{route('admin.settings.admin.bulkDelete')}}" data-token="{{ csrf_token() }}"
             disabled>
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
@@ -46,16 +47,16 @@
     </div>
 </div>
 
-<!-- Tabel Provinsi -->
+<!-- Tabel Admin -->
 <div class="overflow-auto max-h-[70vh] rounded-xl scrollbar-hidden">
 
     <table class="w-full text-base text-left text-gray-700 bg-white shadow-lg rounded-xl overflow-hidden">
         <thead class="text-white bg-[#00A181]">
             <tr>
                 <th class="px-5 py-4 text-center"><input type="checkbox" id="checkAll"></th>
-                <th class="px-5 py-4">Kode Kantor</th>
-                <th class="px-5 py-4">Nama Kantor</th>
-                <th class="px-5 py-4">Provinsi</th>
+                <th class="px-5 py-4">ID Admin</th>
+                <th class="px-5 py-4">Nama</th>
+                <th class="px-5 py-4">Email</th>
                 <th class="px-5 py-4">Aksi</th>
             </tr>
         </thead>
@@ -66,8 +67,8 @@
                         <input type="checkbox" class="checkbox-item" value="{{ $item->id }}">
                     </td>
                     <td class="px-5 py-4">{{ $item->id }}</td>
-                    <td class="px-5 py-4">{{ $item->nama_kantor }}</td>
-                    <td class="px-5 py-4">{{ $item->provinsi }}</td>
+                    <td class="px-5 py-4">{{ $item->name }}</td>
+                    <td class="px-5 py-4">{{ $item->email }}</td>
                     <td class="px-5 py-4 space-y-2">
                         <a href="{{ route('admin.settings.admin.edit', $item->id) }}"
                             class="w-full sm:w-auto inline-flex justify-center items-center text-white bg-yellow-500 hover:bg-yellow-600 font-semibold rounded-md text-sm px-4 py-2">

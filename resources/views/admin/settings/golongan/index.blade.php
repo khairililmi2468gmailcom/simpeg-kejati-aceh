@@ -176,7 +176,7 @@
 
                 Swal.fire({
                     title: 'Yakin ingin menghapus?',
-                    text: "Data golongan di pegawai dan kepangkatan juga akan dihapus dan tidak bisa dikembalikan!",
+                    text: "Data yang dihapus tidak bisa dikembalikan!",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
@@ -220,7 +220,7 @@
 
             Swal.fire({
                 title: 'Yakin ingin menghapus data terpilih?',
-                text: `${selected.length} data golongan di pegawai dan kepangkatan juga akan dihapus akan dihapus!`,
+                text: `${selected.length} data akan dihapus!`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',

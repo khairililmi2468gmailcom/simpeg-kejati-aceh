@@ -29,7 +29,7 @@
         <!-- Tab Contents -->
         <div class="p-8 rounded-b-md bg-white shadow">
             <div data-content="admin" class="tab-content">
-                @include('admin.settings.admin.index')
+                @include('admin.settings.admin.index', ['admins' => $admins ?? null])
             </div>
             <div data-content="jabatan" class="tab-content hidden">
                 @include('admin.settings.jabatan.index', ['jabatans' => $jabatans ?? null])

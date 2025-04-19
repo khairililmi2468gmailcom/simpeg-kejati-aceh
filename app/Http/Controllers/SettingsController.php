@@ -11,6 +11,7 @@ use App\Models\Provinsi;
 use App\Models\UnitKerja;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class SettingsController extends Controller
 {
@@ -92,9 +93,30 @@ class SettingsController extends Controller
     {
         return view('admin.settings.golongan.create');
     }
+    public function createAdmin()
+    {
+        return view('admin.settings.admin.create');
+    }
 
 
     // ======= STORE ===========
+
+    public function storeAdmin(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->password, // Laravel akan hash otomatis dari $casts
+        ]);
+
+        return redirect()->route('admin.settings.index')->with('success', 'Admin baru berhasil ditambahkan.');
+    }
 
     public function storeGolongan(Request $request)
     {
@@ -150,6 +172,12 @@ class SettingsController extends Controller
     }
 
     // ======= EDIT ===========
+    public function editAdmin($id)
+    {
+        $admin = User::findOrFail($id);
+
+        return view('admin.settings.admin.edit', compact('admin'));
+    }
     public function editJabatan($id)
     {
         $data = Jabatan::findOrFail($id);
@@ -213,7 +241,44 @@ class SettingsController extends Controller
         return redirect()->route('admin.settings.index')->with('success', 'Data unitkerja berhasil diperbarui.');
     }
 
+    public function updateAdmin(Request $request, $id)
+    {
+        // Mencari admin berdasarkan ID
+        $admin = User::findOrFail($id);
+
+        // Validasi input
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $admin->id,
+            'password' => 'nullable|string|min:8|confirmed', // Password opsional jika tidak ingin mengganti
+        ]);
+
+        // Update data admin
+        $admin->name = $request->name;
+        $admin->email = $request->email;
+
+        // Jika password diisi, maka kita hash dan update
+        if ($request->password) {
+            $admin->password = bcrypt($request->password);
+        }
+
+        $admin->save(); // Simpan perubahan
+
+        return redirect()->route('admin.settings.index')->with('success', 'Admin berhasil diperbarui.');
+    }
+
     // ======= DESTROY ===========
+    public function destroyAdmin($id)
+    {
+        // Mencari admin berdasarkan ID
+        $admin = User::findOrFail($id);
+
+        // Hapus data admin
+        $admin->delete();
+
+        return redirect()->route('admin.settings.index')->with('success', 'Admin berhasil dihapus.');
+    }
+
     public function destroyJabatan($id)
     {
         $jabatan = Jabatan::findOrFail($id);
@@ -281,7 +346,33 @@ class SettingsController extends Controller
 
 
     // ======= BULK DELETE ===========
+    public function bulkDeleteAdmin(Request $request)
+    {
+        // Log::info('Mulai bulk delete admin');
+        // Log::debug('Request data:', $request->all());
 
+        try {
+            $validated = $request->validate([
+                'id' => 'required|array|min:1',
+                'id.*' => 'exists:users,id',
+            ]);
+
+            // Log::debug('Validasi berhasil:', $validated);
+
+            $deletedCount = User::whereIn('id', $validated['id'])->delete();
+
+            // Log::info("Berhasil menghapus {$deletedCount} admin");
+
+            return redirect()->route('admin.settings.index')->with('success', 'Admin yang dipilih berhasil dihapus.');
+        } catch (\Exception $e) {
+            Log::error('Terjadi kesalahan saat bulk delete admin:', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus admin.');
+        }
+    }
     public function bulkDeleteGolongan(Request $request)
     {
         try {
