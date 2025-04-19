@@ -7,7 +7,7 @@
     </div>
 
     <div class="max-w-xl mx-auto mt-6 p-6 bg-white shadow-md rounded-xl">
-        <form action="{{ route('admin.diklat.master.store') }}" method="POST">
+        <form action="{{ route('admin.diklat.master.store') }}" method="POST" id="createForm">
             @csrf
             <div class="mb-4">
                 <label for="nama_diklat" class="block text-sm font-medium text-gray-700">Nama Diklat</label>
@@ -74,7 +74,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Jika konfirmasi, kirim form
-                    document.querySelector('form').submit();
+                    document.getElementById('createForm').submit();
                 }
             });
         });

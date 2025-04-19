@@ -8,7 +8,7 @@
 
 
     <div class="max-w-xl mx-auto mt-6 p-6 bg-white shadow-md rounded-xl">
-        <form action="{{ route('admin.kecamatan.update', $kecamatan->id) }}" method="POST">
+        <form action="{{ route('admin.kecamatan.update', $kecamatan->id) }}" method="POST" id="editForm">
             @csrf
             @method('PUT')
 
@@ -148,7 +148,7 @@
                         cancelButtonText: 'Batal'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            document.querySelector('form').submit();
+                            document.getElementById('editForm').submit();
                         }
                     });
                 });

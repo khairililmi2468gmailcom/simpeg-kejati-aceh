@@ -7,7 +7,7 @@
     </div>
 
     <div class="max-w-xl mx-auto mt-6 p-6 bg-white shadow-md rounded-xl">
-        <form action="{{ route('admin.kecamatan.store') }}" method="POST">
+        <form action="{{ route('admin.kecamatan.store') }}" method="POST" id="createForm">
             @csrf
             <div class="mb-4">
                 <label for="nama_kecamatan" class="block text-sm font-medium text-gray-700">Nama kecamatan</label>
@@ -51,7 +51,7 @@
                     class="px-4 py-2 mr-2 text-[#00A181] border border-[#00A181] rounded-lg hover:bg-[#00A181] hover:text-white transition">
                     Batal
                 </a>
-                <button type="submit"
+                <button type="button" id="submitBtn"
                     class="cursor-pointer px-4 py-2 bg-[#00A181] text-white rounded-lg hover:bg-[#009171] transition">
                     Simpan
                 </button>
@@ -105,18 +105,59 @@
     }
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    document.querySelector('form').addEventListener('submit', function(e) {
-        const selectedKabupaten = document.querySelector('input[name="id_kabupaten"]').value;
-        if (!selectedKabupaten) {
-            e.preventDefault();
+@push('scripts')
+    <script>
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const selectedKabupaten = document.querySelector('input[name="id_kabupaten"]').value;
+            if (!selectedKabupaten) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Provinsi belum dipilih',
+                    text: 'Silakan pilih provinsi terlebih dahulu.',
+                    confirmButtonColor: '#00A181',
+                });
+            }
+        });
+        document.getElementById('submitBtn').addEventListener('click', function(e) {
+            const kabupaten = document.querySelector('input[name="id_kabupaten"]').value;
+            const kecamatan = document.getElementById('nama_kecamatan').value.trim();
+
+            if (!kecamatan) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lengkapi data',
+                    text: 'Kecamatan wajib diisi.',
+                    confirmButtonColor: '#00A181',
+                });
+                return;
+            }
+            if (!kabupaten) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lengkapi data',
+                    text: 'Kabupaten wajib diisi.',
+                    confirmButtonColor: '#00A181',
+                });
+                return;
+            }
+
+            // Menampilkan konfirmasi SweetAlert
             Swal.fire({
-                icon: 'error',
-                title: 'Provinsi belum dipilih',
-                text: 'Silakan pilih provinsi terlebih dahulu.',
+                title: 'Perbarui Data?',
+                text: 'Apakah Anda yakin ingin menambahkan data ini?',
+                icon: 'warning',
+                showCancelButton: true,
                 confirmButtonColor: '#00A181',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Simpan',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Jika konfirmasi, kirim form
+                    document.getElementById('createForm').submit();
+                }
             });
-        }
-    });
-</script>
+        });
+    </script>
+@endpush

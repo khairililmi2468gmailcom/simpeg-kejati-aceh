@@ -26,5 +26,8 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useTailwind();
         Schema::defaultStringLength(191);
         Carbon::setLocale('id');
+        \Illuminate\Support\Facades\Response::macro('secureJson', function ($value) {
+            return response()->json($value)->header('Content-Security-Policy', "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net");
+        });
     }
 }

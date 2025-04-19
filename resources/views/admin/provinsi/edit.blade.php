@@ -8,7 +8,7 @@
 
 
 <div class="max-w-xl mx-auto mt-6 p-6 bg-white shadow-md rounded-xl">
-    <form action="{{ route('admin.provinsi.update', $provinsi->id) }}" method="POST">
+    <form action="{{ route('admin.provinsi.update', $provinsi->id) }}" method="POST" id="editForm">
         @csrf
         @method('PUT')
 
@@ -64,7 +64,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Jika konfirmasi, kirim form
-                    document.querySelector('form').submit();
+                    document.getElementById('editForm').submit();
                 }
             });
         });

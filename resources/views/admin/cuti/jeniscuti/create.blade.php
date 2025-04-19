@@ -7,7 +7,7 @@
     </div>
 
     <div class="max-w-xl mx-auto mt-6 p-6 bg-white shadow-md rounded-xl">
-        <form action="{{ route('admin.cuti.jeniscuti.store') }}" method="POST">
+        <form action="{{ route('admin.cuti.jeniscuti.store') }}" method="POST" id="createForm">
             @csrf
             <div class="mb-4">
                 <label for="jenis_cuti" class="block text-sm font-medium text-gray-700">Jenis Cuti</label>
@@ -62,7 +62,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Jika konfirmasi, kirim form
-                    document.querySelector('form').submit();
+                    document.getElementById('createForm').submit(); // Cara 1: Pakai ID
                 }
             });
         });
