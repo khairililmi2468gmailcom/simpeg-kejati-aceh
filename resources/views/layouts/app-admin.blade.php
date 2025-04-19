@@ -79,6 +79,10 @@
             transform: translateX(-100%);
         }
 
+        .notification-modal .absolute {
+            backdrop-filter: blur(2px);
+        }
+
         .notification-item {
             padding: 1rem;
             border-bottom: 1px solid #e5e7eb;
@@ -90,6 +94,38 @@
 
         .notification-item:hover {
             background-color: #f3f4f6;
+        }
+
+
+        .preview-image {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .preview-image:hover {
+            transform: scale(1.1);
+        }
+
+        /* Preview overlay */
+        .image-preview-overlay {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(3px);
+        }
+
+        /* Animation */
+        @keyframes gentleScale {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        .enlarged-image {
+            animation: gentleScale 0.3s ease-out;
         }
     </style>
     <script>
@@ -683,7 +719,7 @@
                             <div>
                                 <div class="font-medium text-gray-900">${p.nama}</div>
                                 <div class="text-sm text-gray-500">${p.nip}</div>
-                                <div class="text-xs text-gray-400 mt-1">
+                                <div class="text-bold text-yellow-500 mt-1">
                                     Pensiun dalam ${p.sisa_hari} hari
                                 </div>
                             </div>
@@ -704,8 +740,11 @@
                                         Kembali ke List
                                     </button>
                                     <div class="text-center">
-                                        <img src="${dataset.foto || '{{ asset('/image/logo.png') }}'}" 
-                                            class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
+                                       <div class="relative inline-block group">
+                        <img src="${dataset.foto || '{{ asset('/image/logo.png') }}'}" 
+                            class="preview-image w-24 h-24 rounded-full mx-auto mb-4 object-cover 
+                            cursor-pointer transition-transform duration-200 hover:scale-105">
+                    </div>
                                         <h2 class="text-xl font-bold text-gray-800">${dataset.nama}</h2>
                                         <p class="text-gray-600">NIP: ${dataset.nip}</p>
                                     </div>
@@ -730,7 +769,53 @@
                                     </div>
                                 </div>
                             `;
-                            
+                            // Fungsi preview gambar
+                            const previewImage = notificationModal.querySelector('.preview-image');
+                            if (previewImage) {
+                                previewImage.addEventListener('click', (e) => {
+                                    e.stopPropagation();
+
+                                    // Create preview container
+                                    const previewContainer = document.createElement('div');
+                                    previewContainer.className =
+                                        'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
+
+                                    // Wrapper untuk mencegah close saat klik gambar
+                                    const imageWrapper = document.createElement('div');
+                                    imageWrapper.className = 'relative';
+
+                                    // Gambar bulat
+                                    const enlargedImg = document.createElement('img');
+                                    enlargedImg.src = previewImage.src;
+                                    enlargedImg.className =
+                                        'w-80 h-80 object-cover rounded-full shadow-2xl border-4 border-white transition-transform duration-300 transform hover:scale-105';
+
+                                    // Susun elemen
+                                    imageWrapper.appendChild(enlargedImg);
+                                    previewContainer.appendChild(imageWrapper);
+                                    notificationModal.appendChild(previewContainer);
+
+                                    // Tutup preview
+                                    const closePreview = () => {
+                                        previewContainer.remove();
+                                    };
+
+                                    // Tambahkan event klik untuk overlay
+                                    previewContainer.addEventListener('click', (e) => {
+                                        e
+                                    .stopPropagation(); // ⛔ Mencegah event ini naik ke document
+                                        closePreview(); // ✅ Cuma tutup preview gambar
+                                    });
+                                    // Cegah klik di dalam gambar menutup preview
+                                    imageWrapper.addEventListener('click', (e) => e
+                                        .stopPropagation());
+
+                                    // Ganti ini:
+                                    document.body.appendChild(previewContainer); // ⬅️ penting!
+
+                                });
+                            }
+
                             notificationModal.classList.add('active');
                             const countdownEl = document.getElementById('countdownTimer');
 
@@ -765,12 +850,14 @@
                                     clearInterval(interval);
                                     notificationModal.classList.remove('active');
                                 });
+
                             }
 
                             // Handle tombol kembali
                             document.getElementById('modalBack')?.addEventListener('click', () => {
                                 notificationModal.classList.remove('active');
                             });
+
                         }
                     });
 
@@ -794,7 +881,6 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
-
 
     @stack('scripts')
 </body>
