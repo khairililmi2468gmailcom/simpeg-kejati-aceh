@@ -150,7 +150,7 @@
     </div>
 
 
-    <h1 class="title">LAPORAN DATA PEGAWAI</h1>
+    <h1 class="title">LAPORAN DATA CUTI PEGAWAI</h1>
 
     <table>
         <thead>
@@ -158,20 +158,20 @@
                 <th>No</th>
                 <th>NIP</th>
                 <th>Nama Pegawai</th>
-                <th>Unit Kerja</th>
-                <th>Jabatan</th>
-                <th>Tgl. Lahir</th>
+                <th>Jenis Cuti</th>
+                <th>Tanggal Mulai</th>
+                <th>Tanggal Selesai</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($pegawai as $key => $data)
+            @foreach ($cuti as $key => $data)
                 <tr>
                     <td>{{ $key + 1 }}</td>
                     <td>{{ $data->nip }}</td>
-                    <td>{{ strtoupper($data->nama) }}</td>
-                    <td>{{ $data->unitKerja->nama_kantor ?? '-' }}</td>
-                    <td>{{ $data->golongan->jabatan_fungsional ?? '-' }}</td>
-                    <td>{{ \Carbon\Carbon::parse($data->tanggal_lahir)->translatedFormat('d F Y') }}</td>
+                    <td>{{ strtoupper($data->pegawai->nama) }}</td>
+                    <td>{{ $data->cuti->jenis_cuti ?? '-' }}</td>
+                    <td>{{ \Carbon\Carbon::parse($data->tanggal_mulai)->translatedFormat('d F Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($data->tanggal_selesai)->translatedFormat('d F Y') }}</td>  
                 </tr>
             @endforeach
         </tbody>

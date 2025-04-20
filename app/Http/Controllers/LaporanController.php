@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cuti;
 use App\Models\Diklat;
 use App\Models\Golongan;
 use App\Models\Jabatan;
@@ -282,9 +283,75 @@ class LaporanController extends Controller
             'title' => 'Data Pegawai - Kejaksaan Tinggi Aceh',
         ]);
 
-        return $pdf->stream("pegawai-{$pegawai->nip}.pdf");
+        return $pdf->stream("pegawai-{$pegawai->nip}-{$pegawai->nama}.pdf");
     }
 
+    
+    public function cetakPdfCuti(Request $request)
+    {
+        $query = MenerimaCuti::query();
+
+        if ($request->filled('no_surat')) {
+            $query->where('no_surat', $request->no_surat);
+        }
+
+        if ($request->filled('nip')) {
+            $query->where('nip', $request->nip);
+        }
+
+        if ($request->filled('cuti_id')) {
+            $query->where('cuti_id', $request->cuti_id);
+        }
+
+        $cuti = $query->get();
+
+        // QR Code: bisa berisi informasi tanggal cetak + info otentikasi
+        $tanggalCetak = Carbon::now()->translatedFormat('d F Y');
+        $qrContent = "Laporan Cuti Pegawai - Kejati Aceh\nDicetak pada: $tanggalCetak";
+        $qrCode = base64_encode(QrCode::format('png')->size(100)->generate($qrContent));
+
+        $pdf = Pdf::loadView('exports.cuti_pdf', [
+            'cuti' => $cuti,
+            'tanggalCetak' => $tanggalCetak,
+            'qrCode' => $qrCode,
+        ])->setPaper('A4', 'portrait');
+
+        return $pdf->stream('Laporan_Cuti_Pegawai_Kejati_Aceh.pdf');
+    }
+    public function cetakPdfSatuCuti($id)
+    {
+        $cuti = MenerimaCuti::with(['pegawai', 'cuti'])->findOrFail($id);
+
+        // QR Code
+        $qrCode = base64_encode(
+            QrCode::format('png')->size(100)->generate("Data Cuti Pegawai: {$cuti->pegawai->nama} - NIP: {$cuti->nip}")
+        );
+
+        // Base64 foto pegawai
+        $fotoPath = storage_path('app/public/' . $cuti->foto);
+        $fotoBase64 = null;
+
+        if (!empty($cuti->foto) && file_exists($fotoPath)) {
+            $ext = pathinfo($fotoPath, PATHINFO_EXTENSION);
+            $fotoBase64 = 'data:image/' . $ext . ';base64,' . base64_encode(file_get_contents($fotoPath));
+        } else {
+            // Opsional: fallback ke foto default
+            $defaultPath = public_path('image/default.png');
+            if (file_exists($defaultPath)) {
+                $fotoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($defaultPath));
+            }
+        }
+
+        $pdf = Pdf::loadView('exports.cuti_pdf_single', [
+            'cuti' => $cuti,
+            'qrCode' => $qrCode,
+            'fotoBase64' => $fotoBase64,
+            'title' => 'Data Cuti - Kejaksaan Tinggi Aceh',
+        ]);
+
+        return $pdf->stream("Cuti-{$cuti->nip}-{$cuti->pegawai->nama}.pdf");
+    }
+    
     /**
      * Show the form for creating a new resource.
      */

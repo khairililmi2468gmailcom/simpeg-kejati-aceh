@@ -142,8 +142,6 @@
                             Cetak
                         </a>
                     </td>
-
-
                 </tr>
             @empty
                 <tr>
