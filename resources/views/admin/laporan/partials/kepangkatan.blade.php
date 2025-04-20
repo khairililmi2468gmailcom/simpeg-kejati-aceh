@@ -219,7 +219,7 @@
                 </button>
             </div>
         </div>
-        <h3 class="text-[20px] font-semibold mb-4">Berdasarkan Tahun Diklat</h3>
+        <h3 class="text-[20px] font-semibold mb-4">Berdasarkan Tahun Kepangkatan</h3>
 
         {{-- Dropdown Tahun Kepangkatan --}}
         <div class="w-full shadow-md p-4 border border-[#E0E0E0] rounded-md mb-6">
@@ -288,8 +288,8 @@
         <div class="mt-4 text-sm text-gray-600">
             <p>Petunjuk:</p>
             <ul class="list-disc ml-6">
-                <li>Masukkan Jenis Diklat yang bersangkutan</li>
-                <li>Masukkan Tahun Diklat yang bersangkutan</li>
+                <li>Masukkan Jenis Usulan yang bersangkutan</li>
+                <li>Masukkan Tahun Kepangkatan yang bersangkutan</li>
                 <li>Klik Tombol Cari</li>
             </ul>
         </div>
