@@ -54,6 +54,7 @@ class LaporanController extends Controller
             })
             ->orderBy('nama_kantor')
             ->paginate($perPageUnitKerja);
+        $unitkerjasValues = UnitKerja::orderBy('nama_kantor')->get();
 
         $searchPegawai = $request->searchPegawai;
         $unitKerja = $request->unit_kerja;
@@ -74,19 +75,31 @@ class LaporanController extends Controller
             ->paginate($perPagePegawai);
 
         $searchCuti = $request->searchCuti;
+        $tahunCuti = $request->tahun_cuti;
         $perPageCuti = $request->per_page_cuti ?? 5;
         $menerimaCuti = MenerimaCuti::with(['pegawai', 'cuti'])
             ->when($searchCuti, function ($query) use ($searchCuti) {
                 $query->whereHas('pegawai', function ($q) use ($searchCuti) {
-                    $q->where('nama', 'like', "%$searchCuti%");
+                    $q->where('nama', 'like', "%$searchCuti%")
+                        ->orWhere('nip', 'like', "%$searchCuti%");
                 })->orWhereHas('cuti', function ($q) use ($searchCuti) {
                     $q->where('jenis_cuti', 'like', "%$searchCuti%");
                 });
             })
+            ->when($tahunCuti, function ($query) use ($tahunCuti) {
+                $query->whereYear('tanggal_mulai', $tahunCuti);
+            })
             ->orderBy('tanggal_mulai', 'desc')
             ->paginate($perPageCuti);
 
+        // Untuk dropdown tahun
+        $tahunList = MenerimaCuti::selectRaw('YEAR(tanggal_mulai) as tahun')
+            ->distinct()
+            ->orderBy('tahun', 'desc')
+            ->pluck('tahun');
+
         $searchDiklat = $request->searchDiklat;
+        $tahunDiklat = $request->tahun_diklat;
         $perPageDiklat = $request->per_page_diklat ?? 5;
         $mengikutiDiklat = MengikutiDiklat::with(['pegawai', 'diklat'])
             ->when($searchDiklat, function ($query) use ($searchDiklat) {
@@ -98,8 +111,16 @@ class LaporanController extends Controller
                         ->orWhere('jenis_diklat', 'like', "%$searchDiklat%");
                 });
             })
+            ->when($tahunDiklat, function ($query) use ($tahunDiklat) {
+                $query->whereYear('tanggal_mulai', $tahunDiklat);
+            })
             ->orderBy('tanggal_mulai', 'desc')
             ->paginate($perPageDiklat);
+            
+        $tahunListDiklat = MengikutiDiklat::selectRaw('YEAR(tanggal_mulai) as tahun')
+            ->distinct()
+            ->orderBy('tahun', 'desc')
+            ->pluck('tahun');
 
         $searchMutasi = $request->searchMutasi;
         $perPageMutasi = $request->per_page_mutasi ?? 5;
@@ -138,17 +159,20 @@ class LaporanController extends Controller
             'searchGolongan',
             'perPageGolongan',
             'unitkerjas',
+            'unitkerjasValues',
             'searchUnitKerja',
             'perPageUnitKerja',
             'pegawais',
             'searchPegawai',
             'perPagePegawai',
             'menerimaCuti',
+            'tahunList',
             'searchCuti',
             'perPageCuti',
             'mengikutiDiklat',
             'searchDiklat',
             'perPageDiklat',
+            'tahunListDiklat',
             'mutasi',
             'searchMutasi',
             'perPageMutasi',
