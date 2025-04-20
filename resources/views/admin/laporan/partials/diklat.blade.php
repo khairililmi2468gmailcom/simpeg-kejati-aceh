@@ -293,7 +293,8 @@
         <div class="mt-4 text-sm text-gray-600">
             <p>Petunjuk:</p>
             <ul class="list-disc ml-6">
-                <li>Masukkan Tahun Cuti yang bersangkutan</li>
+                <li>Masukkan Jenis Diklat yang bersangkutan</li>
+                <li>Masukkan Tahun Diklat yang bersangkutan</li>
                 <li>Klik Tombol Cari</li>
             </ul>
         </div>

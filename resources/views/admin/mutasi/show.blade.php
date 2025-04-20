@@ -33,14 +33,25 @@
                     <h3 class="text-lg font-semibold text-[24px] text-[#00A181] mb-4">Data Diklat</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-6 gap-x-6 gap-y-6">
                         <x-display label="No. SK" class="sm:col-span-3">{{ $data->no_sk }}</x-display>
-                        <x-display label="Jabatan Saat Ini" class="sm:col-span-3">{{ $data->pegawai->jabatan->nama_jabatan  ?? '-'}}</x-display>
-                        <x-display label="Keterangan Jabatan" class="sm:col-span-3">{{ $data->pegawai->jabatan->ket ?? '-' }}</x-display>
+                        <x-display label="Jabatan Saat Ini"
+                            class="sm:col-span-3">{{ $data->pegawai->jabatan->nama_jabatan ?? '-' }}</x-display>
+                        <x-display label="Keterangan Jabatan"
+                            class="sm:col-span-3">{{ $data->pegawai->jabatan->ket ?? '-' }}</x-display>
                         <x-display label="Jabatan Lama" class="sm:col-span-3">{{ $data->jabatan_l ?? '-' }}</x-display>
-                        <x-display label="Unit Saat Ini" class="sm:col-span-3">{{ $data->pegawai->unitkerja->nama_kantor ?? '-' }}</x-display>
+                        <x-display label="Unit Saat Ini"
+                            class="sm:col-span-3">{{ $data->pegawai->unitkerja->nama_kantor ?? '-' }}</x-display>
                         <x-display label="Unit Kerja Lama" class="sm:col-span-3">{{ $data->tempat_l ?? '-' }}</x-display>
-                        <x-display label="Tanggal SK" class="sm:col-span-3">{{ \Carbon\Carbon::parse( $data->tanggal_sk ?? '-')->format('d M Y') }}</x-display>
-                        <x-display label="TMT Lama" class="sm:col-span-3">{{ \Carbon\Carbon::parse( $data->tmt_l )->format('d M Y') : '-'  }}</x-display>
-                        <x-display label="Terhitung Mulai Tanggal Jabatan" class="sm:col-span-3">{{ \Carbon\Carbon::parse( $data->tmt_jabatan )->format('d M Y') : '-' }}</x-display>
+                        <x-display label="Tanggal SK" class="sm:col-span-3">
+                            {{ $data->tanggal_sk ? \Carbon\Carbon::parse($data->tanggal_sk)->format('d M Y') : '-' }}
+                        </x-display>
+
+                        <x-display label="TMT Lama" class="sm:col-span-3">
+                            {{ $data->tmt_l ? \Carbon\Carbon::parse($data->tmt_l)->format('d M Y') : '-' }}
+                        </x-display>
+
+                        <x-display label="Terhitung Mulai Tanggal Jabatan" class="sm:col-span-3">
+                            {{ $data->tmt_jabatan ? \Carbon\Carbon::parse($data->tmt_jabatan)->format('d M Y') : '-' }}
+                        </x-display>
                     </div>
                 </div>
             </div>

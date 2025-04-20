@@ -130,6 +130,7 @@ class LaporanController extends Controller
             ->pluck('tahun');
 
         $searchMutasi = $request->searchMutasi;
+        $tahunMutasi = $request->tahun_mutasi;
         $perPageMutasi = $request->per_page_mutasi ?? 5;
         $mutasi = Mutasi::with(['pegawai', 'jabatan'])
             ->when($searchMutasi, function ($query) use ($searchMutasi) {
@@ -140,8 +141,15 @@ class LaporanController extends Controller
                         ->orWhere('ket', 'like', "%$searchMutasi%");
                 })->orWhere('nip', 'like', "%$searchMutasi%");
             })
+            ->when($tahunMutasi, function ($query) use ($tahunMutasi) {
+                $query->whereYear('tanggal_sk', $tahunMutasi);
+            })
             ->orderBy('created_at', 'desc')
             ->paginate($perPageMutasi);
+        $tahunMutasi = Mutasi::selectRaw('YEAR(tanggal_sk) as tahun')
+            ->distinct()
+            ->orderBy('tahun', 'desc')
+            ->pluck('tahun');
 
         $searchKepangkatan = $request->searchKepangkatan;
         $perPageKepangkatan = $request->per_page_kepangkatan ?? 5;
@@ -183,6 +191,7 @@ class LaporanController extends Controller
             'diklatValues',
             'mutasi',
             'searchMutasi',
+            'tahunMutasi',
             'perPageMutasi',
             'kepangkatan',
             'searchKepangkatan',
