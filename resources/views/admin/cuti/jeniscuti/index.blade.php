@@ -22,9 +22,6 @@
         </div>
 
         <div class="flex flex-wrap justify-end space-x-2">
-
-
-
             <!-- Tambah Master Diklat -->
             <a href="{{ route('admin.cuti.jeniscuti.create') }}"
                 class="inline-flex items-center text-white bg-[#00A181] hover:bg-[#008f73] focus:outline-none focus:ring-4 focus:ring-[#00A181]/50 font-medium rounded-lg text-sm px-6 py-2.5 text-center mb-2 md:mb-0">

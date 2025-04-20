@@ -95,7 +95,7 @@ class CutiController extends Controller
     {
         $request->validate([
             'id' => 'required|array',
-            'id.*' => 'integer|exists:diklat,id', 
+            'id.*' => 'integer|exists:cuti,id', 
         ]);
     
         Cuti::whereIn('id', $request->id)->delete();
