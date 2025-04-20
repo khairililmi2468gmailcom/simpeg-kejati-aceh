@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Laporan Data Cuti Pegawai - Kejati Aceh</title>
+    <title>Laporan Data Mutasi Pegawai - Kejati Aceh</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -138,19 +138,19 @@
             <!-- Teks pusat -->
             <div class="institution-info">
                 <h2>KEJAKSAAN TINGGI REPUBLIK INDONESIA</h1>
-                <h1>KEJAKSAAN TINGGI ACEH</h1>
-                <div class="address">
-                    Jl. Dr. M. Mohammed Hasan, Batoh, Kota Banda Aceh<br>
-                    Telp. (0651) 22240 | Fax. (0651) 28094
-                    Website: www.kejati-aceh.go.id | Email: kejatiaceh@go.id
-                </div>
+                    <h1>KEJAKSAAN TINGGI ACEH</h1>
+                    <div class="address">
+                        Jl. Dr. M. Mohammed Hasan, Batoh, Kota Banda Aceh<br>
+                        Telp. (0651) 22240 | Fax. (0651) 28094
+                        Website: www.kejati-aceh.go.id | Email: kejatiaceh@go.id
+                    </div>
             </div>
-           
+
         </div>
     </div>
 
 
-    <h1 class="title">LAPORAN DATA CUTI PEGAWAI</h1>
+    <h1 class="title">LAPORAN DATA MUTASI PEGAWAI</h1>
 
     <table>
         <thead>
@@ -158,20 +158,24 @@
                 <th>No</th>
                 <th>NIP</th>
                 <th>Nama Pegawai</th>
-                <th>Jenis Cuti</th>
-                <th>Tanggal Mulai</th>
-                <th>Tanggal Selesai</th>
+                <th>Jabatan Lama</th>
+                <th>Jabatan Baru</th>
+                <th>Unit Kerja Lama</th>
+                <th>Unit Kerja Baru</th>
+                <th>Tanggal SK</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($cuti as $key => $data)
+            @foreach ($mutasi as $key => $data)
                 <tr>
                     <td>{{ $key + 1 }}</td>
                     <td>{{ $data->nip }}</td>
                     <td>{{ strtoupper($data->pegawai->nama) }}</td>
-                    <td>{{ $data->cuti->jenis_cuti ?? '-' }}</td>
-                    <td>{{ \Carbon\Carbon::parse($data->tanggal_mulai)->translatedFormat('d F Y') }}</td>
-                    <td>{{ \Carbon\Carbon::parse($data->tanggal_selesai)->translatedFormat('d F Y') }}</td>  
+                    <td>{{ $data->jabatan_l }}</td>
+                    <td>{{ $data->pegawai->jabatan->nama_jabatan ?? '-' }}</td>
+                    <td>{{ $data->tempat_l ?? '-' }}</td>
+                    <td>{{ $data->pegawai->unitkerja->nama_kantor ?? '-' }}</td>
+                    <td>{{ $data->tanggal_sk ?? '-' }}</td>
                 </tr>
             @endforeach
         </tbody>

@@ -117,9 +117,13 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/pegawai/pdf', [LaporanController::class, 'cetakPdfPegawai'])->name('pegawai.pdf');
         Route::get('/cuti/pdf', [LaporanController::class, 'cetakPdfCuti'])->name('cuti.pdf');
         Route::get('/diklat/pdf', [LaporanController::class, 'cetakPdfDiklat'])->name('diklat.pdf');
+        Route::get('/mutasi/pdf', [LaporanController::class, 'cetakPdfMutasi'])->name('mutasi.pdf');
+        Route::get('/kepangkatan/pdf', [LaporanController::class, 'cetakPdfKepangkatan'])->name('kepangkatan.pdf');
         Route::get('/pegawai/{id}/pdf', [LaporanController::class, 'cetakPdfSatuPegawai'])->name('pegawai.single.pdf');
         Route::get('/cuti/{id}/pdf', [LaporanController::class, 'cetakPdfSatuCuti'])->name('cuti.single.pdf');
         Route::get('/diklat/{id}/pdf', [LaporanController::class, 'cetakPdfSatuDiklat'])->name('diklat.single.pdf');
+        Route::get('/mutasi/{id}/pdf', [LaporanController::class, 'cetakPdfSatuMutasi'])->name('mutasi.single.pdf');
+        Route::get('/kepangkatan/{id}/pdf', [LaporanController::class, 'cetakPdfSatuKepangkatan'])->name('kepangkatan.single.pdf');
     });
 
     Route::prefix('pegawai')->name('pegawai.')->group(function () {

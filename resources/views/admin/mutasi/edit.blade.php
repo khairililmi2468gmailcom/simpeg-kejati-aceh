@@ -78,7 +78,7 @@
                             @foreach ($jabatanList as $jabatan)
                                 <div class="option-item px-3 py-2 hover:bg-gray-100 cursor-pointer transition-colors {{ old('id_jabatan', $data->id_jabatan) == $jabatan->id_jabatan ? 'bg-[#00A181] text-white hover:bg-[#009171]' : '' }}"
                                     data-value="{{ $jabatan->id_jabatan }}"
-                                    onclick='selectItem("jabatan", @json($jabatan->id_jabatan), @json($jabatan->nama_jabatan . " (jabatan->unitkerja->nama_kantor)"))'>
+                                    onclick='selectItem("jabatan", {{ $jabatan->id_jabatan }}, "{{ $jabatan->nama_jabatan }} ({{ $jabatan->unitkerja->nama_kantor }})")'>
                                     {{ $jabatan->nama_jabatan }} ({{ $jabatan->unitkerja->nama_kantor }})
                                 </div>
                             @endforeach

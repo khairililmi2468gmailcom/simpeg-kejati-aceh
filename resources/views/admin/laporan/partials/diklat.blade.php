@@ -35,7 +35,6 @@
                     </svg>
                 </div>
             </div>
-            {{-- Tombol Cetak Daftar Pegawai (Kanan) --}}
             <div class="w-full md:w-auto text-center md:text-right">
                 <a href="{{ route('admin.laporan.diklat.pdf', $queryParams) }}" target="_blank"
                     class="inline-flex items-center gap-2 bg-[#007f66] hover:bg-[#005e4f] text-white px-4 py-2 rounded-md text-sm font-medium transition">

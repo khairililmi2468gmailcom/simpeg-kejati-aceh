@@ -220,7 +220,7 @@ class LaporanController extends Controller
         ));
     }
 
-
+// ============== CETAK PDF LAPORAN ==================
     public function cetakPdfPegawai(Request $request)
     {
         $query = Pegawai::query();
@@ -318,6 +318,7 @@ class LaporanController extends Controller
 
         return $pdf->stream('Laporan_Cuti_Pegawai_Kejati_Aceh.pdf');
     }
+   
     public function cetakPdfSatuCuti($id)
     {
         $cuti = MenerimaCuti::with(['pegawai', 'cuti'])->findOrFail($id);
@@ -384,6 +385,7 @@ class LaporanController extends Controller
 
         return $pdf->stream('Laporan_Diklat_Pegawai_Kejati_Aceh.pdf');
     }
+ 
     public function cetakPdfSatuDiklat($id)
     {
         $diklat = MengikutiDiklat::with(['pegawai', 'diklat'])->findOrFail($id);
@@ -416,6 +418,137 @@ class LaporanController extends Controller
         ]);
 
         return $pdf->stream("Diklat-{$diklat->nip}-{$diklat->pegawai->nama}.pdf");
+    }
+    
+    public function cetakPdfMutasi(Request $request)
+    {
+        $query = Mutasi::query();
+
+        if ($request->filled('no_sk')) {
+            $query->where('no_sk', $request->no_sk);
+        }
+
+        if ($request->filled('nip')) {
+            $query->where('nip', $request->nip);
+        }
+
+        if ($request->filled('id_jabatan')) {
+            $query->where('id_jabatan', $request->id_jabatan);
+        }
+
+        $mutasi = $query->get();
+
+        // QR Code: bisa berisi informasi tanggal cetak + info otentikasi
+        $tanggalCetak = Carbon::now()->translatedFormat('d F Y');
+        $qrContent = "Laporan Mutasi Pegawai - Kejati Aceh\nDicetak pada: $tanggalCetak";
+        $qrCode = base64_encode(QrCode::format('png')->size(100)->generate($qrContent));
+
+        $pdf = Pdf::loadView('exports.mutasi_pdf', [
+            'mutasi' => $mutasi,
+            'tanggalCetak' => $tanggalCetak,
+            'qrCode' => $qrCode,
+        ])->setPaper('A4', 'portrait');
+
+        return $pdf->stream('Laporan_Daftar_Mutasi_Pegawai_Kejati_Aceh.pdf');
+    }
+  
+    public function cetakPdfSatuMutasi($id)
+    {
+        $mutasi = Mutasi::with(['pegawai', 'jabatan'])->findOrFail($id);
+
+        // QR Code
+        $qrCode = base64_encode(
+            QrCode::format('png')->size(100)->generate("Data jabatan Pegawai: {$mutasi->pegawai->nama} - NIP: {$mutasi->nip}")
+        );
+
+        // Base64 foto pegawai
+        $fotoPath = storage_path('app/public/' . $mutasi->foto);
+        $fotoBase64 = null;
+
+        if (!empty($mutasi->foto) && file_exists($fotoPath)) {
+            $ext = pathinfo($fotoPath, PATHINFO_EXTENSION);
+            $fotoBase64 = 'data:image/' . $ext . ';base64,' . base64_encode(file_get_contents($fotoPath));
+        } else {
+            // Opsional: fallback ke foto default
+            $defaultPath = public_path('image/default.png');
+            if (file_exists($defaultPath)) {
+                $fotoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($defaultPath));
+            }
+        }
+
+        $pdf = Pdf::loadView('exports.mutasi_pdf_single', [
+            'mutasi' => $mutasi,
+            'qrCode' => $qrCode,
+            'fotoBase64' => $fotoBase64,
+            'title' => 'Data mutasi - Kejaksaan Tinggi Aceh',
+        ]);
+
+        return $pdf->stream("Mutasi-{$mutasi->nip}-{$mutasi->pegawai->nama}.pdf");
+    }
+
+    public function cetakPdfKepangkatan(Request $request)
+    {
+        $query = Kepangkatan::query();
+
+        if ($request->filled('no_sk')) {
+            $query->where('no_sk', $request->no_sk);
+        }
+
+        if ($request->filled('nip')) {
+            $query->where('nip', $request->nip);
+        }
+
+        if ($request->filled('id_golongan')) {
+            $query->where('id_golongan', $request->id_golongan);
+        }
+
+        $kepangkatan = $query->get();
+
+        // QR Code: bisa berisi informasi tanggal cetak + info otentikasi
+        $tanggalCetak = Carbon::now()->translatedFormat('d F Y');
+        $qrContent = "Laporan Kepangkatan Pegawai - Kejati Aceh\nDicetak pada: $tanggalCetak";
+        $qrCode = base64_encode(QrCode::format('png')->size(100)->generate($qrContent));
+
+        $pdf = Pdf::loadView('exports.kepangkatan_pdf', [
+            'kepangkatan' => $kepangkatan,
+            'tanggalCetak' => $tanggalCetak,
+            'qrCode' => $qrCode,
+        ])->setPaper('A4', 'portrait');
+
+        return $pdf->stream('Laporan_Daftar_Kepangkatan_Pegawai_Kejati_Aceh.pdf');
+    }
+  
+    public function cetakPdfSatuKepangkatan($id)
+    {
+        $kepangkatan = Kepangkatan::with(['pegawai', 'golongan'])->findOrFail($id);
+        // QR Code
+        $qrCode = base64_encode(
+            QrCode::format('png')->size(100)->generate("Data kepangkatan Pegawai: {$kepangkatan->pegawai->nama} - NIP: {$kepangkatan->nip}")
+        );
+
+        // Base64 foto pegawai
+        $fotoPath = storage_path('app/public/' . $kepangkatan->pegawai->foto);
+        $fotoBase64 = null;
+
+        if (!empty($mutasi->foto) && file_exists($fotoPath)) {
+            $ext = pathinfo($fotoPath, PATHINFO_EXTENSION);
+            $fotoBase64 = 'data:image/' . $ext . ';base64,' . base64_encode(file_get_contents($fotoPath));
+        } else {
+            // Opsional: fallback ke foto default
+            $defaultPath = public_path('image/default.png');
+            if (file_exists($defaultPath)) {
+                $fotoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($defaultPath));
+            }
+        }
+
+        $pdf = Pdf::loadView('exports.kepangkatan_pdf_single', [
+            'kepangkatan' => $kepangkatan,
+            'qrCode' => $qrCode,
+            'fotoBase64' => $fotoBase64,
+            'title' => 'Data Kepangkatan - Kejaksaan Tinggi Aceh',
+        ]);
+
+        return $pdf->stream("Kepangkatan-{$kepangkatan->nip}-{$kepangkatan->pegawai->nama}.pdf");
     }
     
     /**

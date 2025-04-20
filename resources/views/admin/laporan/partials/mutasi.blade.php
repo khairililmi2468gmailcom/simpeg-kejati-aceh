@@ -1,13 +1,15 @@
 <div class="overflow-x-auto rounded-lg mb-2 ">
     <div class="flex items-center justify-between bg-[#00A181] px-6 py-4 rounded-t-lg">
         <h3 class="text-lg font-semibold text-white font-poppins">Daftar Mutasi Pegawai</h3>
-
+        @php
+            $queryParams = request()->only(['nip', 'no_sttpp', 'diklat_id']);
+        @endphp
         <form method="GET" action="{{ route('admin.laporan.index') }}"
-            class="md:flex md:gap-3 grid gap-4 w-full md:w-1/3">
+            class="w-full max-w-full md:max-w-4xl lg:max-w-2xl  flex flex-col md:flex-row md:items-center md:justify-right gap-3">
             <input type="hidden" name="tab" value="mutasi">
 
             {{-- Select Jumlah per Halaman --}}
-            <div class="flex items-center w-full md:flex-[1]">
+            <div class="w-full md:w-auto">
                 <select name="per_page_mutasi" onchange="this.form.submit()"
                     class="w-full border border-gray-300 text-black px-3 py-2 bg-white rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]">
                     @foreach ([5, 10, 25, 50, 100, 250, 500, 1000, 2000, 5000, 10000] as $size)
@@ -20,7 +22,7 @@
             </div>
 
             {{-- Input Pencarian --}}
-            <div class="relative w-full md:flex-[2]">
+            <div class="relative w-full md:flex-1">
                 <input type="text" name="searchMutasi" id="search" value="{{ request('searchMutasi') }}"
                     class="w-full px-4 py-2 pl-10 text-sm text-black border border-gray-300 rounded-md bg-[#F0F0F0] focus:outline-none focus:ring-2 focus:ring-[#00A181]"
                     placeholder="Cari Mutasi...">
@@ -31,6 +33,32 @@
                             d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
                     </svg>
                 </div>
+            </div>
+            <div class="w-full md:w-auto text-center md:text-right">
+                <a href="{{ route('admin.laporan.mutasi.pdf', $queryParams) }}" target="_blank"
+                    class="inline-flex items-center gap-2 bg-[#007f66] hover:bg-[#005e4f] text-white px-4 py-2 rounded-md text-sm font-medium transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 495 495"
+                        class="w-5 h-5 fill-current text-white">
+                        <g>
+                            <rect x="247.5" style="fill:#46F8FF;" width="170" height="92.5" />
+                            <rect x="77.5" style="fill:#9BFBFF;" width="170" height="92.5" />
+                            <polygon style="fill:#FFDA44;"
+                                points="247.5,232.5 247.5,92.5 0,92.5 0,412.5 77.5,412.5 77.5,232.5" />
+                            <path style="fill:#FFCD00;" d="M495,92.5H247.5v140h170v180H495V92.5z M397.5,202.5c-11.046,0-20-8.954-20-20
+                s8.954-20,20-20s20,8.954,20,20S408.546,202.5,397.5,202.5z" />
+                            <circle style="fill:#FFFFFF;" cx="397.5" cy="182.5" r="20" />
+                            <polygon style="fill:#9BFBFF;"
+                                points="147.5,412.5 147.5,372.5 247.5,372.5 247.5,342.5 147.5,342.5 147.5,302.5 
+                247.5,302.5 247.5,232.5 77.5,232.5 77.5,495 247.5,495 247.5,412.5" />
+                            <polygon style="fill:#46F8FF;"
+                                points="247.5,232.5 247.5,302.5 347.5,302.5 347.5,342.5 247.5,342.5 247.5,372.5 
+                347.5,372.5 347.5,412.5 247.5,412.5 247.5,495 417.5,495 417.5,232.5" />
+                            <rect x="147.5" y="372.5" style="fill:#005ECE;" width="200" height="40" />
+                            <rect x="147.5" y="302.5" style="fill:#005ECE;" width="200" height="40" />
+                        </g>
+                    </svg>
+                    Cetak Daftar Mutasi
+                </a>
             </div>
         </form>
 
@@ -92,10 +120,30 @@
                     <td class="px-3 py-2 border border-gray-300">
                         {{ \Carbon\Carbon::parse($item->pegawai->tmt_jabatan)->format('d-m-Y') ?? '-' }}
                     </td>
-
-
-                    <td class="px-3 py-2 border border-gray-300 text-center">
-                        <a href="#" class="bg-[#00A181] hover:bg-[#007f66] text-white px-3 py-1 rounded text-xs">
+                    <td class="px-4 py-3 border border-gray-300 text-center">
+                        <a href="{{ route('admin.laporan.mutasi.single.pdf', $item->no_sk) }}" target="_blank"
+                            class="inline-flex items-center gap-2 bg-[#00A181] hover:bg-[#007f66] text-white px-4 py-2 rounded text-sm font-medium transition">
+                            {{-- Icon --}}
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 495 495"
+                                class="w-5 h-5 fill-current text-white">
+                                <g>
+                                    <rect x="247.5" style="fill:#46F8FF;" width="170" height="92.5" />
+                                    <rect x="77.5" style="fill:#9BFBFF;" width="170" height="92.5" />
+                                    <polygon style="fill:#FFDA44;"
+                                        points="247.5,232.5 247.5,92.5 0,92.5 0,412.5 77.5,412.5 77.5,232.5" />
+                                    <path style="fill:#FFCD00;" d="M495,92.5H247.5v140h170v180H495V92.5z M397.5,202.5c-11.046,0-20-8.954-20-20
+                                        s8.954-20,20-20s20,8.954,20,20S408.546,202.5,397.5,202.5z" />
+                                    <circle style="fill:#FFFFFF;" cx="397.5" cy="182.5" r="20" />
+                                    <polygon style="fill:#9BFBFF;"
+                                        points="147.5,412.5 147.5,372.5 247.5,372.5 247.5,342.5 147.5,342.5 147.5,302.5 
+                                        247.5,302.5 247.5,232.5 77.5,232.5 77.5,495 247.5,495 247.5,412.5" />
+                                    <polygon style="fill:#46F8FF;"
+                                        points="247.5,232.5 247.5,302.5 347.5,302.5 347.5,342.5 247.5,342.5 247.5,372.5 
+                                        347.5,372.5 347.5,412.5 247.5,412.5 247.5,495 417.5,495 417.5,232.5" />
+                                    <rect x="147.5" y="372.5" style="fill:#005ECE;" width="200" height="40" />
+                                    <rect x="147.5" y="302.5" style="fill:#005ECE;" width="200" height="40" />
+                                </g>
+                            </svg>
                             Cetak
                         </a>
                     </td>
@@ -128,7 +176,8 @@
             {{-- Angka halaman --}}
             @foreach ($mutasi->getUrlRange(1, $mutasi->lastPage()) as $page => $url)
                 @if ($page == $mutasi->currentPage())
-                    <span class="px-3 py-1 bg-[#00A181] text-white rounded-md font-semibold">{{ $page }}</span>
+                    <span
+                        class="px-3 py-1 bg-[#00A181] text-white rounded-md font-semibold">{{ $page }}</span>
                 @else
                     <a href="{{ $url }}"
                         class="px-3 py-1 bg-white border rounded-md hover:bg-[#00A181]/10 text-[#00A181]">{{ $page }}</a>
@@ -164,7 +213,7 @@
                 </button>
             </div>
         </div>
-       
+
         <h3 class="text-[20px] font-semibold mb-4">Berdasarkan Tahun Mutasi</h3>
 
         {{-- Dropdown Tahun Diklat --}}

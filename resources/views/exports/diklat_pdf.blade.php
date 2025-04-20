@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Laporan Data Pegawai - Kejati Aceh</title>
+    <title>Laporan Data Diklat Pegawai - Kejati Aceh</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
