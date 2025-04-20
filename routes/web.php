@@ -116,8 +116,10 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/{nip}', [LaporanController::class, 'show'])->name('show');
         Route::get('/pegawai/pdf', [LaporanController::class, 'cetakPdfPegawai'])->name('pegawai.pdf');
         Route::get('/cuti/pdf', [LaporanController::class, 'cetakPdfCuti'])->name('cuti.pdf');
+        Route::get('/diklat/pdf', [LaporanController::class, 'cetakPdfDiklat'])->name('diklat.pdf');
         Route::get('/pegawai/{id}/pdf', [LaporanController::class, 'cetakPdfSatuPegawai'])->name('pegawai.single.pdf');
         Route::get('/cuti/{id}/pdf', [LaporanController::class, 'cetakPdfSatuCuti'])->name('cuti.single.pdf');
+        Route::get('/diklat/{id}/pdf', [LaporanController::class, 'cetakPdfSatuDiklat'])->name('diklat.single.pdf');
     });
 
     Route::prefix('pegawai')->name('pegawai.')->group(function () {

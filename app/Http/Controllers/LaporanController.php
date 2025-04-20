@@ -352,6 +352,72 @@ class LaporanController extends Controller
         return $pdf->stream("Cuti-{$cuti->nip}-{$cuti->pegawai->nama}.pdf");
     }
     
+
+    public function cetakPdfDiklat(Request $request)
+    {
+        $query = MengikutiDiklat::query();
+
+        if ($request->filled('no_sttpp')) {
+            $query->where('no_sttpp', $request->no_sttpp);
+        }
+
+        if ($request->filled('nip')) {
+            $query->where('nip', $request->nip);
+        }
+
+        if ($request->filled('diklat_id')) {
+            $query->where('diklat_id', $request->diklat_id);
+        }
+
+        $diklat = $query->get();
+
+        // QR Code: bisa berisi informasi tanggal cetak + info otentikasi
+        $tanggalCetak = Carbon::now()->translatedFormat('d F Y');
+        $qrContent = "Laporan Diklat Pegawai - Kejati Aceh\nDicetak pada: $tanggalCetak";
+        $qrCode = base64_encode(QrCode::format('png')->size(100)->generate($qrContent));
+
+        $pdf = Pdf::loadView('exports.diklat_pdf', [
+            'diklat' => $diklat,
+            'tanggalCetak' => $tanggalCetak,
+            'qrCode' => $qrCode,
+        ])->setPaper('A4', 'portrait');
+
+        return $pdf->stream('Laporan_Diklat_Pegawai_Kejati_Aceh.pdf');
+    }
+    public function cetakPdfSatuDiklat($id)
+    {
+        $diklat = MengikutiDiklat::with(['pegawai', 'diklat'])->findOrFail($id);
+
+        // QR Code
+        $qrCode = base64_encode(
+            QrCode::format('png')->size(100)->generate("Data diklat Pegawai: {$diklat->pegawai->nama} - NIP: {$diklat->nip}")
+        );
+
+        // Base64 foto pegawai
+        $fotoPath = storage_path('app/public/' . $diklat->foto);
+        $fotoBase64 = null;
+
+        if (!empty($diklat->foto) && file_exists($fotoPath)) {
+            $ext = pathinfo($fotoPath, PATHINFO_EXTENSION);
+            $fotoBase64 = 'data:image/' . $ext . ';base64,' . base64_encode(file_get_contents($fotoPath));
+        } else {
+            // Opsional: fallback ke foto default
+            $defaultPath = public_path('image/default.png');
+            if (file_exists($defaultPath)) {
+                $fotoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($defaultPath));
+            }
+        }
+
+        $pdf = Pdf::loadView('exports.diklat_pdf_single', [
+            'diklat' => $diklat,
+            'qrCode' => $qrCode,
+            'fotoBase64' => $fotoBase64,
+            'title' => 'Data diklat - Kejaksaan Tinggi Aceh',
+        ]);
+
+        return $pdf->stream("Diklat-{$diklat->nip}-{$diklat->pegawai->nama}.pdf");
+    }
+    
     /**
      * Show the form for creating a new resource.
      */

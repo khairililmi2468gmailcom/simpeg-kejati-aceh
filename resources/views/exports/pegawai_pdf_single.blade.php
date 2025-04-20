@@ -16,7 +16,7 @@
             font-size: 13px;
             line-height: 1.6;
             margin: 20px;
-            background: #f8f9fa;
+            background: white;
         }
 
         .container {

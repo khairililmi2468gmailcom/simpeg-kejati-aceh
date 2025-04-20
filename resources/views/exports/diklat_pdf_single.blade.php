@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Surat Bukti Cuti Pegawai</title>
+    <title>Surat Bukti Diklat Pegawai</title>
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -113,22 +113,24 @@
             text-decoration: underline;
             letter-spacing: 1px;
         }
+
         .content-section {
-            padding: 15px;
+            padding: 1px;
             border-radius: 6px;
             position: relative;
             z-index: 1;
         }
 
+
         .signature-section {
-            margin-top: 36px;
+            margin-top: 10px;
             padding-top: 20px;
             border-top: 2px solid var(--primary-color);
             text-align: right;
         }
 
         .qr-code {
-            margin-top: 15px;
+            margin-top: 5px;
             padding: 10px;
             background: #fff;
             display: inline-block;
@@ -156,68 +158,92 @@
             <div class="header-content">
                 <h2>KEJAKSAAN TINGGI REPUBLIK INDONESIA</h2>
                 <h1>KEJAKSAAN TINGGI ACEH</h1>
-                <p>Jl. Tgk. Daud Beureueh No.15, Batoh, Kota Banda Aceh<br>Telp: (0651) 34123 | Email: kejatiaceh@go.id</p>
+                <p>Jl. Tgk. Daud Beureueh No.15, Batoh, Kota Banda Aceh<br>Telp: (0651) 34123 | Email: kejatiaceh@go.id
+                </p>
             </div>
         </div>
 
-        <h1 class="title">SURAT BUKTI CUTI PEGAWAI</h1>
+        <h1 class="title">SURAT BUKTI MENGIKUTI DIKLAT</h1>
 
         <div class="content-section">
             <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px;">
                 <tr>
-                    <td style="width: 160px; font-weight: 600; color: #2c3e50;">Nomor Surat</td>
+                    <td style="width: 160px; font-weight: 600; color: #2c3e50;">Nomor STTPP</td>
                     <td style="width: 10px;">:</td>
-                    <td style="border-bottom: 1px dashed #ccc;">{{ $cuti->no_surat ?? '-' }}</td>
+                    <td style="border-bottom: 1px dashed #ccc;">{{ $diklat->no_sttpp ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td style="font-weight: 600; color: #2c3e50;">Nama Pegawai</td>
                     <td>:</td>
-                    <td style="border-bottom: 1px dashed #ccc;">{{ $cuti->pegawai->nama ?? '-' }}</td>
+                    <td style="border-bottom: 1px dashed #ccc;">{{ $diklat->pegawai->nama ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td style="font-weight: 600; color: #2c3e50;">NIP</td>
                     <td>:</td>
-                    <td style="border-bottom: 1px dashed #ccc;">{{ $cuti->nip ?? '-' }}</td>
+                    <td style="border-bottom: 1px dashed #ccc;">{{ $diklat->nip ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <td style="font-weight: 600; color: #2c3e50;">Jenis Cuti</td>
+                    <td style="font-weight: 600; color: #2c3e50;">Jabatan</td>
                     <td>:</td>
-                    <td style="border-bottom: 1px dashed #ccc;">{{ $cuti->cuti->jenis_cuti ?? '-' }}</td>
+                    <td style="border-bottom: 1px dashed #ccc;">{{ $diklat->pegawai->jabatan->nama_jabatan ?? '-' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight: 600; color: #2c3e50;">Jenis Diklat</td>
+                    <td>:</td>
+                    <td style="border-bottom: 1px dashed #ccc;">{{ $diklat->diklat->jenis_diklat ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td style="font-weight: 600; color: #2c3e50;">Tanggal Mulai</td>
                     <td>:</td>
                     <td style="border-bottom: 1px dashed #ccc;">
-                        {{ $cuti->tanggal_mulai ? \Carbon\Carbon::parse($cuti->tanggal_mulai)->translatedFormat('d F Y') : '-' }}
+                        {{ $diklat->tanggal_mulai ? \Carbon\Carbon::parse($diklat->tanggal_mulai)->translatedFormat('d F Y') : '-' }}
                     </td>
                 </tr>
                 <tr>
                     <td style="font-weight: 600; color: #2c3e50;">Tanggal Selesai</td>
                     <td>:</td>
                     <td style="border-bottom: 1px dashed #ccc;">
-                        {{ $cuti->tanggal_selesai ? \Carbon\Carbon::parse($cuti->tanggal_selesai)->translatedFormat('d F Y') : '-' }}
+                        {{ $diklat->tanggal_selesai ? \Carbon\Carbon::parse($diklat->tanggal_selesai)->translatedFormat('d F Y') : '-' }}
                     </td>
                 </tr>
+
                 <tr>
-                    <td style="font-weight: 600; color: #2c3e50;">Lama Cuti</td>
+                    <td style="font-weight: 600; color: #2c3e50;">Tempat Diklat</td>
                     <td>:</td>
-                    <td style="border-bottom: 1px dashed #ccc;">{{ $cuti->jumlah_cuti ?? '-' }} Hari Kerja</td>
+                    <td style="border-bottom: 1px dashed #ccc;">{{ $diklat->tempat_diklat ?? '-' }} Hari Kerja</td>
                 </tr>
                 <tr>
-                    <td style="font-weight: 600; color: #2c3e50;">Keterangan</td>
+                    <td style="font-weight: 600; color: #2c3e50;">Penyelenggara</td>
                     <td>:</td>
-                    <td style="border-bottom: 1px dashed #ccc;">{{ $cuti->keterangan ?? '-' }}</td>
+                    <td style="border-bottom: 1px dashed #ccc;">{{ $diklat->penyelenggara ?? '-' }} Hari Kerja</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: 600; color: #2c3e50;">Tanggal STTPP</td>
+                    <td>:</td>
+                    <td style="border-bottom: 1px dashed #ccc;">
+                        {{ $diklat->tanggal_sttpp ? \Carbon\Carbon::parse($diklat->tanggal_sttpp)->translatedFormat('d F Y') : '-' }}
+                    </td>
                 </tr>
             </table>
 
         </div>
 
         <div class="content-section">
-            <p style="color: var(--accent-color); font-weight: 600; margin-bottom: 10px; font-style:italic;">CATATAN RESMI:</p>
-            <ol style="color: var(--secondary-color); padding-left: 20px;">
-                <li>Surat ini sah apabila telah dibubuhi tanda tangan dan stempel resmi</li>
-                <li>Masa cuti tidak dapat diperpanjang tanpa persetujuan tertulis</li>
-                <li>Wajib lapor kembali setelah masa cuti berakhir</li>
+            <p
+                style="color: var(--accent-color); font-weight: 600; margin-bottom: 8px; font-style: italic; text-decoration: underline; font-size: 12px;">
+                CATATAN RESMI:
+            </p>
+            <ol
+                style="color: var(--secondary-color); padding-left: 18px; line-height: 1.5; font-size: 12px; margin: 0;">
+                <li>Surat ini dikeluarkan sebagai bukti keikutsertaan dalam kegiatan Pendidikan dan Pelatihan (Diklat).
+                </li>
+                <li>Seluruh informasi yang tercantum bersumber dari data resmi yang diberikan oleh penyelenggara Diklat.
+                </li>
+                <li>Keabsahan surat ini bergantung pada keberadaan tanda tangan pejabat berwenang dan cap stempel
+                    instansi.</li>
+                <li>Surat ini dapat digunakan sebagai kelengkapan administrasi kepegawaian dan penilaian kompetensi.
+                </li>
             </ol>
         </div>
 
