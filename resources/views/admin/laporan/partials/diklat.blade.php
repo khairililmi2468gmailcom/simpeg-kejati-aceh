@@ -166,7 +166,60 @@
                     value="{{ request('searchDiklat') }}" class="w-full border px-4 py-2 rounded-lg" />
             </div>
             <div>
-                <button type="submit" class="cursor-pointer bg-[#00A181] text-white px-6 py-2 rounded-lg mt-2 md:mt-0">
+                <button type="submit"
+                    class="cursor-pointer bg-[#00A181] text-white px-6 py-2 rounded-lg mt-2 md:mt-0">
+                    Cari
+                </button>
+            </div>
+        </div>
+        <h3 class="text-[20px] font-semibold mb-4">Berdasarkan Jenis Diklat</h3>
+
+        {{-- Dropdown Jenis Diklat --}}
+        <div class="w-full shadow-md p-4 border border-[#E0E0E0] rounded-md mb-6">
+            <div class="flex flex-wrap items-center w-full mb-4">
+                <div class="w-full md:w-1/2  md:pl-8 mb-2 md:mb-0">
+                    <label class="block text-[18px] font-semibold text-gray-800">
+                        Laporan Jenis Diklat
+                    </label>
+                </div>
+                <div class="w-full md:w-1/2 pr-5 relative">
+                    <div class="relative">
+                        <div class="selected-item w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm cursor-pointer flex justify-between items-center"
+                            onclick="toggleDropdown('namadiklat')">
+                            <span id="namadiklat-display">
+                                -- Pilih Jenis Diklat --
+                            </span>
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                        <div id="namadiklat-dropdown"
+                            class="dropdown-content hidden absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-64 overflow-y-auto">
+                            <input type="text" class="w-full px-3 py-2 border-b border-gray-200 focus:outline-none"
+                                placeholder="Cari Jenis Diklat..." onkeyup="filterOptions('namadiklat', this.value)">
+                            <div class="options" id="namadiklat-options">
+                                @foreach ($diklatValues as $diklatvalue)
+                                    <div class="option-item px-3 py-2 hover:bg-gray-100 cursor-pointer transition-colors {{ request('nama_diklat') == $diklatvalue->nama_diklat ? 'bg-[#00A181] text-white hover:bg-[#009171]' : '' }}"
+                                        data-value="{{ $diklatvalue->nama_diklat }}"
+                                        onclick='selectItem("namadiklat", "{{ $diklatvalue->nama_diklat }}", "{{ $diklatvalue->nama_diklat }}")'>
+                                        {{ $diklatvalue->nama_diklat }}
+                                    </div>
+                                @endforeach
+
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="nama_diklat" id="namadiklat-input"
+                        value="{{ request('nama_diklat') }}">
+                </div>
+            </div>
+
+            {{-- Tombol Cari --}}
+            <div class="w-full">
+                <button type="submit"
+                    class="cursor-pointer w-full bg-[#00A181] hover:bg-[#008f73] text-white px-6 py-2 rounded-md text-[16px] font-semibold">
                     Cari
                 </button>
             </div>
@@ -186,9 +239,10 @@
                         <div class="selected-item w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm cursor-pointer flex justify-between items-center"
                             onclick="toggleDropdown('tahundiklat')">
                             <span id="tahundiklat-display">
-                                -- Pilih Tahun Cuti --
+                                -- Pilih Tahun Diklat --
                             </span>
-                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M19 9l-7 7-7-7" />
                             </svg>

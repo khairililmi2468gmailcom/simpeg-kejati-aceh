@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Diklat;
 use App\Models\Golongan;
 use App\Models\Jabatan;
 use App\Models\Kepangkatan;
@@ -100,6 +101,7 @@ class LaporanController extends Controller
 
         $searchDiklat = $request->searchDiklat;
         $tahunDiklat = $request->tahun_diklat;
+        $jenisDiklat = $request->nama_diklat;
         $perPageDiklat = $request->per_page_diklat ?? 5;
         $mengikutiDiklat = MengikutiDiklat::with(['pegawai', 'diklat'])
             ->when($searchDiklat, function ($query) use ($searchDiklat) {
@@ -111,12 +113,17 @@ class LaporanController extends Controller
                         ->orWhere('jenis_diklat', 'like', "%$searchDiklat%");
                 });
             })
+            ->when($jenisDiklat, function ($query) use ($jenisDiklat) {
+                $query->whereHas('diklat', function ($q) use ($jenisDiklat) {
+                    $q->where('nama_diklat', $jenisDiklat);
+                });
+            })
             ->when($tahunDiklat, function ($query) use ($tahunDiklat) {
                 $query->whereYear('tanggal_mulai', $tahunDiklat);
             })
             ->orderBy('tanggal_mulai', 'desc')
             ->paginate($perPageDiklat);
-            
+        $diklatValues = Diklat::orderBy('nama_diklat')->get();
         $tahunListDiklat = MengikutiDiklat::selectRaw('YEAR(tanggal_mulai) as tahun')
             ->distinct()
             ->orderBy('tahun', 'desc')
@@ -173,6 +180,7 @@ class LaporanController extends Controller
             'searchDiklat',
             'perPageDiklat',
             'tahunListDiklat',
+            'diklatValues',
             'mutasi',
             'searchMutasi',
             'perPageMutasi',
