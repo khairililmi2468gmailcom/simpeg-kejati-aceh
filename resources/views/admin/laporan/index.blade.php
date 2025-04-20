@@ -1,10 +1,22 @@
 @extends('layouts.app-admin')
 
 @section('content')
+    @php
+        $tab = request('tab', 'pegawai');
+
+        $titles = [
+            'pegawai' => 'Pegawai',
+            'cuti' => 'Cuti',
+            'diklat' => 'Diklat',
+            'mutasi' => 'Mutasi',
+            'kepangkatan' => 'Kepangkatan',
+        ];
+
+        $currentTitle = $titles[$tab] ?? 'Laporan';
+    @endphp
     <div class="p-6">
-        <h1 class="text-3xl font-bold text-[#00A181]">Laporan</h1>
-        <p class="text-gray-600 mb-8">Halaman Laporan</p>
-        {{-- Tab Navigasi --}}
+        <h1 class="text-3xl font-bold text-[#00A181]">Laporan {{ $currentTitle }}</h1>
+        <p class="text-gray-600 mb-8">Halaman laporan {{ strtolower($currentTitle) }}</p> {{-- Tab Navigasi --}}
         @php
             $tab = request('tab', 'pegawai');
         @endphp
