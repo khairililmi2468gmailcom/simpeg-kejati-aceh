@@ -114,7 +114,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::prefix('laporan')->name('laporan.')->group(function () {
         Route::get('/', [LaporanController::class, 'index'])->name('index');
         Route::get('/{nip}', [LaporanController::class, 'show'])->name('show');
-    
+        Route::get('/pegawai/pdf', [LaporanController::class, 'cetakPdfPegawai'])->name('pegawai.pdf');
+        Route::get('/pegawai/{id}/pdf', [LaporanController::class, 'cetakPdfSatuPegawai'])->name('pegawai.single.pdf');
     });
 
     Route::prefix('pegawai')->name('pegawai.')->group(function () {

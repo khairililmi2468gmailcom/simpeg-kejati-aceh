@@ -15,6 +15,10 @@ use App\Models\UnitKerja;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\Storage;
 
 class LaporanController extends Controller
 {
@@ -179,7 +183,7 @@ class LaporanController extends Controller
             ->distinct()
             ->orderBy('tahun', 'desc')
             ->pluck('tahun');
-            
+
         return view('admin.laporan.index', compact(
             'jabatans',
             'searchJabatan',
@@ -216,6 +220,70 @@ class LaporanController extends Controller
     }
 
 
+    public function cetakPdfPegawai(Request $request)
+    {
+        $query = Pegawai::query();
+
+        if ($request->filled('nip')) {
+            $query->where('nip', $request->nip);
+        }
+
+        if ($request->filled('kode_kantor')) {
+            $query->where('kode_kantor', $request->kode_kantor);
+        }
+
+        if ($request->filled('id_golongan')) {
+            $query->where('id_golongan', $request->id_golongan);
+        }
+
+        $pegawai = $query->get();
+
+        // QR Code: bisa berisi informasi tanggal cetak + info otentikasi
+        $tanggalCetak = Carbon::now()->translatedFormat('d F Y');
+        $qrContent = "Laporan Pegawai - Kejati Aceh\nDicetak pada: $tanggalCetak";
+        $qrCode = base64_encode(QrCode::format('png')->size(100)->generate($qrContent));
+
+        $pdf = Pdf::loadView('exports.pegawai_pdf', [
+            'pegawai' => $pegawai,
+            'tanggalCetak' => $tanggalCetak,
+            'qrCode' => $qrCode,
+        ])->setPaper('A4', 'portrait');
+
+        return $pdf->stream('Laporan_Pegawai_Kejati_Aceh.pdf');
+    }
+    public function cetakPdfSatuPegawai($id)
+    {
+        $pegawai = Pegawai::with(['unitKerja', 'golongan'])->findOrFail($id);
+
+        // QR Code
+        $qrCode = base64_encode(
+            QrCode::format('png')->size(100)->generate("Data Pegawai: {$pegawai->nama} - NIP: {$pegawai->nip}")
+        );
+
+        // Base64 foto pegawai
+        $fotoPath = storage_path('app/public/' . $pegawai->foto);
+        $fotoBase64 = null;
+
+        if (!empty($pegawai->foto) && file_exists($fotoPath)) {
+            $ext = pathinfo($fotoPath, PATHINFO_EXTENSION);
+            $fotoBase64 = 'data:image/' . $ext . ';base64,' . base64_encode(file_get_contents($fotoPath));
+        } else {
+            // Opsional: fallback ke foto default
+            $defaultPath = public_path('image/default.png');
+            if (file_exists($defaultPath)) {
+                $fotoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($defaultPath));
+            }
+        }
+
+        $pdf = Pdf::loadView('exports.pegawai_pdf_single', [
+            'pegawai' => $pegawai,
+            'qrCode' => $qrCode,
+            'fotoBase64' => $fotoBase64,
+            'title' => 'Data Pegawai - Kejaksaan Tinggi Aceh',
+        ]);
+
+        return $pdf->stream("pegawai-{$pegawai->nip}.pdf");
+    }
 
     /**
      * Show the form for creating a new resource.

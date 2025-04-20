@@ -21,7 +21,7 @@
             $tab = request('tab', 'pegawai');
         @endphp
 
-        <div class="flex space-x-2 mb-6">
+        <div class="flex space-x-2 mb-6 overflow-x-auto scrollbar-hide">
             <a href="{{ route('admin.laporan.index', ['tab' => 'pegawai']) }}"
                 class="px-4 py-2 rounded {{ $tab === 'pegawai' ? 'bg-[#00A181] text-white' : 'bg-gray-200 text-gray-700' }}">Laporan
                 Pegawai</a>
