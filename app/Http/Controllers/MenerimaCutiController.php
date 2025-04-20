@@ -135,4 +135,16 @@ class MenerimaCutiController extends Controller
 
         return redirect()->route('admin.cuti.riwayatcuti.index')->with('success', 'Data cuti pegawai berhasil dihapus.');
     }
+
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|array',
+            'id.*' => 'string|exists:menerima_cuti,no_surat',
+        ]);
+
+        MenerimaCuti::whereIn('no_surat', $request->id)->delete();
+
+        return redirect()->route('admin.cuti.riwayatcuti.index')->with('success', count($request->id) . ' data riwayat diklat berhasil dihapus.');
+    }
 }

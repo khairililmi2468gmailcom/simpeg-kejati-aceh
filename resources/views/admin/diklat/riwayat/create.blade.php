@@ -17,6 +17,9 @@
                     maxlength="50"
                     class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181]"
                     required>
+                @error('tempat_diklat')
+                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- Nama Pegawai --}}
@@ -48,6 +51,9 @@
                     </div>
                 </div>
                 <input type="hidden" name="nip" id="pegawai-input" value="{{ old('nip') }}">
+                @error('nip')
+                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- Nama Diklat --}}
@@ -79,6 +85,9 @@
                     </div>
                 </div>
                 <input type="hidden" name="diklat_id" id="diklat-input" value="{{ old('diklat_id') }}">
+                @error('diklat_id')
+                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- Penyelenggara --}}
@@ -88,6 +97,9 @@
                     maxlength="50"
                     class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181]"
                     required>
+                @error('penyelenggara')
+                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- Angkatan --}}
@@ -95,15 +107,21 @@
                 <label for="angkatan" class="block text-sm font-medium text-gray-700">Angkatan</label>
                 <input type="text" name="angkatan" id="angkatan" value="{{ old('angkatan') }}" maxlength="12"
                     class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181]">
+                @error('angkatan')
+                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- Jumlah Jam --}}
             <div class="mb-4">
                 <label for="jumlah_jam" class="block text-sm font-medium text-gray-700">Jumlah Jam</label>
-                <input type="text" name="jumlah_jam" id="jumlah_jam" maxlength="6" inputmode="numeric" pattern="\d*"
-                    value="{{ old('jumlah_jam') }}"
+                <input type="text" name="jumlah_jam" id="jumlah_jam" maxlength="6" inputmode="numeric"
+                    pattern="\d*" value="{{ old('jumlah_jam') }}"
                     class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181]"
                     required>
+                @error('jumlah_jam')
+                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- Tanggal Mulai, Selesai, STTPP --}}
@@ -122,6 +140,9 @@
                             value="{{ old($field) }}"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5"
                             required>
+                        @error($field)
+                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
             @endforeach
@@ -140,7 +161,19 @@
         </form>
     </div>
 @endsection
-
+@if ($errors->any())
+    <script>
+        window.addEventListener('load', () => {
+            let errorMessages = `{{ implode('\n', $errors->all()) }}`;
+            Swal.fire({
+                title: 'Gagal Menyimpan',
+                text: errorMessages,
+                icon: 'error',
+                confirmButtonColor: '#00A181',
+            });
+        });
+    </script>
+@endif
 @push('scripts')
     <script>
         const dropdowns = {

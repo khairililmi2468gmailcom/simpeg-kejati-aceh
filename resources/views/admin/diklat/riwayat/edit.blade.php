@@ -26,6 +26,9 @@
                     value="{{ old('tempat_diklat', $data->tempat_diklat) }}" maxlength="50"
                     class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181]"
                     required>
+                @error('tempat_diklat')
+                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- Nama Pegawai --}}
@@ -59,6 +62,9 @@
                     </div>
                 </div>
                 <input type="hidden" name="nip" id="pegawai-input" value="{{ old('nip', $data->nip) }}">
+                @error('nip')
+                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                @enderror
             </div>
             {{-- Nama Diklat --}}
             <div class="mb-4">
@@ -91,6 +97,9 @@
                     </div>
                 </div>
                 <input type="hidden" name="diklat_id" id="diklat-input" value="{{ old('diklat_id', $data->diklat_id) }}">
+                @error('diklat_id')
+                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- Penyelenggara --}}
@@ -100,6 +109,9 @@
                     value="{{ old('penyelenggara', $data->penyelenggara) }}" maxlength="50"
                     class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181]"
                     required>
+                @error('penyelenggara')
+                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- Angkatan --}}
@@ -108,6 +120,9 @@
                 <input type="text" name="angkatan" id="angkatan" value="{{ old('angkatan', $data->angkatan) }}"
                     maxlength="12"
                     class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181]">
+                @error('angkatan')
+                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- Jumlah Jam --}}
@@ -117,6 +132,9 @@
                     value="{{ old('jumlah_jam', $data->jumlah_jam) }}" maxlength="11"
                     class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181]"
                     required>
+                @error('jumlah_jam')
+                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
 
@@ -133,6 +151,9 @@
                     <input name="tanggal_mulai" id="tanggal_mulai" type="date"
                         value="{{ old('tanggal_mulai', $data->tanggal_mulai) }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5">
+                    @error('tanggal_mulai')
+                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 
@@ -149,6 +170,9 @@
                     <input name="tanggal_selesai" id="tanggal_selesai" type="date"
                         value="{{ old('tanggal_selesai', $data->tanggal_selesai) }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5">
+                    @error('tanggal_selesai')
+                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 
@@ -165,6 +189,9 @@
                     <input name="tanggal_sttpp" id="tanggal_sttpp" type="date"
                         value="{{ old('tanggal_sttpp', $data->tanggal_sttpp) }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5">
+                    @error('tanggal_sttpp')
+                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 

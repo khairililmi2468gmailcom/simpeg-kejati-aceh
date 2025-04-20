@@ -167,9 +167,9 @@
             @foreach ($mutasi as $key => $data)
                 <tr>
                     <td>{{ $key + 1 }}</td>
-                    <td>{{ $data->nip }}</td>
-                    <td>{{ strtoupper($data->pegawai->nama) }}</td>
-                    <td>{{ $data->jabatan_l }}</td>
+                    <td>{{ $data->nip ?? '-' }}</td>
+                    <td>{{ strtoupper($data->pegawai->nama) ?? '-' }}</td>
+                    <td>{{ $data->jabatan_l ?? '-' }}</td>
                     <td>{{ $data->pegawai->jabatan->nama_jabatan ?? '-' }}</td>
                     <td>{{ $data->tempat_l ?? '-' }}</td>
                     <td>{{ $data->pegawai->unitkerja->nama_kantor ?? '-' }}</td>

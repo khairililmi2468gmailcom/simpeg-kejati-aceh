@@ -218,13 +218,7 @@
                         {{ $mutasi->tmt_l ? \Carbon\Carbon::parse($mutasi->tmt_l)->translatedFormat('d F Y') : '-' }}
                     </td>
                 </tr>
-                <tr>
-                    <td style="font-weight: 600; color: #2c3e50;">TMT Lama</td>
-                    <td>:</td>
-                    <td style="border-bottom: 1px dashed #ccc;">
-                        {{ $mutasi->tmt_l ? \Carbon\Carbon::parse($mutasi->tanggal_selesai)->translatedFormat('d F Y') : '-' }}
-                    </td>
-                </tr>
+              
                 <tr>
                     <td style="font-weight: 600; color: #2c3e50;">TMT Baru
                     <td>:</td>

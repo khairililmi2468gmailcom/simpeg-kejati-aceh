@@ -102,7 +102,7 @@ class DiklatController extends Controller
 
         $diklat->delete();
 
-        return redirect()->route('admin.diklat.master')->with('success', 'Data diklat berhasil dihapus.');
+        return redirect()->route('admin.diklat.master.index')->with('success', 'Data diklat berhasil dihapus.');
     }
     public function bulkDelete(Request $request)
     {

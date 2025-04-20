@@ -165,12 +165,12 @@
                 <tr>
                     <td class="label">1. Nama Lengkap</td>
                     <td class="separator">:</td>
-                    <td class="value">{{ $pegawai->nama }}</td>
+                    <td class="value">{{ $pegawai->nama ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td class="label">2. NIP</td>
                     <td class="separator">:</td>
-                    <td class="value">{{ $pegawai->nip }}</td>
+                    <td class="value">{{ $pegawai->nip ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td class="label">3. NRP</td>
@@ -181,22 +181,23 @@
                     <td class="label">4. Tempat & Tanggal Lahir</td>
                     <td class="separator">:</td>
                     <td class="value">{{ $pegawai->tmpt_lahir }},
-                        {{ \Carbon\Carbon::parse($pegawai->tgl_lahir)->format('d/m/Y') }}</td>
+                        {{ $pegawai->tgl_lahir ? \Carbon\Carbon::parse($pegawai->tgl_lahir)->translatedFormat('d F Y') : '-' }}
+                    </td>
                 </tr>
                 <tr>
                     <td class="label">5. Jenis Kelamin</td>
                     <td class="separator">:</td>
-                    <td class="value">{{ $pegawai->j_kelamin }}</td>
+                    <td class="value">{{ $pegawai->j_kelamin ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td class="label">6. Agama</td>
                     <td class="separator">:</td>
-                    <td class="value">{{ $pegawai->agama }}</td>
+                    <td class="value">{{ $pegawai->agama ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td class="label">7. Alamat</td>
                     <td class="separator">:</td>
-                    <td class="value">{{ $pegawai->alamat }}</td>
+                    <td class="value">{{ $pegawai->alamat ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td class="label">8. No. HP</td>
@@ -213,22 +214,22 @@
                 <tr>
                     <td class="label">1. Jabatan</td>
                     <td class="separator">:</td>
-                    <td class="value">{{ $pegawai->jabatan }}</td>
+                    <td class="value">{{ $pegawai->jabatan->nama_jabatan ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td class="label">2. Unit Kerja</td>
                     <td class="separator">:</td>
-                    <td class="value">{{ $pegawai->unit_kerja }}</td>
+                    <td class="value">{{ $pegawai->unitkerja->nama_kantor ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td class="label">3. Pangkat</td>
                     <td class="separator">:</td>
-                    <td class="value">{{ $pegawai->pangkat }}</td>
+                    <td class="value">{{ $pegawai->golongan->pangkat ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td class="label">4. Golongan</td>
                     <td class="separator">:</td>
-                    <td class="value">{{ $pegawai->golongan }}</td>
+                    <td class="value">{{ $pegawai->golongan->id_golongan ?? '-' }}</td>
                 </tr>
             </table>
         </div>
@@ -240,17 +241,17 @@
                 <tr>
                     <td class="label">1. Pendidikan Terakhir</td>
                     <td class="separator">:</td>
-                    <td class="value">{{ $pegawai->pendidikan }}</td>
+                    <td class="value">{{ $pegawai->pendidikan ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td class="label">2. Universitas</td>
                     <td class="separator">:</td>
-                    <td class="value">{{ $pegawai->universitas }}</td>
+                    <td class="value">{{ $pegawai->universitas ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td class="label">3. Jurusan</td>
                     <td class="separator">:</td>
-                    <td class="value">{{ $pegawai->jurusan }}</td>
+                    <td class="value">{{ $pegawai->jurusan ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td class="label">4. Tahun Masuk</td>
@@ -260,7 +261,7 @@
                 <tr>
                     <td class="label">5. Tahun Lulus</td>
                     <td class="separator">:</td>
-                    <td class="value">{{ $pegawai->t_lulus }}</td>
+                    <td class="value">{{ $pegawai->t_lulus ?? '-' }}</td>
                 </tr>
             </table>
         </div>
@@ -272,7 +273,7 @@
                 <tr>
                     <td class="label">1. Alamat</td>
                     <td class="separator">:</td>
-                    <td class="value">{{ $pegawai->alamat }}</td>
+                    <td class="value">{{ $pegawai->alamat ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td class="label">2. Kode Pos</td>

@@ -169,13 +169,17 @@
                 <tr>
                     <td>{{ $key + 1 }}</td>
                     <td>{{ $data->nip }}</td>
-                    <td>{{ strtoupper($data->pegawai->nama) }}</td>
+                    <td>{{ strtoupper($data->pegawai->nama) ?? '-' }}</td>
                     <td>{{ $data->pegawai->jabatan->nama_jabatan ?? '-' }}</td>
                     <td>{{ $data->diklat->nama_diklat ?? '-' }}</td>
                     <td>{{ $data->diklat->jenis_diklat ?? '-' }}</td>
                     <td>{{ $data->tempat_diklat ?? '-' }}</td>
-                    <td>{{ \Carbon\Carbon::parse($data->tanggal_mulai)->translatedFormat('d F Y') }}</td>
-                    <td>{{ \Carbon\Carbon::parse($data->tanggal_selesai)->translatedFormat('d F Y') }}</td>
+                    <td>
+                        {{ $data->tanggal_mulai ? \Carbon\Carbon::parse($data->tanggal_mulai)->translatedFormat('d F Y') : '-' }}
+                    </td>
+                    <td>
+                        {{ $data->tanggal_selesai ? \Carbon\Carbon::parse($data->tanggal_selesai)->translatedFormat('d F Y') : '-' }}
+                    </td>
                 </tr>
             @endforeach
         </tbody>

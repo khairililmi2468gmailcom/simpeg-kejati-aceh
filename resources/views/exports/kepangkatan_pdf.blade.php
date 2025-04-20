@@ -168,9 +168,9 @@
                 <tr>
                     <td>{{ $key + 1 }}</td>
                     <td>{{ $data->no_sk ?? '-' }}</td>
-                    <td>{{ $data->nip }}</td>
-                    <td>{{ strtoupper($data->pegawai->nama) }}</td>
-                    <td>{{ $data->golongan->jabatan_fungsional }}</td>
+                    <td>{{ $data->nip ?? '-' }}</td>
+                    <td>{{ strtoupper($data->pegawai->nama) ?? '-' }}</td>
+                    <td>{{ $data->golongan->jabatan_fungsional ?? '-'}}</td>
                     <td>{{ $data->pangkat_l ?? '-' }}</td>
                     <td>{{ $data->pegawai->golongan->pangkat ?? '-' }}</td>
                     <td>{{ $data->tmt_sk_pangkat ?? '-' }}</td>
