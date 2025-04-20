@@ -23,6 +23,10 @@
                 class="cursor-pointer tab-btn px-4 py-2 rounded-t-lg transition text-gray-600 hover:bg-gray-200 hover:text-black">
                 Unit Kerja
             </button>
+            <button data-tab="kepalakejaksaan"
+                class="cursor-pointer tab-btn px-4 py-2 rounded-t-lg transition text-gray-600 hover:bg-gray-200 hover:text-black">
+                Kepala Kejaksaan
+            </button>
         </div>
 
 
@@ -39,6 +43,11 @@
             </div>
             <div data-content="unitkerja" class="tab-content hidden">
                 @include('admin.settings.unitkerja.index', ['unitkerjas' => $unitkerjas ?? null])
+            </div>
+            <div data-content="kepalakejaksaan" class="tab-content hidden">
+                @include('admin.settings.kepalakejaksaan.index', [
+                    'kepalakejaksaan' => $kepalakejaksaan ?? null,
+                ])
             </div>
         </div>
     </div>

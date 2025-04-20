@@ -121,21 +121,19 @@
             z-index: 1;
         }
 
+        .ttd-section {
+            margin-top: 30px;
+            float: right;
+            width: 300px;
+        }
 
-        .signature-section {
-            margin-top: 10px;
-            padding-top: 20px;
-            border-top: 2px solid var(--primary-color);
-            text-align: right;
+        .signature-box {
+            text-align: center;
         }
 
         .qr-code {
-            margin-top: 5px;
-            padding: 10px;
-            background: #fff;
-            display: inline-block;
-            border-radius: 6px;
-            border: 1px solid #e9ecef;
+            margin-top: 20px;
+            text-align: center;
         }
 
         .official-stamp {
@@ -247,22 +245,20 @@
             </ol>
         </div>
 
-        <div class="signature-section">
-            <p>Banda Aceh, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</p>
-            <p>Kepala Kejaksaan Tinggi Aceh</p>
-
-            @if ($qrCode)
+        <div class="ttd-section">
+            <div class="signature-box">
+                Banda Aceh, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}<br>
+                Kepala Kejaksaan Tinggi Aceh<br>
                 <div class="qr-code">
-                    <img src="data:image/png;base64,{{ $qrCode }}" width="100" alt="TTD Digital">
+                    <img src="data:image/png;base64, {!! $qrCode !!}" width="100">
                 </div>
-            @endif
+                <br>
+                <strong><u>{{ $kepalakejaksaan->nama ?? '-' }}</u></strong><br>
+                NIP.
+                {{ substr($kepalakejaksaan->nip, 0, 8) . ' ' . substr($kepalakejaksaan->nip, 8, 6) . ' ' . substr($kepalakejaksaan->nip, 14, 1) . ' ' . substr($kepalakejaksaan->nip, 15, 3) ?? '-' }}
 
-            <div style="margin-top: 30px;">
-                <strong>DR. H. MUHAMMAD FADLI, S.H., M.H.</strong><br>
-                NIP. 19730512 199803 1 005
             </div>
 
-            {{-- <img src="{{ public_path('image/stempel.png') }}" class="official-stamp" alt="Stempel Resmi"> --}}
         </div>
     </div>
 </body>

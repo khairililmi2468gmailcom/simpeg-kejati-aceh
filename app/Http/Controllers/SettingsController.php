@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Golongan;
 use App\Models\Jabatan;
+use App\Models\KepalaKejaksaan;
 use App\Models\Kepangkatan;
 use App\Models\Mutasi;
 use App\Models\Pegawai;
@@ -60,6 +61,9 @@ class SettingsController extends Controller
             ->orderBy('id')
             ->paginate($perPageAdmin);
 
+        $kepalakejaksaan = KepalaKejaksaan::all();
+
+
         return view('admin.settings.index', compact(
             'jabatans',
             'searchJabatan',
@@ -73,6 +77,7 @@ class SettingsController extends Controller
             'admins',
             'searchAdmin',
             'perPageAdmin',
+            'kepalakejaksaan',
         ));
     }
 
@@ -97,10 +102,25 @@ class SettingsController extends Controller
     {
         return view('admin.settings.admin.create');
     }
+    public function createKepalaKejaksaan()
+    {
+        return view('admin.settings.kepalakejaksaan.create');
+    }
 
 
     // ======= STORE ===========
 
+    public function storeKepalaKejaksaan(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'nip' => 'required|string|max:30',
+        ]);
+
+        KepalaKejaksaan::create($request->only('nama', 'nip'));
+
+        return redirect()->route('admin.settings.index')->with('success', 'Kepala Kejaksaan berhasil ditambahkan');
+    }
     public function storeAdmin(Request $request)
     {
         $request->validate([
@@ -201,6 +221,18 @@ class SettingsController extends Controller
 
 
     // ======= UPDATE ===========
+    public function updateKepalaKejaksaan(Request $request, $id)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'nip' => 'required|string|max:30',
+        ]);
+
+        $kepala = KepalaKejaksaan::findOrFail($id);
+        $kepala->update($request->only('nama', 'nip'));
+
+        return redirect()->route('admin.settings.index')->with('success', 'Data Kepala Kejaksaan berhasil diperbarui');
+    }
     public function updateGolongan(Request $request, $id)
     {
         $request->validate([

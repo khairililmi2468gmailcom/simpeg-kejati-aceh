@@ -113,6 +113,7 @@
             text-decoration: underline;
             letter-spacing: 1px;
         }
+
         .content-section {
             padding: 15px;
             border-radius: 6px;
@@ -127,13 +128,18 @@
             text-align: right;
         }
 
+        .ttd-section {
+            float: right;
+            width: 300px;
+        }
+
+        .signature-box {
+            text-align: center;
+        }
+
         .qr-code {
             margin-top: 15px;
-            padding: 10px;
-            background: #fff;
-            display: inline-block;
-            border-radius: 6px;
-            border: 1px solid #e9ecef;
+            text-align: center;
         }
 
         .official-stamp {
@@ -156,7 +162,8 @@
             <div class="header-content">
                 <h2>KEJAKSAAN TINGGI REPUBLIK INDONESIA</h2>
                 <h1>KEJAKSAAN TINGGI ACEH</h1>
-                <p>Jl. Tgk. Daud Beureueh No.15, Batoh, Kota Banda Aceh<br>Telp: (0651) 34123 | Email: kejatiaceh@go.id</p>
+                <p>Jl. Tgk. Daud Beureueh No.15, Batoh, Kota Banda Aceh<br>Telp: (0651) 34123 | Email: kejatiaceh@go.id
+                </p>
             </div>
         </div>
 
@@ -213,7 +220,8 @@
         </div>
 
         <div class="content-section">
-            <p style="color: var(--accent-color); font-weight: 600; margin-bottom: 10px; font-style:italic;">CATATAN RESMI:</p>
+            <p style="color: var(--accent-color); font-weight: 600; margin-bottom: 10px; font-style:italic;">CATATAN
+                RESMI:</p>
             <ol style="color: var(--secondary-color); padding-left: 20px;">
                 <li>Surat ini sah apabila telah dibubuhi tanda tangan dan stempel resmi</li>
                 <li>Masa cuti tidak dapat diperpanjang tanpa persetujuan tertulis</li>
@@ -221,22 +229,21 @@
             </ol>
         </div>
 
-        <div class="signature-section">
-            <p>Banda Aceh, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</p>
-            <p>Kepala Kejaksaan Tinggi Aceh</p>
 
-            @if ($qrCode)
+        <div class="ttd-section">
+            <div class="signature-box">
+                Banda Aceh, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}<br>
+                Kepala Kejaksaan Tinggi Aceh<br>
                 <div class="qr-code">
-                    <img src="data:image/png;base64,{{ $qrCode }}" width="100" alt="TTD Digital">
+                    <img src="data:image/png;base64, {!! $qrCode !!}" width="100">
                 </div>
-            @endif
+                <br>
+                <strong><u>{{ $kepalakejaksaan->nama ?? '-' }}</u></strong><br>
+                NIP.
+                {{ substr($kepalakejaksaan->nip, 0, 8) . ' ' . substr($kepalakejaksaan->nip, 8, 6) . ' ' . substr($kepalakejaksaan->nip, 14, 1) . ' ' . substr($kepalakejaksaan->nip, 15, 3) ?? '-' }}
 
-            <div style="margin-top: 30px;">
-                <strong>DR. H. MUHAMMAD FADLI, S.H., M.H.</strong><br>
-                NIP. 19730512 199803 1 005
             </div>
 
-            {{-- <img src="{{ public_path('image/stempel.png') }}" class="official-stamp" alt="Stempel Resmi"> --}}
         </div>
     </div>
 </body>

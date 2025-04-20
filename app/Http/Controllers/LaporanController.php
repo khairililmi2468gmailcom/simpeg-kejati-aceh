@@ -6,6 +6,7 @@ use App\Models\Cuti;
 use App\Models\Diklat;
 use App\Models\Golongan;
 use App\Models\Jabatan;
+use App\Models\KepalaKejaksaan;
 use App\Models\Kepangkatan;
 use App\Models\MenerimaCuti;
 use App\Models\MengikutiDiklat;
@@ -220,7 +221,7 @@ class LaporanController extends Controller
         ));
     }
 
-// ============== CETAK PDF LAPORAN ==================
+    // ============== CETAK PDF LAPORAN ==================
     public function cetakPdfPegawai(Request $request)
     {
         $query = Pegawai::query();
@@ -238,16 +239,18 @@ class LaporanController extends Controller
         }
 
         $pegawai = $query->get();
-
+        $kepalakejaksaan = KepalaKejaksaan::first();
         // QR Code: bisa berisi informasi tanggal cetak + info otentikasi
         $tanggalCetak = Carbon::now()->translatedFormat('d F Y');
-        $qrContent = "Laporan Pegawai - Kejati Aceh\nDicetak pada: $tanggalCetak";
+        $kepalaInfo = "Kepala Kejaksaan: " . ($kepalakejaksaan->nama ?? 'Tidak Ada Data') . "\nNIP: " . ($kepalakejaksaan->nip ?? '-');
+        $qrContent = "Laporan Pegawai - Kejati Aceh\nDicetak pada: $tanggalCetak\n$kepalaInfo";
         $qrCode = base64_encode(QrCode::format('png')->size(100)->generate($qrContent));
 
         $pdf = Pdf::loadView('exports.pegawai_pdf', [
             'pegawai' => $pegawai,
             'tanggalCetak' => $tanggalCetak,
             'qrCode' => $qrCode,
+            'kepalakejaksaan' => $kepalakejaksaan,
         ])->setPaper('A4', 'portrait');
 
         return $pdf->stream('Laporan_Pegawai_Kejati_Aceh.pdf');
@@ -286,7 +289,7 @@ class LaporanController extends Controller
         return $pdf->stream("pegawai-{$pegawai->nip}-{$pegawai->nama}.pdf");
     }
 
-    
+
     public function cetakPdfCuti(Request $request)
     {
         $query = MenerimaCuti::query();
@@ -304,28 +307,37 @@ class LaporanController extends Controller
         }
 
         $cuti = $query->get();
+        $kepalakejaksaan = KepalaKejaksaan::first();
 
         // QR Code: bisa berisi informasi tanggal cetak + info otentikasi
         $tanggalCetak = Carbon::now()->translatedFormat('d F Y');
-        $qrContent = "Laporan Cuti Pegawai - Kejati Aceh\nDicetak pada: $tanggalCetak";
+        $kepalaInfo = "Kepala Kejaksaan: " . ($kepalakejaksaan->nama ?? 'Tidak Ada Data') . "\nNIP: " . ($kepalakejaksaan->nip ?? '-');
+        $qrContent = "Laporan Cuti Pegawai - Kejati Aceh\nDicetak pada: $tanggalCetak\n$kepalaInfo";
         $qrCode = base64_encode(QrCode::format('png')->size(100)->generate($qrContent));
 
         $pdf = Pdf::loadView('exports.cuti_pdf', [
             'cuti' => $cuti,
             'tanggalCetak' => $tanggalCetak,
             'qrCode' => $qrCode,
+            'kepalakejaksaan' => $kepalakejaksaan,
         ])->setPaper('A4', 'portrait');
 
         return $pdf->stream('Laporan_Cuti_Pegawai_Kejati_Aceh.pdf');
     }
-   
+
     public function cetakPdfSatuCuti($id)
     {
         $cuti = MenerimaCuti::with(['pegawai', 'cuti'])->findOrFail($id);
+        $kepalakejaksaan = KepalaKejaksaan::first();
 
         // QR Code
+        $qrContent = "Data Cuti Pegawai: {$cuti->pegawai->nama} - NIP: {$cuti->nip}\n";
+        $qrContent .= "Kepala Kejaksaan: " . ($kepalakejaksaan->nama ?? 'Tidak Ada Data') . "\n";
+        $qrContent .= "NIP Kepala Kejaksaan: " . ($kepalakejaksaan->nip ?? '-');
+
+        // Generate QR Code with combined content
         $qrCode = base64_encode(
-            QrCode::format('png')->size(100)->generate("Data Cuti Pegawai: {$cuti->pegawai->nama} - NIP: {$cuti->nip}")
+            QrCode::format('png')->size(100)->generate($qrContent)
         );
 
         // Base64 foto pegawai
@@ -348,11 +360,12 @@ class LaporanController extends Controller
             'qrCode' => $qrCode,
             'fotoBase64' => $fotoBase64,
             'title' => 'Data Cuti - Kejaksaan Tinggi Aceh',
+            'kepalakejaksaan' => $kepalakejaksaan,
         ]);
 
         return $pdf->stream("Cuti-{$cuti->nip}-{$cuti->pegawai->nama}.pdf");
     }
-    
+
 
     public function cetakPdfDiklat(Request $request)
     {
@@ -371,30 +384,38 @@ class LaporanController extends Controller
         }
 
         $diklat = $query->get();
-
+        $kepalakejaksaan = KepalaKejaksaan::first();
         // QR Code: bisa berisi informasi tanggal cetak + info otentikasi
         $tanggalCetak = Carbon::now()->translatedFormat('d F Y');
-        $qrContent = "Laporan Diklat Pegawai - Kejati Aceh\nDicetak pada: $tanggalCetak";
+        $kepalaInfo = "Kepala Kejaksaan: " . ($kepalakejaksaan->nama ?? 'Tidak Ada Data') . "\nNIP: " . ($kepalakejaksaan->nip ?? '-');
+        $qrContent = "Laporan Diklat Pegawai - Kejati Aceh\nDicetak pada: $tanggalCetak\n$kepalaInfo";
         $qrCode = base64_encode(QrCode::format('png')->size(100)->generate($qrContent));
 
         $pdf = Pdf::loadView('exports.diklat_pdf', [
             'diklat' => $diklat,
             'tanggalCetak' => $tanggalCetak,
             'qrCode' => $qrCode,
+            'kepalakejaksaan' => $kepalakejaksaan,
         ])->setPaper('A4', 'portrait');
 
         return $pdf->stream('Laporan_Diklat_Pegawai_Kejati_Aceh.pdf');
     }
- 
+
     public function cetakPdfSatuDiklat($id)
     {
         $diklat = MengikutiDiklat::with(['pegawai', 'diklat'])->findOrFail($id);
 
-        // QR Code
-        $qrCode = base64_encode(
-            QrCode::format('png')->size(100)->generate("Data diklat Pegawai: {$diklat->pegawai->nama} - NIP: {$diklat->nip}")
-        );
+        $kepalakejaksaan = KepalaKejaksaan::first();
 
+        // QR Code
+        $qrContent = "Data Diklat Pegawai: {$diklat->pegawai->nama} - NIP: {$diklat->nip}\n";
+        $qrContent .= "Kepala Kejaksaan: " . ($kepalakejaksaan->nama ?? 'Tidak Ada Data') . "\n";
+        $qrContent .= "NIP Kepala Kejaksaan: " . ($kepalakejaksaan->nip ?? '-');
+
+        // Generate QR Code with combined content
+        $qrCode = base64_encode(
+            QrCode::format('png')->size(100)->generate($qrContent)
+        );
         // Base64 foto pegawai
         $fotoPath = storage_path('app/public/' . $diklat->foto);
         $fotoBase64 = null;
@@ -415,11 +436,12 @@ class LaporanController extends Controller
             'qrCode' => $qrCode,
             'fotoBase64' => $fotoBase64,
             'title' => 'Data diklat - Kejaksaan Tinggi Aceh',
+            'kepalakejaksaan' => $kepalakejaksaan,
         ]);
 
         return $pdf->stream("Diklat-{$diklat->nip}-{$diklat->pegawai->nama}.pdf");
     }
-    
+
     public function cetakPdfMutasi(Request $request)
     {
         $query = Mutasi::query();
@@ -437,28 +459,38 @@ class LaporanController extends Controller
         }
 
         $mutasi = $query->get();
+        $kepalakejaksaan = KepalaKejaksaan::first();
 
         // QR Code: bisa berisi informasi tanggal cetak + info otentikasi
         $tanggalCetak = Carbon::now()->translatedFormat('d F Y');
-        $qrContent = "Laporan Mutasi Pegawai - Kejati Aceh\nDicetak pada: $tanggalCetak";
+        $kepalaInfo = "Kepala Kejaksaan: " . ($kepalakejaksaan->nama ?? 'Tidak Ada Data') . "\nNIP: " . ($kepalakejaksaan->nip ?? '-');
+        $qrContent = "Laporan Mutasi Pegawai - Kejati Aceh\nDicetak pada: $tanggalCetak\n$kepalaInfo";
         $qrCode = base64_encode(QrCode::format('png')->size(100)->generate($qrContent));
 
         $pdf = Pdf::loadView('exports.mutasi_pdf', [
             'mutasi' => $mutasi,
             'tanggalCetak' => $tanggalCetak,
             'qrCode' => $qrCode,
+            'kepalakejaksaan' => $kepalakejaksaan,
         ])->setPaper('A4', 'portrait');
 
         return $pdf->stream('Laporan_Daftar_Mutasi_Pegawai_Kejati_Aceh.pdf');
     }
-  
+
     public function cetakPdfSatuMutasi($id)
     {
         $mutasi = Mutasi::with(['pegawai', 'jabatan'])->findOrFail($id);
 
+        $kepalakejaksaan = KepalaKejaksaan::first();
+
         // QR Code
+        $qrContent = "Data Mutasi Pegawai: {$mutasi->pegawai->nama} - NIP: {$mutasi->nip}\n";
+        $qrContent .= "Kepala Kejaksaan: " . ($kepalakejaksaan->nama ?? 'Tidak Ada Data') . "\n";
+        $qrContent .= "NIP Kepala Kejaksaan: " . ($kepalakejaksaan->nip ?? '-');
+
+        // Generate QR Code with combined content
         $qrCode = base64_encode(
-            QrCode::format('png')->size(100)->generate("Data jabatan Pegawai: {$mutasi->pegawai->nama} - NIP: {$mutasi->nip}")
+            QrCode::format('png')->size(100)->generate($qrContent)
         );
 
         // Base64 foto pegawai
@@ -481,6 +513,7 @@ class LaporanController extends Controller
             'qrCode' => $qrCode,
             'fotoBase64' => $fotoBase64,
             'title' => 'Data mutasi - Kejaksaan Tinggi Aceh',
+            'kepalakejaksaan' => $kepalakejaksaan,
         ]);
 
         return $pdf->stream("Mutasi-{$mutasi->nip}-{$mutasi->pegawai->nama}.pdf");
@@ -503,27 +536,36 @@ class LaporanController extends Controller
         }
 
         $kepangkatan = $query->get();
-
+        $kepalakejaksaan = KepalaKejaksaan::first();
         // QR Code: bisa berisi informasi tanggal cetak + info otentikasi
         $tanggalCetak = Carbon::now()->translatedFormat('d F Y');
-        $qrContent = "Laporan Kepangkatan Pegawai - Kejati Aceh\nDicetak pada: $tanggalCetak";
+        $kepalaInfo = "Kepala Kejaksaan: " . ($kepalakejaksaan->nama ?? 'Tidak Ada Data') . "\nNIP: " . ($kepalakejaksaan->nip ?? '-');
+        $qrContent = "Laporan Kepangkatan Pegawai - Kejati Aceh\nDicetak pada: $tanggalCetak\n$kepalaInfo";
         $qrCode = base64_encode(QrCode::format('png')->size(100)->generate($qrContent));
 
         $pdf = Pdf::loadView('exports.kepangkatan_pdf', [
             'kepangkatan' => $kepangkatan,
             'tanggalCetak' => $tanggalCetak,
             'qrCode' => $qrCode,
+            'kepalakejaksaan' => $kepalakejaksaan,
         ])->setPaper('A4', 'portrait');
 
         return $pdf->stream('Laporan_Daftar_Kepangkatan_Pegawai_Kejati_Aceh.pdf');
     }
-  
+
     public function cetakPdfSatuKepangkatan($id)
     {
         $kepangkatan = Kepangkatan::with(['pegawai', 'golongan'])->findOrFail($id);
+        $kepalakejaksaan = KepalaKejaksaan::first();
+
         // QR Code
+        $qrContent = "Data Kepangkatan Pegawai: {$kepangkatan->pegawai->nama} - NIP: {$kepangkatan->nip}\n";
+        $qrContent .= "Kepala Kejaksaan: " . ($kepalakejaksaan->nama ?? 'Tidak Ada Data') . "\n";
+        $qrContent .= "NIP Kepala Kejaksaan: " . ($kepalakejaksaan->nip ?? '-');
+
+        // Generate QR Code with combined content
         $qrCode = base64_encode(
-            QrCode::format('png')->size(100)->generate("Data kepangkatan Pegawai: {$kepangkatan->pegawai->nama} - NIP: {$kepangkatan->nip}")
+            QrCode::format('png')->size(100)->generate($qrContent)
         );
 
         // Base64 foto pegawai
@@ -546,11 +588,12 @@ class LaporanController extends Controller
             'qrCode' => $qrCode,
             'fotoBase64' => $fotoBase64,
             'title' => 'Data Kepangkatan - Kejaksaan Tinggi Aceh',
+            'kepalakejaksaan' => $kepalakejaksaan,
         ]);
 
         return $pdf->stream("Kepangkatan-{$kepangkatan->nip}-{$kepangkatan->pegawai->nama}.pdf");
     }
-    
+
     /**
      * Show the form for creating a new resource.
      */

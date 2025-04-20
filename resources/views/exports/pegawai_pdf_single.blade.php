@@ -114,17 +114,16 @@
         }
 
         .signature-section {
-            margin-top: 50px;
+            float: right;
             padding-top: 20px;
-            border-top: 2px solid var(--primary-color);
-            text-align: right;
+            text-align: center;
         }
 
         .qr-code {
-            margin-top: 15px;
             padding: 10px;
             background: #fff;
             display: inline-block;
+            text-align: center;
             border-radius: 6px;
             border: 1px solid #e9ecef;
         }

@@ -57,7 +57,7 @@
                             <rect x="147.5" y="302.5" style="fill:#005ECE;" width="200" height="40" />
                         </g>
                     </svg>
-                    Cetak Mutasi
+                    Cetak Daftar Mutasi
                 </a>
             </div>
         </form>

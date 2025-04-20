@@ -258,6 +258,12 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
             Route::get('/', [SettingsController::class, 'index'])->name('index');
 
+            Route::prefix('kepalakejaksaan')->name('kepalakejaksaan.')->group(function () {
+                Route::get('/create', [SettingsController::class, 'createKepalaKejaksaan'])->name('create');
+                Route::post('/store', [SettingsController::class, 'storeKepalaKejaksaan'])->name('store');
+                Route::put('/{id}', [SettingsController::class, 'updateKepalaKejaksaan'])->name('update');
+            });
+            
             Route::prefix('admin')->name('admin.')->group(function () {
                 Route::get('/', [SettingsController::class, 'index'])->name('index');
                 Route::get('/create', [SettingsController::class, 'createAdmin'])->name('create');

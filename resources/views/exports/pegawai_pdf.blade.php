@@ -117,8 +117,7 @@
         }
 
         .signature-box {
-            border-top: 2px solid #2c3e50;
-            padding-top: 15px;
+           
             text-align: center;
         }
 
@@ -139,14 +138,14 @@
             <!-- Teks pusat -->
             <div class="institution-info">
                 <h2>KEJAKSAAN TINGGI REPUBLIK INDONESIA</h1>
-                <h1>KEJAKSAAN TINGGI ACEH</h1>
-                <div class="address">
-                    Jl. Dr. M. Mohammed Hasan, Batoh, Kota Banda Aceh<br>
-                    Telp. (0651) 22240 | Fax. (0651) 28094
-                    Website: www.kejati-aceh.go.id | Email: kejatiaceh@go.id
-                </div>
+                    <h1>KEJAKSAAN TINGGI ACEH</h1>
+                    <div class="address">
+                        Jl. Dr. M. Mohammed Hasan, Batoh, Kota Banda Aceh<br>
+                        Telp. (0651) 22240 | Fax. (0651) 28094
+                        Website: www.kejati-aceh.go.id | Email: kejatiaceh@go.id
+                    </div>
             </div>
-           
+
         </div>
     </div>
 
@@ -185,9 +184,10 @@
             <div class="qr-code">
                 <img src="data:image/png;base64, {!! $qrCode !!}" width="100">
             </div>
-            <br><br>
-            <strong><u>DR. H. MUHAMMAD FADLI, S.H., M.H.</u></strong><br>
-            NIP. 19730512 199803 1 005
+            <br>
+            <strong><u>{{ $kepalakejaksaan->nama ?? '-' }}</u></strong><br>
+            NIP.
+            {{ substr($kepalakejaksaan->nip, 0, 8) . ' ' . substr($kepalakejaksaan->nip, 8, 6) . ' ' . substr($kepalakejaksaan->nip, 14, 1) . ' ' . substr($kepalakejaksaan->nip, 15, 3) ?? '-' }}
         </div>
 
     </div>

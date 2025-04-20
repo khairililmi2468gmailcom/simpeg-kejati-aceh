@@ -12,10 +12,10 @@
         }
 
         body {
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', sans-serif, Arial, Helvetica, sans-serif;
             font-size: 13px;
             line-height: 1.6;
-            margin: 12px;
+            margin: 0px;
             background: white;
         }
 
@@ -122,20 +122,19 @@
         }
 
 
-        .signature-section {
-            margin-top: 10px;
-            padding-top: 20px;
-            border-top: 2px solid var(--primary-color);
-            text-align: right;
+        .ttd-section {
+            margin-top: 40px;
+            float: right;
+            width: 300px;
+        }
+
+        .signature-box {
+            text-align: center;
         }
 
         .qr-code {
-            margin-top: 5px;
-            padding: 10px;
-            background: #fff;
-            display: inline-block;
-            border-radius: 6px;
-            border: 1px solid #e9ecef;
+            margin-top: 15px;
+            text-align: center;
         }
 
         .official-stamp {
@@ -255,23 +254,21 @@
 
 
 
-        <div class="signature-section">
-            <p>Banda Aceh, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</p>
-            <p>Kepala Kejaksaan Tinggi Aceh</p>
-
-            @if ($qrCode)
-                <div class="qr-code">
-                    <img src="data:image/png;base64,{{ $qrCode }}" width="100" alt="TTD Digital">
-                </div>
-            @endif
-
-            <div style="margin-top: 30px;">
-                <strong>DR. H. MUHAMMAD FADLI, S.H., M.H.</strong><br>
-                NIP. 19730512 199803 1 005
+          <div class="ttd-section">
+        <div class="signature-box">
+            Banda Aceh, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}<br>
+            Kepala Kejaksaan Tinggi Aceh<br>
+            <div class="qr-code">
+                <img src="data:image/png;base64, {!! $qrCode !!}" width="100">
             </div>
+            <br>
+            <strong><u>{{ $kepalakejaksaan->nama ?? '-' }}</u></strong><br>
+            NIP.
+            {{ substr($kepalakejaksaan->nip, 0, 8) . ' ' . substr($kepalakejaksaan->nip, 8, 6) . ' ' . substr($kepalakejaksaan->nip, 14, 1) . ' ' . substr($kepalakejaksaan->nip, 15, 3) ?? '-' }}
 
-            {{-- <img src="{{ public_path('image/stempel.png') }}" class="official-stamp" alt="Stempel Resmi"> --}}
         </div>
+
+    </div>
     </div>
 </body>
 

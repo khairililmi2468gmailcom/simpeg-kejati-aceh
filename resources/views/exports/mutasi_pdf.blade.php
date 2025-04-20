@@ -110,14 +110,12 @@
         }
 
         .ttd-section {
-            margin-top: 40px;
+            margin-top: 30px;
             float: right;
             width: 300px;
         }
 
         .signature-box {
-            border-top: 2px solid #2c3e50;
-            padding-top: 15px;
             text-align: center;
         }
 
@@ -150,7 +148,7 @@
     </div>
 
 
-    <h1 class="title">LAPORAN DATA MUTASI PEGAWAI</h1>
+    <h1 class="title" style="text-decoration: underline">LAPORAN DATA MUTASI PEGAWAI</h1>
 
     <table>
         <thead>
@@ -188,9 +186,10 @@
             <div class="qr-code">
                 <img src="data:image/png;base64, {!! $qrCode !!}" width="100">
             </div>
-            <br><br>
-            <strong><u>DR. H. MUHAMMAD FADLI, S.H., M.H.</u></strong><br>
-            NIP. 19730512 199803 1 005
+            <br>
+            <strong><u>{{ $kepalakejaksaan->nama ?? '-' }}</u></strong><br>
+            NIP.
+            {{ substr($kepalakejaksaan->nip, 0, 8) . ' ' . substr($kepalakejaksaan->nip, 8, 6) . ' ' . substr($kepalakejaksaan->nip, 14, 1) . ' ' . substr($kepalakejaksaan->nip, 15, 3) ?? '-' }}
         </div>
 
     </div>
