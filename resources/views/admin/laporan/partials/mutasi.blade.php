@@ -2,7 +2,7 @@
     <div class="flex items-center justify-between bg-[#00A181] px-6 py-4 rounded-t-lg">
         <h3 class="text-lg font-semibold text-white font-poppins">Daftar Mutasi Pegawai</h3>
         @php
-            $queryParams = request()->only(['nip', 'no_sttpp', 'diklat_id']);
+            $queryParams = request()->only(['nip', 'no_sk', 'id_jabatan']);
         @endphp
         <form method="GET" action="{{ route('admin.laporan.index') }}"
             class="w-full max-w-full md:max-w-4xl lg:max-w-2xl  flex flex-col md:flex-row md:items-center md:justify-right gap-3">
@@ -57,7 +57,7 @@
                             <rect x="147.5" y="302.5" style="fill:#005ECE;" width="200" height="40" />
                         </g>
                     </svg>
-                    Cetak Daftar Mutasi
+                    Cetak Mutasi
                 </a>
             </div>
         </form>
