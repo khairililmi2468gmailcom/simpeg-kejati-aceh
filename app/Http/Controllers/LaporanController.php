@@ -152,6 +152,8 @@ class LaporanController extends Controller
             ->pluck('tahun');
 
         $searchKepangkatan = $request->searchKepangkatan;
+        $jenisUsulan = $request->jenis_usulan;
+        $tahunKepangkatan = $request->tahun_kepangkatan;
         $perPageKepangkatan = $request->per_page_kepangkatan ?? 5;
         $kepangkatan = Kepangkatan::with(['pegawai', 'golongan'])
             ->when($searchKepangkatan, function ($query) use ($searchKepangkatan) {
@@ -163,9 +165,21 @@ class LaporanController extends Controller
                         ->orWhere('id_golongan', 'like', "%$searchKepangkatan%");
                 })->orWhere('nip', 'like', "%$searchKepangkatan%");
             })
+            ->when($jenisUsulan, function ($query) use ($jenisUsulan) {
+                $query->where('jenis_usulan', $jenisUsulan);
+            })
+            ->when($tahunKepangkatan, function ($query) use ($tahunKepangkatan) {
+                $query->whereYear('tanggal_sk', $tahunKepangkatan);
+            })
             ->orderBy('created_at', 'desc')
             ->paginate($perPageKepangkatan);
 
+        $kepangkatanValues = Kepangkatan::orderBy('jenis_usulan')->get();
+        $tahunListKepangkatan = Kepangkatan::selectRaw('YEAR(tanggal_sk) as tahun')
+            ->distinct()
+            ->orderBy('tahun', 'desc')
+            ->pluck('tahun');
+            
         return view('admin.laporan.index', compact(
             'jabatans',
             'searchJabatan',
@@ -194,6 +208,8 @@ class LaporanController extends Controller
             'tahunMutasi',
             'perPageMutasi',
             'kepangkatan',
+            'kepangkatanValues',
+            'tahunListKepangkatan',
             'searchKepangkatan',
             'perPageKepangkatan'
         ));
