@@ -15,7 +15,7 @@
                 </div>
                 <div>
                     <div class="text-base font-semibold">Total Pegawai</div>
-                    <div class="text-3xl font-bold">{{ $totalPegawai }}</div>
+                    <div class="text-3xl font-bold count-up" data-target="{{ $totalPegawai }}">0</div>
                 </div>
             </div>
 
@@ -27,7 +27,7 @@
                 </div>
                 <div>
                     <div class="text-base font-semibold">Total Unit Kerja</div>
-                    <div class="text-3xl font-bold">{{ $totalUnit }}</div>
+                    <div class="text-3xl font-bold count-up" data-target="{{ $totalUnit }}">0</div>
                 </div>
             </div>
 
@@ -39,7 +39,7 @@
                 </div>
                 <div>
                     <div class="text-base font-semibold">Total Jabatan</div>
-                    <div class="text-3xl font-bold">{{ $totalJabatan }}</div>
+                    <div class="text-3xl font-bold count-up" data-target="{{ $totalJabatan }}">0</div>
                 </div>
             </div>
 
@@ -51,7 +51,7 @@
                 </div>
                 <div>
                     <div class="text-base font-semibold">Total Golongan</div>
-                    <div class="text-3xl font-bold">{{ $totalGolongan }}</div>
+                    <div class="text-3xl font-bold count-up" data-target="{{ $totalGolongan }}">0</div>
                 </div>
             </div>
             {{-- Total Diklat --}}
@@ -62,7 +62,7 @@
                 </div>
                 <div>
                     <div class="text-base font-semibold">Total Diklat</div>
-                    <div class="text-3xl font-bold">{{ $totalDiklat }}</div>
+                    <div class="text-3xl font-bold count-up" data-target="{{ $totalDiklat }}">0</div>
                 </div>
             </div>
             {{-- Jumlah Provinsi --}}
@@ -73,7 +73,7 @@
                 </div>
                 <div>
                     <div class="text-base font-semibold">Jumlah Provinsi</div>
-                    <div class="text-3xl font-bold">{{ $totalProvinsi }}</div>
+                    <div class="text-3xl font-bold count-up" data-target="{{ $totalProvinsi }}">0</div>
                 </div>
             </div>
             {{-- Jumlah Kabupaten --}}
@@ -84,7 +84,7 @@
                 </div>
                 <div>
                     <div class="text-base font-semibold">Jumlah Kabupaten</div>
-                    <div class="text-3xl font-bold">{{ $totalKabupaten }}</div>
+                    <div class="text-3xl font-bold count-up" data-target="{{ $totalKabupaten }}">0</div>
                 </div>
             </div>
 
@@ -98,7 +98,7 @@
                 </div>
                 <div>
                     <div class="text-base font-semibold">Jumlah Kecamatan</div>
-                    <div class="text-3xl font-bold">{{ $totalKecamatan }}</div>
+                    <div class="text-3xl font-bold count-up" data-target="{{ $totalKecamatan }}">0</div>
                 </div>
             </div>
         </div>
@@ -161,7 +161,8 @@
                     </div>
 
                     <div class="flex items-end">
-                        <button type="submit" class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded shadow">
+                        <button type="submit"
+                            class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded shadow">
                             Terapkan
                         </button>
                     </div>
@@ -331,6 +332,27 @@
                     }
                 });
             }
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const counters = document.querySelectorAll('.count-up');
+            const speed = 60; // makin kecil makin cepat
+
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = +counter.getAttribute('data-target');
+                    const count = +counter.innerText;
+                    const increment = Math.ceil(target / speed);
+
+                    if (count < target) {
+                        counter.innerText = count + increment > target ? target : count + increment;
+                        setTimeout(updateCount, 20); // kecepatan per update
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+
+                updateCount();
+            });
         });
     </script>
 @endpush

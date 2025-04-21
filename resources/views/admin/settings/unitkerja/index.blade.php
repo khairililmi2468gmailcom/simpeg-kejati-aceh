@@ -68,7 +68,7 @@
                     </td>
                     <td class="px-5 py-4">{{ $item->kode_kantor ?? '-' }}</td>
                     <td class="px-5 py-4">{{ $item->nama_kantor ?? '-' }}</td>
-                    <td class="px-5 py-4">{{ $item->provinsi->nama_provinsi  ?? '-'}}</td>
+                    <td class="px-5 py-4">{{ $item->provinsi->nama_provinsi ?? '-' }}</td>
                     <td class="px-5 py-4 space-y-2">
                         <a href="{{ route('admin.settings.unitkerja.edit', $item->kode_kantor) }}"
                             class="w-full sm:w-auto inline-flex justify-center items-center text-white bg-yellow-500 hover:bg-yellow-600 font-semibold rounded-md text-sm px-4 py-2">
@@ -118,16 +118,37 @@
                 <a href="{{ $unitkerjas->previousPageUrl() }}"
                     class="px-3 py-1 bg-white border rounded-md text-[#00A181] hover:bg-[#00A181]/10">← Prev</a>
             @endif
-
-            {{-- Angka halaman --}}
-            @foreach ($unitkerjas->getUrlRange(1, $unitkerjas->lastPage()) as $page => $url)
-                @if ($page == $unitkerjas->currentPage())
+            @php
+                $current = $unitkerjas->currentPage();
+                $last = $unitkerjas->lastPage();
+                $start = max($current - 2, 1);
+                $end = min($current + 2, $last);
+            @endphp
+            {{-- Tampilkan "..." di awal jika halaman pertama tidak ditampilkan --}}
+            @if ($start > 1)
+                <a href="{{ $unitkerjas->url(1) }}"
+                    class="px-3 py-1 bg-white border rounded-md hover:bg-[#00A181]/10 text-[#00A181]">1</a>
+                @if ($start > 2)
+                    <span class="px-2">...</span>
+                @endif
+            @endif
+            {{-- Loop halaman tengah --}}
+            @for ($page = $start; $page <= $end; $page++)
+                @if ($page == $current)
                     <span class="px-3 py-1 bg-[#00A181] text-white rounded-md font-semibold">{{ $page }}</span>
                 @else
-                    <a href="{{ $url }}"
+                    <a href="{{ $unitkerjas->url($page) }}"
                         class="px-3 py-1 bg-white border rounded-md hover:bg-[#00A181]/10 text-[#00A181]">{{ $page }}</a>
                 @endif
-            @endforeach
+            @endfor
+            {{-- Tampilkan "..." di akhir jika halaman terakhir tidak ditampilkan --}}
+            @if ($end < $last)
+                @if ($end < $last - 1)
+                    <span class="px-2">...</span>
+                @endif
+                <a href="{{ $unitkerjas->url($last) }}"
+                    class="px-3 py-1 bg-white border rounded-md hover:bg-[#00A181]/10 text-[#00A181]">{{ $last }}</a>
+            @endif
 
             {{-- Tombol Next --}}
             @if ($unitkerjas->hasMorePages())

@@ -11,7 +11,8 @@
             <select name="per_page_golongan" onchange="this.form.submit()"
                 class="border border-gray-300 px-3 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00A181] w-full">
                 @foreach ([5, 10, 25, 50, 100, 250, 500, 1000, 2000, 5000, 10000] as $size)
-                    <option value="{{ $size }}" {{ request('per_page_golongan', 5) == $size ? 'selected' : '' }}>
+                    <option value="{{ $size }}"
+                        {{ request('per_page_golongan', 5) == $size ? 'selected' : '' }}>
                         {{ $size }} / halaman
                     </option>
                 @endforeach
@@ -33,8 +34,7 @@
         <!-- Hapus Data -->
         <button id="bulkDeleteBtn"
             class="bulk-delete-btn cursor-pointer inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-2.5 disabled:opacity-50 mb-2 md:mb-0"
-            data-action="{{route('admin.settings.golongan.bulkDelete')}}" data-token="{{ csrf_token() }}"
-            disabled>
+            data-action="{{ route('admin.settings.golongan.bulkDelete') }}" data-token="{{ csrf_token() }}" disabled>
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -78,8 +78,8 @@
                             </svg>
                             Edit
                         </a>
-                        <form action="{{ route('admin.settings.golongan.destroy', $item->id_golongan) }}" method="POST"
-                            class="w-full sm:w-auto inline delete-form">
+                        <form action="{{ route('admin.settings.golongan.destroy', $item->id_golongan) }}"
+                            method="POST" class="w-full sm:w-auto inline delete-form">
                             @csrf
                             @method('DELETE')
                             <button type="button"
@@ -117,16 +117,37 @@
                 <a href="{{ $golongans->previousPageUrl() }}"
                     class="px-3 py-1 bg-white border rounded-md text-[#00A181] hover:bg-[#00A181]/10">← Prev</a>
             @endif
-
-            {{-- Angka halaman --}}
-            @foreach ($golongans->getUrlRange(1, $golongans->lastPage()) as $page => $url)
-                @if ($page == $golongans->currentPage())
+            @php
+                $current = $golongans->currentPage();
+                $last = $golongans->lastPage();
+                $start = max($current - 2, 1);
+                $end = min($current + 2, $last);
+            @endphp
+            {{-- Tampilkan "..." di awal jika halaman pertama tidak ditampilkan --}}
+            @if ($start > 1)
+                <a href="{{ $golongans->url(1) }}"
+                    class="px-3 py-1 bg-white border rounded-md hover:bg-[#00A181]/10 text-[#00A181]">1</a>
+                @if ($start > 2)
+                    <span class="px-2">...</span>
+                @endif
+            @endif
+            {{-- Loop halaman tengah --}}
+            @for ($page = $start; $page <= $end; $page++)
+                @if ($page == $current)
                     <span class="px-3 py-1 bg-[#00A181] text-white rounded-md font-semibold">{{ $page }}</span>
                 @else
-                    <a href="{{ $url }}"
+                    <a href="{{ $golongans->url($page) }}"
                         class="px-3 py-1 bg-white border rounded-md hover:bg-[#00A181]/10 text-[#00A181]">{{ $page }}</a>
                 @endif
-            @endforeach
+            @endfor
+            {{-- Tampilkan "..." di akhir jika halaman terakhir tidak ditampilkan --}}
+            @if ($end < $last)
+                @if ($end < $last - 1)
+                    <span class="px-2">...</span>
+                @endif
+                <a href="{{ $golongans->url($last) }}"
+                    class="px-3 py-1 bg-white border rounded-md hover:bg-[#00A181]/10 text-[#00A181]">{{ $last }}</a>
+            @endif
 
             {{-- Tombol Next --}}
             @if ($golongans->hasMorePages())

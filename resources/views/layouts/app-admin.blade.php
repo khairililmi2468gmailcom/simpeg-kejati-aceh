@@ -134,6 +134,11 @@
         }
     </script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    {{-- <script src="/js/turbolinks.js"></script>
+    <script>
+        Turbolinks.start();
+    </script> --}}
+
 
 </head>
 
@@ -537,6 +542,7 @@
             @yield('content')
         </div>
     </div>
+
     <script>
         document.getElementById("toggleSidebar").addEventListener("click", function() {
             document.getElementById("logo-sidebar").classList.toggle("-translate-x-full");

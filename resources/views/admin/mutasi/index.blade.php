@@ -144,17 +144,38 @@
                     <a href="{{ $data->previousPageUrl() }}"
                         class="px-3 py-1 bg-white border rounded-md text-[#00A181] hover:bg-[#00A181]/10">← Prev</a>
                 @endif
-
-                {{-- Angka halaman --}}
-                @foreach ($data->getUrlRange(1, $data->lastPage()) as $page => $url)
-                    @if ($page == $data->currentPage())
+                @php
+                    $current = $data->currentPage();
+                    $last = $data->lastPage();
+                    $start = max($current - 2, 1);
+                    $end = min($current + 2, $last);
+                @endphp
+                {{-- Tampilkan "..." di awal jika halaman pertama tidak ditampilkan --}}
+                @if ($start > 1)
+                    <a href="{{ $data->url(1) }}"
+                        class="px-3 py-1 bg-white border rounded-md hover:bg-[#00A181]/10 text-[#00A181]">1</a>
+                    @if ($start > 2)
+                        <span class="px-2">...</span>
+                    @endif
+                @endif
+                {{-- Loop halaman tengah --}}
+                @for ($page = $start; $page <= $end; $page++)
+                    @if ($page == $current)
                         <span
                             class="px-3 py-1 bg-[#00A181] text-white rounded-md font-semibold">{{ $page }}</span>
                     @else
-                        <a href="{{ $url }}"
+                        <a href="{{ $data->url($page) }}"
                             class="px-3 py-1 bg-white border rounded-md hover:bg-[#00A181]/10 text-[#00A181]">{{ $page }}</a>
                     @endif
-                @endforeach
+                @endfor
+                {{-- Tampilkan "..." di akhir jika halaman terakhir tidak ditampilkan --}}
+                @if ($end < $last)
+                    @if ($end < $last - 1)
+                        <span class="px-2">...</span>
+                    @endif
+                    <a href="{{ $data->url($last) }}"
+                        class="px-3 py-1 bg-white border rounded-md hover:bg-[#00A181]/10 text-[#00A181]">{{ $last }}</a>
+                @endif
 
                 {{-- Tombol Next --}}
                 @if ($data->hasMorePages())

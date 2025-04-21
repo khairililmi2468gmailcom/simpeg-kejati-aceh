@@ -12,7 +12,7 @@
                 <select name="per_page" onchange="this.form.submit()"
                     class="border border-gray-300 px-3 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00A181]">
                     @foreach ([5, 10, 25, 50, 100, 250, 500, 1000, 2000, 5000, 10000] as $size)
-                        <option value="{{ $size }}" {{ request('per_page', 10) == $size ? 'selected' : '' }}>
+                        <option value="{{ $size }}" {{ request('per_page', 5) == $size ? 'selected' : '' }}>
                             {{ $size }} / halaman
                         </option>
                     @endforeach
@@ -124,16 +124,37 @@
                     <a href="{{ $provinsi->previousPageUrl() }}"
                         class="px-3 py-1 bg-white border rounded-md text-[#00A181] hover:bg-[#00A181]/10">← Prev</a>
                 @endif
-
-                {{-- Angka halaman --}}
-                @foreach ($provinsi->getUrlRange(1, $provinsi->lastPage()) as $page => $url)
-                    @if ($page == $provinsi->currentPage())
+                @php
+                    $current = $provinsi->currentPage();
+                    $last = $provinsi->lastPage();
+                    $start = max($current - 2, 1);
+                    $end = min($current + 2, $last);
+                @endphp
+                {{-- Tampilkan "..." di awal jika halaman pertama tidak ditampilkan --}}
+                @if ($start > 1)
+                    <a href="{{ $provinsi->url(1) }}"
+                        class="px-3 py-1 bg-white border rounded-md hover:bg-[#00A181]/10 text-[#00A181]">1</a>
+                    @if ($start > 2)
+                        <span class="px-2">...</span>
+                    @endif
+                @endif
+                {{-- Loop halaman tengah --}}
+                @for ($page = $start; $page <= $end; $page++)
+                    @if ($page == $current)
                         <span class="px-3 py-1 bg-[#00A181] text-white rounded-md font-semibold">{{ $page }}</span>
                     @else
-                        <a href="{{ $url }}"
+                        <a href="{{ $provinsi->url($page) }}"
                             class="px-3 py-1 bg-white border rounded-md hover:bg-[#00A181]/10 text-[#00A181]">{{ $page }}</a>
                     @endif
-                @endforeach
+                @endfor
+                {{-- Tampilkan "..." di akhir jika halaman terakhir tidak ditampilkan --}}
+                @if ($end < $last)
+                    @if ($end < $last - 1)
+                        <span class="px-2">...</span>
+                    @endif
+                    <a href="{{ $provinsi->url($last) }}"
+                        class="px-3 py-1 bg-white border rounded-md hover:bg-[#00A181]/10 text-[#00A181]">{{ $last }}</a>
+                @endif
 
                 {{-- Tombol Next --}}
                 @if ($provinsi->hasMorePages())

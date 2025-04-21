@@ -12,7 +12,7 @@ class ProvinsiController extends Controller
     public function index(Request $request)
     {
         $search = $request->search;
-        $perPage = $request->per_page ?? 10;
+        $perPage = $request->per_page ?? 5;
 
         $provinsi = Provinsi::query()
             ->when($search, function ($query) use ($search) {

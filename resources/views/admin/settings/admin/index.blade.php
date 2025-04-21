@@ -5,8 +5,7 @@
     <!-- Input Search -->
     <div class="w-full md:w-1/3 mb-4 md:mb-0 relative">
         <form action="{{ route('admin.settings.index') }}" method="GET">
-            <input type="text" name="searchAdmin" value="{{ request('searchAdmin') }}"
-                placeholder="Cari Admin..."
+            <input type="text" name="searchAdmin" value="{{ request('searchAdmin') }}" placeholder="Cari Admin..."
                 class="px-4 py-2 mb-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00A181] w-full">
             <select name="per_page_admin" onchange="this.form.submit()"
                 class="border border-gray-300 px-3 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00A181] w-full">
@@ -33,8 +32,7 @@
         <!-- Hapus Data -->
         <button id="bulkDeleteBtn"
             class="bulk-delete-btn cursor-pointer inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-2.5 disabled:opacity-50 mb-2 md:mb-0"
-            data-action="{{route('admin.settings.admin.bulkDelete')}}" data-token="{{ csrf_token() }}"
-            disabled>
+            data-action="{{ route('admin.settings.admin.bulkDelete') }}" data-token="{{ csrf_token() }}" disabled>
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -118,16 +116,37 @@
                 <a href="{{ $admins->previousPageUrl() }}"
                     class="px-3 py-1 bg-white border rounded-md text-[#00A181] hover:bg-[#00A181]/10">← Prev</a>
             @endif
-
-            {{-- Angka halaman --}}
-            @foreach ($admins->getUrlRange(1, $admins->lastPage()) as $page => $url)
-                @if ($page == $admins->currentPage())
+            @php
+                $current = $admins->currentPage();
+                $last = $admins->lastPage();
+                $start = max($current - 2, 1);
+                $end = min($current + 2, $last);
+            @endphp
+            {{-- Tampilkan "..." di awal jika halaman pertama tidak ditampilkan --}}
+            @if ($start > 1)
+                <a href="{{ $admins->url(1) }}"
+                    class="px-3 py-1 bg-white border rounded-md hover:bg-[#00A181]/10 text-[#00A181]">1</a>
+                @if ($start > 2)
+                    <span class="px-2">...</span>
+                @endif
+            @endif
+            {{-- Loop halaman tengah --}}
+            @for ($page = $start; $page <= $end; $page++)
+                @if ($page == $current)
                     <span class="px-3 py-1 bg-[#00A181] text-white rounded-md font-semibold">{{ $page }}</span>
                 @else
-                    <a href="{{ $url }}"
+                    <a href="{{ $admins->url($page) }}"
                         class="px-3 py-1 bg-white border rounded-md hover:bg-[#00A181]/10 text-[#00A181]">{{ $page }}</a>
                 @endif
-            @endforeach
+            @endfor
+            {{-- Tampilkan "..." di akhir jika halaman terakhir tidak ditampilkan --}}
+            @if ($end < $last)
+                @if ($end < $last - 1)
+                    <span class="px-2">...</span>
+                @endif
+                <a href="{{ $admins->url($last) }}"
+                    class="px-3 py-1 bg-white border rounded-md hover:bg-[#00A181]/10 text-[#00A181]">{{ $last }}</a>
+            @endif
 
             {{-- Tombol Next --}}
             @if ($admins->hasMorePages())

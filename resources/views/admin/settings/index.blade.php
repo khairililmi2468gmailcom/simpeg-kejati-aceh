@@ -6,12 +6,12 @@
 
     <div class="mb-4 mt-8">
         <!-- Tab Buttons -->
-        <div id="tabs" class="flex space-x-2 border-b border-gray-300 mb-4">
+        <div id="tabs" class="flex space-x-2 border-b border-gray-300 mb-4" data-turbolinks="false">
             <button data-tab="admin"
                 class="cursor-pointer tab-btn px-4 py-2 rounded-t-lg transition text-gray-600 hover:bg-gray-200 hover:text-black">
                 Admin
             </button>
-            <button data-tab="jabatan"
+            <button data-tab="jabatan" 
                 class="cursor-pointer tab-btn px-4 py-2 rounded-t-lg transition text-gray-600 hover:bg-gray-200 hover:text-black ">
                 Jabatan
             </button>
