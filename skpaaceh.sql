@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Waktu pembuatan: 21 Apr 2025 pada 05.50
+-- Waktu pembuatan: 21 Apr 2025 pada 06.42
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -8222,7 +8222,10 @@ CREATE TABLE `mutasi` (
 --
 
 INSERT INTO `mutasi` (`no_sk`, `nip`, `id_jabatan`, `jabatan_l`, `tempat_l`, `tanggal_sk`, `tmt_l`, `tmt_jabatan`, `created_at`, `updated_at`) VALUES
+('SK-1010JU', '605929282493889300', 71, NULL, NULL, '2001-03-03', NULL, '2001-03-03', '2025-04-20 21:30:25', '2025-04-20 21:30:25'),
+('SK-1011JU', '700456111133098600', 65, NULL, NULL, '2001-01-01', NULL, '2001-01-01', '2025-04-20 21:40:18', '2025-04-20 21:40:18'),
 ('SK-102', '406581192463636400', 37, NULL, NULL, '2010-03-03', NULL, '2010-03-03', '2025-04-20 20:36:36', '2025-04-20 20:36:36'),
+('SK-1021JU', '472884861938655360', 62, NULL, NULL, '2001-01-01', NULL, '2001-01-01', '2025-04-20 21:41:33', '2025-04-20 21:41:33'),
 ('SK-102JU', '421973085030913340', 40, 'Jaksa Utama', 'Kejaksaan Negeri Kabupaten Aceh Tenggara', '2002-04-04', '2002-04-04', '2002-04-04', '2025-04-20 20:37:22', '2025-04-20 20:37:35'),
 ('SK-103', '197501012001011001', 46, NULL, NULL, '2012-01-01', '2010-06-15', '2012-01-01', '2025-04-20 20:40:36', '2025-04-20 20:40:36'),
 ('SK-103JS', '301405293308198460', 73, NULL, NULL, '2012-08-01', NULL, '2012-08-01', '2025-04-20 20:42:04', '2025-04-20 20:42:04'),
@@ -8234,7 +8237,8 @@ INSERT INTO `mutasi` (`no_sk`, `nip`, `id_jabatan`, `jabatan_l`, `tempat_l`, `ta
 ('SK-106', '167615409381687650', 85, NULL, NULL, '2014-11-02', NULL, '2014-11-02', '2025-04-20 20:46:58', '2025-04-20 20:46:58'),
 ('SK-106KK', '833326194807887100', 67, NULL, NULL, '2001-01-01', NULL, '2001-01-01', '2025-04-20 20:48:18', '2025-04-20 20:48:18'),
 ('SK-107', '407575471699237800', 41, NULL, NULL, '2001-04-04', NULL, '2001-04-04', '2025-04-20 20:49:11', '2025-04-20 20:49:11'),
-('SK-108', '675178653001785300', 56, NULL, NULL, '2001-08-01', NULL, '2001-08-01', '2025-04-20 20:50:20', '2025-04-20 20:50:20');
+('SK-108', '675178653001785300', 56, NULL, NULL, '2001-08-01', NULL, '2001-08-01', '2025-04-20 20:50:20', '2025-04-20 20:50:20'),
+('SK-109JU', '721684766374528400', 50, NULL, NULL, '2001-03-03', NULL, '2001-03-03', '2025-04-20 21:29:46', '2025-04-20 21:29:46');
 
 -- --------------------------------------------------------
 
@@ -8302,8 +8306,12 @@ INSERT INTO `pegawai` (`nip`, `nrp`, `karpeg`, `nama`, `tmpt_lahir`, `tgl_lahir`
 ('406581192463636400', 'qz6bm6akpd', '9bf8yhldi1', 'Rachel Hane', 'Hirtheshire', '1965-06-25', 'Islam', 'azure', 'O', 'Laki-Laki', 'Menikah', 1, NULL, NULL, NULL, '36363 Kirk Orchard', '73662-8315', '085049768872', 'S1', 'Muller Inc', 'Hukum', '2017', '1991', 'pegawai/HQEWICTgMawiwUbPytChjD234Pr8Cath4tC1vScp.jpg', '2010-03-03', NULL, '101', 37, NULL, '2025-04-18 22:41:53', '2025-04-20 20:36:36'),
 ('407575471699237800', '0d4voudelt', 'wwkbm9s1rp', 'Harriet Wisozk', 'Bel Air South', '1971-01-11', 'Islam', 'Identity', 'O', 'Laki-Laki', 'Menikah', 1, '11', '1102', '110201', '1297 Halvorson View', '24705', '080119639770', 'S1', 'Murray - Kunze', 'Hukum', '2012', '1991', NULL, '2001-04-04', NULL, '102', 41, NULL, '2025-04-20 20:48:39', '2025-04-20 20:49:11'),
 ('421973085030913340', 'zw85xechw7', 'mur7orzbys', 'Dr. Cindy Turner', 'Kennewick', NULL, 'Islam', 'Licensed', 'O', 'Laki-Laki', 'Menikah', 3, NULL, NULL, NULL, '836 Hartmann Club', '02432', '087622334380', 'S1', 'Thompson, Lueilwitz and Fadel', 'Hukum', '1994', '2007', NULL, '2002-04-04', NULL, '102', 40, NULL, '2025-04-18 22:42:26', '2025-04-20 20:37:35'),
+('472884861938655360', 'hro6hs6saf', 'xoraz827gp', 'Julio Powlowski', 'Scranton', '1999-08-21', 'Islam', 'Steel', 'O', 'Laki-Laki', 'Menikah', 3, '11', '1109', '110902', '395 Maegan Mission', '79290-6180', '085883852792', 'S1', 'Schultz Group', 'Hukum', '2012', '2013', NULL, '2001-01-01', NULL, '109', 62, NULL, '2025-04-20 21:41:06', '2025-04-20 21:41:33'),
+('605929282493889300', 'vxcyjknxz1', 'eyr0icb2np', 'Kelley Cruickshank', 'East Audreymouth', '1965-02-21', 'Islam', '1080p', 'O', 'Laki-Laki', 'Menikah', 1, '11', '1105', '110503', '66510 Buckridge Ridges', '14371', '085246075958', 'S1', 'Collins - Towne', 'Hukum', '1994', '1995', NULL, '2001-03-03', NULL, '112', 71, NULL, '2025-04-20 21:29:19', '2025-04-20 21:30:25'),
 ('622445676848292400', '8y78zwse2w', 'n2speit6y5', 'Natasha Cummerata', 'Trompbury', '1975-08-25', 'Islam', 'Accounts', 'O', 'Laki-Laki', 'Menikah', 4, '11', '1117', '111710', '420 D\'Amore Flats', '85050', '080542692421', 'S1', 'Smith - Champlin', 'Hukum', '1999', '2004', NULL, '2013-04-04', NULL, '101', 38, NULL, '2025-04-20 20:20:09', '2025-04-20 20:43:27'),
 ('675178653001785300', 'qiwv4y876v', '73vae6lnfc', 'Gail Windler', 'North Alexandro', '1986-04-17', 'Islam', 'turn-key', 'O', 'Laki-Laki', 'Menikah', 2, '11', '1107', '110703', '131 Troy Tunnel', '67865', '085124346881', 'S1', 'Bernier and Sons', 'Hukum', '2003', '1996', NULL, '2001-08-01', NULL, '107', 56, NULL, '2025-04-20 20:49:45', '2025-04-20 20:50:20'),
+('700456111133098600', 'tqii35hr6n', '4lhj3n8zk5', 'Seth Lowe', 'Appleton', '1984-08-28', 'Islam', 'SQL', 'O', 'Laki-Laki', 'Menikah', 2, '11', '1110', '111002', '040 Emile Summit', '65983', '084656876825', 'S1', 'Lang - Stamm', 'Hukum', '2003', '2003', NULL, '2001-01-01', NULL, '110', 65, NULL, '2025-04-20 21:39:52', '2025-04-20 21:40:18'),
+('721684766374528400', '1qh94rgjn3', 'ha14pur11z', 'Betty Stoltenberg', 'Redlands', '1969-05-08', 'Islam', 'feed', 'O', 'Laki-Laki', 'Menikah', 0, '11', '1112', '111202', '32322 Augusta Cliff', '40428', '082259451398', 'S1', 'Metz and Sons', 'Hukum', '1996', '1986', NULL, '2001-03-03', NULL, '105', 50, NULL, '2025-04-20 21:29:06', '2025-04-20 21:29:46'),
 ('753044072352349700', 'shzzftlwii', 't67hout1bq', 'Gertrude O\'Conner', 'Paucekville', '1969-08-18', 'Islam', 'solutions', 'O', 'Laki-Laki', 'Menikah', 1, NULL, NULL, NULL, '8731 Harrison Fords 8731 Harrison Fords8731 Harrison Fords8731 Harrison Fords', '16334-0676', '083473699715', 'S1', 'Nolan LLC', 'Hukum', '2017', '2002', NULL, '2007-04-04', NULL, '106', 54, NULL, '2025-04-18 22:43:16', '2025-04-20 20:45:46'),
 ('833326194807887100', 'bc96pm9y9q', '9vae34kp85', 'Keith Waters', 'Margiehaven', '1987-01-25', 'Islam', 'alarm', 'O', 'Laki-Laki', 'Menikah', 2, '11', '1103', '110302', '35279 Balistreri Trafficway', '18240', '080098892089', 'S1', 'O\'Conner - Kovacek', 'Hukum', '2022', '1993', NULL, '2001-01-01', NULL, '111', 67, NULL, '2025-04-20 20:47:38', '2025-04-20 20:48:18');
 
