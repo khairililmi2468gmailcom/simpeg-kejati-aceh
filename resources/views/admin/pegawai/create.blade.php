@@ -386,19 +386,25 @@
 </textarea>
                 </div>
 
-                {{-- Foto --}}
-                <div>
-                    <label class="block font-semibold text-gray-700">Foto</label>
-
-                    <div
-                        class="border-2 border-dashed border-gray-300 rounded-lg p-4 relative bg-gray-50 text-center hover:border-[#00A181]">
-
-                        <input type="file" name="foto" id="foto-input"
-                            class="absolute inset-0 opacity-0 z-10 cursor-pointer" />
-                        <p class="text-gray-600">Tarik dan letakkan file di sini atau klik untuk memilih</p>
+                <div class="px-4 py-6">
+                    <div id="image-preview"
+                        class="max-w-sm p-6 mb-4 bg-gray-100 border-dashed border-2 border-gray-400 rounded-lg items-center mx-auto text-center cursor-pointer">
+                        <input id="foto-input" name="foto" type="file" class="hidden" accept="image/*" />
+                        <label for="foto-input" class="cursor-pointer">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-gray-700 mx-auto mb-4">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                            </svg>
+                            <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-700">Upload picture</h5>
+                            <p class="font-normal text-sm text-gray-400 md:px-6">Choose photo size should be less than <b
+                                    class="text-gray-600">2mb</b></p>
+                            <p class="font-normal text-sm text-gray-400 md:px-6">and should be in <b
+                                    class="text-gray-600">JPG, PNG, or GIF</b> format.</p>
+                            <span id="filename" class="text-gray-500 bg-gray-200 z-50"></span>
+                        </label>
                     </div>
                 </div>
-
             </div>
 
             <div class="mt-6 flex items-center justify-between">
@@ -433,6 +439,55 @@
     </style>
 @endpush
 @push('scripts')
+    <script>
+        const uploadInput = document.getElementById('foto-input');
+        const filenameLabel = document.getElementById('filename');
+        const imagePreview = document.getElementById('image-preview');
+
+        // Check if the event listener has been added before
+        let isEventListenerAdded = false;
+
+        uploadInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+
+            if (file) {
+                filenameLabel.textContent = file.name;
+
+                // Sembunyikan label ketika gambar berhasil dipilih
+                document.querySelector('label[for="foto-input"]').classList.add('hidden');
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const imgTag = document.createElement('img');
+                    imgTag.src = e.target.result;
+                    imgTag.className = "max-h-48 rounded-lg mx-auto";
+                    imgTag.alt = "Image preview";
+
+                    const previewContainer = document.getElementById('image-preview');
+                    const oldImage = previewContainer.querySelector('img');
+                    if (oldImage) previewContainer.removeChild(oldImage);
+                    previewContainer.appendChild(imgTag);
+
+                    previewContainer.classList.remove('border-dashed', 'border-2', 'border-gray-400');
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                filenameLabel.textContent = '';
+                imagePreview.innerHTML =
+                    `<div class="bg-gray-200 h-48 rounded-lg flex items-center justify-center text-gray-500">No image preview</div>`;
+                imagePreview.classList.add('border-dashed', 'border-2', 'border-gray-400');
+
+                // Tampilkan kembali label jika tidak ada file
+                document.querySelector('label[for="foto-input"]').classList.remove('hidden');
+            }
+        });
+
+
+        uploadInput.addEventListener('click', (event) => {
+            event.stopPropagation();
+        });
+    </script>
     <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
     {{-- SweetAlert --}}
     @if (session('success'))
