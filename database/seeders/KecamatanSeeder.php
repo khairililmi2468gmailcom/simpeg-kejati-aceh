@@ -16,10 +16,10 @@ class KecamatanSeeder extends Seeder
         DB::table('kecamatan')->delete(); // Ganti truncate() dengan delete()
     
         DB::table('kecamatan')->insert([
-            ['id' => '1101010', 'nama_kecamatan' => 'Teupah Selatan', 'id_kabupaten' => '1101'],
-            ['id' => '1101020', 'nama_kecamatan' => 'Simeulue Timur', 'id_kabupaten' => '1101'],
-            ['id' => '1201010', 'nama_kecamatan' => 'Gunungsitoli', 'id_kabupaten' => '1201'],
-            ['id' => '1201020', 'nama_kecamatan' => 'Gunungsitoli Selatan', 'id_kabupaten' => '1201'],
+            ['id' => '110101', 'nama_kecamatan' => 'Teupah Selatan', 'id_kabupaten' => '1101'],
+            ['id' => '110102', 'nama_kecamatan' => 'Simeulue Timur', 'id_kabupaten' => '1101'],
+            ['id' => '120101', 'nama_kecamatan' => 'Gunungsitoli', 'id_kabupaten' => '1201'],
+            ['id' => '120102', 'nama_kecamatan' => 'Gunungsitoli Selatan', 'id_kabupaten' => '1201'],
         ]);
     }
     

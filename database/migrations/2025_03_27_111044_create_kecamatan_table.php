@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('kecamatan', function (Blueprint $table) {
-            $table->string('id', 7)->primary(); // ID kecamatan (varchar 7 karakter)
+            $table->string('id', 6)->primary(); // ID kecamatan (varchar 7 karakter)
             $table->string('nama_kecamatan', 50);
             $table->string('id_kabupaten', 4); // Foreign key ke kabupaten
 

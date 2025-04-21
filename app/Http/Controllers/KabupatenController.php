@@ -21,7 +21,7 @@ class KabupatenController extends Controller
                 $query->where('id', 'like', "%$search%")
                     ->orWhere('nama_kabupaten', 'like', "%$search%");
             })
-            ->orderBy('id','desc')
+            ->orderBy('id', 'desc')
             ->paginate($perPage);
         $referensi = [
             'provinsi' => \App\Models\Provinsi::select('id', 'nama_provinsi as nama')->get(),
@@ -38,27 +38,25 @@ class KabupatenController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_kabupaten' => 'required|string|max:50|unique:kabupaten,nama_kabupaten',
+            'nama_kabupaten' => 'required|string|max:50',
             'id_provinsi' => 'required|string|max:2|exists:provinsi,id',
+            'id' => 'nullable|string|max:4|unique:kabupaten,id',
         ]);
 
-        // Ambil semua ID yang sudah dipakai, lalu ubah ke array angka
-        $existingIds = Kabupaten::pluck('id')->map(fn($id) => intval($id))->sort()->values();
+        $data = $request->all();
 
-        // Cari id kosong pertama
-        $newId = null;
-        for ($i = 1000; $i <= 9999; $i++) {
-            if (!$existingIds->contains($i)) {
-                $newId = str_pad($i, 4, '0', STR_PAD_LEFT);
-                break;
+        if (empty($data['id'])) {
+            $usedIds = Kabupaten::pluck('id')->toArray();
+            for ($i = 1000; $i <= 9999; $i++) {
+                $idStr = str_pad($i, 4, '0', STR_PAD_LEFT);
+                if (!in_array($idStr, $usedIds)) {
+                    $data['id'] = $idStr;
+                    break;
+                }
             }
         }
 
-        Kabupaten::create([
-            'id' => $newId,
-            'nama_kabupaten' => $request->nama_kabupaten,
-            'id_provinsi' => $request->id_provinsi,
-        ]);
+        Kabupaten::create($data);
 
         return redirect()->route('admin.kabupaten.index')->with('success', 'Kabupaten berhasil ditambahkan.');
     }
@@ -80,10 +78,14 @@ class KabupatenController extends Controller
             'id_provinsi' => 'required|string|max:2|exists:provinsi,id',
         ]);
 
-        $kabupaten->update($request->all());
+        $kabupaten->update([
+            'nama_kabupaten' => $request->nama_kabupaten,
+            'id_provinsi' => $request->id_provinsi,
+        ]);
 
         return redirect()->route('admin.kabupaten.index')->with('success', 'Kabupaten berhasil diperbarui.');
     }
+
 
     public function destroy($id)
     {
@@ -127,7 +129,7 @@ class KabupatenController extends Controller
 
     public function downloadTemplate()
     {
-        $file = public_path('template/template-kabupaten.xlsx');
+        $file = public_path('template/template-kabupaten-fill.xlsx');
 
         if (!file_exists($file)) {
             abort(404, 'Template tidak ditemukan.');

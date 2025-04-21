@@ -12,36 +12,46 @@ class KecamatanImport implements ToCollection
     public function collection(Collection $rows)
     {
         foreach ($rows as $index => $row) {
-            // Lewati baris header jika cocok
-            if ($index === 0 && strtolower($row[0]) === 'nama_kecamatan') {
+            // Lewati baris header
+            if ($index === 0 && strtolower($row[0]) === 'id') {
                 continue;
             }
 
+            $providedId = isset($row[0]) ? str_pad($row[0], 6, '0', STR_PAD_LEFT) : null;
+            $namaKecamatan = $row[1] ?? null;
+            $idKabupaten = $row[2] ?? null;
+
             $validator = Validator::make([
-                'nama_kecamatan' => $row[0],
-                'id_kabupaten' => $row[1],
+                'id' => $providedId,
+                'nama_kecamatan' => $namaKecamatan,
+                'id_kabupaten' => $idKabupaten,
             ], [
-                'nama_kecamatan' => 'required|string|max:30|unique:kecamatan,nama_kecamatan',
+                'id' => 'nullable|string|max:6|unique:kecamatan,id',
+                'nama_kecamatan' => 'required|string|max:50',
                 'id_kabupaten' => 'required|exists:kabupaten,id',
             ]);
 
             if ($validator->fails()) {
-                continue; // Skip baris jika tidak valid
+                continue;
             }
 
-            // Cari ID otomatis dari missing ID antara 1000–9999
-            $existingIds = Kecamatan::orderBy('id')->pluck('id')->toArray();
-            for ($i = 1000000; $i <= 9999999; $i++) {
-                $newId = str_pad($i, 7, '0', STR_PAD_LEFT);
-                if (!in_array($newId, $existingIds)) {
-                    break;
+            // Cari ID otomatis jika tidak diberikan
+            $newId = $providedId;
+            if (!$newId) {
+                $usedIds = Kecamatan::pluck('id')->toArray();
+                for ($i = 100000; $i <= 999999; $i++) {
+                    $idStr = str_pad($i, 6, '0', STR_PAD_LEFT);
+                    if (!in_array($idStr, $usedIds)) {
+                        $newId = $idStr;
+                        break;
+                    }
                 }
             }
 
             Kecamatan::create([
                 'id' => $newId,
-                'nama_kecamatan' => $row[0],
-                'id_kabupaten' => $row[1],
+                'nama_kecamatan' => $namaKecamatan,
+                'id_kabupaten' => $idKabupaten,
             ]);
         }
     }

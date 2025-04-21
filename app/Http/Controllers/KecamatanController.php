@@ -21,7 +21,7 @@ class KecamatanController extends Controller
                 $query->where('id', 'like', "%$search%")
                     ->orWhere('nama_kecamatan', 'like', "%$search%");
             })
-            ->orderBy('id','desc')
+            ->orderBy('id', 'desc')
             ->paginate($perPage);
         $referensi = [
             'kabupaten' => \App\Models\Kabupaten::select('id', 'nama_kabupaten as nama')->get(),
@@ -38,17 +38,22 @@ class KecamatanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_kecamatan' => 'required|string|max:50|unique:kecamatan,nama_kecamatan',
+            'id' => 'nullable|string|max:6|unique:kecamatan,id',
+            'nama_kecamatan' => 'required|string|max:50',
             'id_kabupaten' => 'required|string|max:4|exists:kabupaten,id',
         ]);
-        $existingIds = Kecamatan::pluck('id')->map(fn($id) => intval($id))->sort()->values();
-        $newId = null;
-        for ($i = 1000000; $i <= 9999999; $i++) {
-            if (!$existingIds->contains($i)) {
-                $newId = str_pad($i, 7, '0', STR_PAD_LEFT);
-                break;
+
+        $newId = $request->id;
+        if (!$newId) {
+            $existingIds = Kecamatan::pluck('id')->map(fn($id) => intval($id))->sort()->values();
+            for ($i = 100000; $i <= 999999; $i++) {
+                if (!$existingIds->contains($i)) {
+                    $newId = str_pad($i, 6, '0', STR_PAD_LEFT);
+                    break;
+                }
             }
         }
+
         Kecamatan::create([
             'id' => $newId,
             'nama_kecamatan' => $request->nama_kecamatan,
@@ -117,7 +122,7 @@ class KecamatanController extends Controller
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString()
             ]);
-    
+
             // Kembalikan JSON untuk notifikasi gagal
             return response()->json([
                 'success' => false,
@@ -127,7 +132,7 @@ class KecamatanController extends Controller
     }
     public function downloadTemplate()
     {
-        $file = public_path('template/template-kecamatan.xlsx');
+        $file = public_path('template/template-kecamatan-fill.xlsx');
 
         if (!file_exists($file)) {
             abort(404, 'Template tidak ditemukan.');

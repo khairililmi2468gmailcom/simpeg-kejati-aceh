@@ -19,7 +19,7 @@ class ProvinsiController extends Controller
                 $query->where('id', 'like', "%$search%")
                     ->orWhere('nama_provinsi', 'like', "%$search%");
             })
-            ->orderBy('nama_provinsi','asc')
+            ->orderBy('nama_provinsi', 'asc')
             ->paginate($perPage)
             ->appends($request->all()); // penting untuk tetap menyimpan query string saat pagination
 
@@ -50,15 +50,27 @@ class ProvinsiController extends Controller
     {
         $request->validate([
             'nama_provinsi' => 'required|string|max:30|unique:provinsi,nama_provinsi',
+            'id' => 'nullable|string|max:2|unique:provinsi,id',
         ]);
 
         $data = $request->all();
-        $data['id'] = $this->getNextAvailableId();
+
+        if (empty($data['id'])) {
+            $usedIds = Provinsi::pluck('id')->toArray();
+            for ($i = 1; $i <= 99; $i++) {
+                $iStr = str_pad($i, 2, '0', STR_PAD_LEFT);
+                if (!in_array($iStr, $usedIds)) {
+                    $data['id'] = $iStr;
+                    break;
+                }
+            }
+        }
 
         Provinsi::create($data);
 
         return redirect()->route('admin.provinsi.index')->with('success', 'Provinsi berhasil ditambahkan.');
     }
+
 
 
     public function show($id)
@@ -78,13 +90,16 @@ class ProvinsiController extends Controller
         $provinsi = Provinsi::findOrFail($id);
 
         $request->validate([
-            'nama_provinsi' => 'required|string|max:30',
+            'nama_provinsi' => 'required|string|max:30|unique:provinsi,nama_provinsi,' . $id . ',id',
         ]);
 
-        $provinsi->update($request->all());
+        $provinsi->update([
+            'nama_provinsi' => $request->nama_provinsi,
+        ]);
 
         return redirect()->route('admin.provinsi.index')->with('success', 'Provinsi berhasil diperbarui.');
     }
+
 
     public function destroy($id)
     {
@@ -134,7 +149,7 @@ class ProvinsiController extends Controller
 
     public function downloadTemplate()
     {
-        $file = public_path('template/template-provinsi.xlsx');
+        $file = public_path('template/template-provinsi-fill.xlsx');
 
         if (!file_exists($file)) {
             abort(404, 'Template tidak ditemukan.');

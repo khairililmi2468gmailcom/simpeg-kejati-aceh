@@ -181,6 +181,18 @@
         </div>
     </div>
 @endsection
+<style>
+    #barChart {
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    @media (max-width: 768px) {
+        #barChart {
+            height: 180px !important;
+        }
+    }
+</style>
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script>
@@ -206,24 +218,29 @@
             // Chart.js setup
             const labels = {!! json_encode($pegawaiPerUnit->pluck('unit')) !!};
             const data = {!! json_encode($pegawaiPerUnit->pluck('total')) !!};
-
             const selectedWarna = '{{ request('warna') }}';
 
             if (labels.length && data.length) {
-                const barColors = getBarColors(selectedWarna, data.length); // simpan warna di variable
-                const chart = createBarChart(labels, data, barColors); // kirim ke chart
+                const singkatUnit = singkatUnitFactory(labels);
+                const shortLabels = labels.map(label => singkatUnit(label));
+                const barColors = getBarColors(selectedWarna, data.length);
+                const chart = createBarChart(shortLabels, data, barColors, labels);
 
-                // Legend Custom
+                // Custom Legend
                 const legendContainer = document.getElementById('legend');
                 legendContainer.innerHTML = '';
                 labels.forEach((label, index) => {
+                    const short = singkatUnit(label);
                     const item = document.createElement('div');
                     item.className =
                         'flex items-center gap-2 text-sm bg-gray-100 sm:px-3 px-4 py-4 sm:py-2 rounded shadow-sm';
                     item.innerHTML = `
-                <div class="w-8 h-4 sm:w-6 sm:h-6 rounded" style="background-color: ${barColors[index]}"></div>
-                <span class="text-gray-700 font-medium">${label}</span>
-            `;
+                    <div class="w-8 h-4 sm:w-6 sm:h-6 rounded" style="background-color: ${barColors[index]}"></div>
+                    <div class="flex flex-col">
+                        <span class="text-gray-700 font-medium">${short}</span>
+                        <span class="text-gray-500 text-xs">${label}</span>
+                    </div>
+                `;
                     legendContainer.appendChild(item);
                 });
             }
@@ -256,22 +273,93 @@
                 }
             }
 
-            function createBarChart(labels, data, colors) {
-                const ctx = document.getElementById('barChart').getContext('2d');
+            function singkatUnitFactory(labels) {
+                const hasilInisialUnik = {};
+                const grupInisialDasar = {};
+                const setInisialFinal = new Set();
 
+                // Fase 1: Buat inisial dasar dan kelompokkan
+                labels.forEach(label => {
+                    const labelKapital = label.toUpperCase();
+                    const kata = labelKapital.split(' ');
+                    let inisial = '';
+
+                    if (label.includes('Kejaksaan Negeri')) {
+                        inisial = 'KN';
+                    } else if (label.includes('Kejaksaan Tinggi')) {
+                        inisial = 'KT';
+                    } else if (label.includes('Kejaksaan Provinsi')) {
+                        inisial = 'KP';
+                    }
+
+                    let inisialDasar = '';
+                    const kabIndex = kata.indexOf('KABUPATEN');
+                    const kotaIndex = kata.indexOf('KOTA');
+
+                    if (kabIndex !== -1 && kata[kabIndex + 1]) {
+                        inisialDasar = kata[kabIndex + 1][0];
+                        if (kata[kabIndex + 2]) inisialDasar += kata[kabIndex + 2][0];
+                    } else if (kotaIndex !== -1 && kata[kotaIndex + 1]) {
+                        inisialDasar = kata[kotaIndex + 1][0];
+                        if (kata[kotaIndex + 2]) inisialDasar += kata[kotaIndex + 2][0];
+                    }
+
+                    inisialDasar = inisialDasar.toUpperCase();
+                    const key = `${inisial} ${inisialDasar}`;
+                    if (!grupInisialDasar[key]) grupInisialDasar[key] = [];
+                    grupInisialDasar[key].push(label);
+                });
+
+                // Fase 2: Selesaikan konflik
+                for (const [inisialDasar, listLabel] of Object.entries(grupInisialDasar)) {
+                    if (listLabel.length === 1) {
+                        let inisialFinal = inisialDasar;
+                        let i = 1;
+                        while (setInisialFinal.has(inisialFinal)) {
+                            inisialFinal = inisialDasar + i;
+                            i++;
+                        }
+                        hasilInisialUnik[listLabel[0]] = inisialFinal;
+                        setInisialFinal.add(inisialFinal);
+                    } else {
+                        const kapitalList = listLabel.map(label => label.toUpperCase());
+                        listLabel.forEach((label, i) => {
+                            const current = kapitalList[i];
+                            let pembedaIndex = 0;
+
+                            while (true) {
+                                let charPembeda = current[pembedaIndex] || (i + 1).toString();
+                                let kandidat = inisialDasar + charPembeda;
+                                let loopIndex = pembedaIndex;
+
+                                while (setInisialFinal.has(kandidat)) {
+                                    loopIndex++;
+                                    charPembeda = current[loopIndex];
+                                    if (!charPembeda) {
+                                        charPembeda = (i + 1).toString();
+                                    }
+                                    kandidat = inisialDasar + charPembeda;
+                                }
+
+                                hasilInisialUnik[label] = kandidat;
+                                setInisialFinal.add(kandidat);
+                                break;
+                            }
+                        });
+                    }
+                }
+
+                return function(label) {
+                    return hasilInisialUnik[label] || label;
+                };
+            }
+
+            function createBarChart(shortLabels, data, colors, fullLabels) {
+                const ctx = document.getElementById('barChart').getContext('2d');
                 return new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: labels.map(label => {
-                            // Potong kata "Kejaksaan Tinggi Kabupaten" dan "Kejaksaan Tinggi Kota"
-                            if (label.includes('Kejaksaan Tinggi Kabupaten') || label.includes(
-                                    'Kejaksaan Tinggi Kota')) {
-                                const words = label.split(' ');
-                                // Mengambil kata setelah "Kejaksaan Tinggi" (indeks 2)
-                                return words.slice(2).join(' ');
-                            }
-                            return label; // Jika tidak ada kata tersebut, biarkan label seperti semula
-                        }),
+                        labels: shortLabels,
                         datasets: [{
                             label: 'Jumlah Pegawai',
                             data,
@@ -300,7 +388,10 @@
                             },
                             tooltip: {
                                 callbacks: {
-                                    label: context => ` ${context.dataset.label}: ${context.raw}`
+                                    label: function(context) {
+                                        const fullLabel = fullLabels[context.dataIndex];
+                                        return `${fullLabel}: ${context.raw}`;
+                                    }
                                 }
                             }
                         },
@@ -319,12 +410,14 @@
                                     font: {
                                         size: 12
                                     },
-                                    rotation: -90, // rotasi ke atas
-                                    align: 'end', // posisikan ke bawah bar
-                                    crossAlign: 'far',
+                                    maxRotation: 60,
+                                    minRotation: 0,
+                                    autoSkip: window.innerWidth <
+                                    768, // autoSkip hanya diaktifkan di mobile
+                                    maxTicksLimit: labels.length,
                                     callback: function(value, index, ticks) {
-                                        return this.getLabelForValue(
-                                            value); // Menggunakan label yang sudah dipotong
+                                        const label = this.getLabelForValue(value);
+                                        return label.length > 10 ? label.slice(0, 10) + '…' : label;
                                     }
                                 }
                             }
@@ -332,10 +425,10 @@
                     }
                 });
             }
-        });
-        document.addEventListener("DOMContentLoaded", function() {
+
+            // Count Up Animation
             const counters = document.querySelectorAll('.count-up');
-            const speed = 60; // makin kecil makin cepat
+            const speed = 60;
 
             counters.forEach(counter => {
                 const updateCount = () => {
@@ -345,7 +438,7 @@
 
                     if (count < target) {
                         counter.innerText = count + increment > target ? target : count + increment;
-                        setTimeout(updateCount, 20); // kecepatan per update
+                        setTimeout(updateCount, 20);
                     } else {
                         counter.innerText = target;
                     }
