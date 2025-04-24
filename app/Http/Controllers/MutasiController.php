@@ -49,9 +49,12 @@ class MutasiController extends Controller
     {
         $pegawais = Pegawai::all();
         $jabatans = Jabatan::all();
+        $jabatanTerisi = Pegawai::whereNotNull('id_jabatan')->pluck('id_jabatan')->toArray();
+
         return view('admin.mutasi.create', [
             'pegawaiList' => $pegawais,
             'jabatanList' => $jabatans,
+            'jabatanTerisi' => $jabatanTerisi,
 
         ]);
     }
@@ -123,13 +126,18 @@ class MutasiController extends Controller
 
         $pegawais = Pegawai::all();
         $jabatans = Jabatan::all();
-
+        $jabatanTerisi = Pegawai::whereNotNull('id_jabatan')
+            ->where('id_jabatan', '!=', $pegawai->id_jabatan)
+            ->pluck('id_jabatan')
+            ->toArray();
         return view('admin.mutasi.edit', [
             'data' => $data,
             'pegawaiList' => $pegawais,
             'jabatanList' => $jabatans,
             'pegawai' => $pegawai,
-            'jabatan_l' => $jabatan?->nama_jabatan // safe navigation operator
+            'jabatan_l' => $jabatan?->nama_jabatan,
+            'jabatanTerisi' => $jabatanTerisi,
+
         ]);
     }
 

@@ -74,10 +74,18 @@
                             placeholder="Cari jabatan..." onkeyup="filterOptions('jabatan', this.value)">
                         <div class="options" id="jabatan-options">
                             @foreach ($jabatanList as $jabatan)
+                                @php
+                                    $isDisabled = in_array($jabatan->id_jabatan, $jabatanTerisi ?? []);
+                                @endphp
                                 <div class="option-item px-3 py-2 hover:bg-gray-100 cursor-pointer transition-colors"
+                                    title="{{ $isDisabled ? 'Jabatan ini sudah digunakan oleh pegawai lain' : '' }}"
                                     data-value="{{ $jabatan->id_jabatan }}"
-                                    onclick='selectItem("jabatan", @json($jabatan->id_jabatan), @json($jabatan->nama_jabatan), @json($jabatan->unitkerja->nama_kantor))'>
+                                    onclick='{{ $isDisabled ? '' : "selectItem(\"jabatan\", " . json_encode($jabatan->id_jabatan) . ', ' . json_encode($jabatan->nama_jabatan) . ', ' . json_encode($jabatan->unitkerja->nama_kantor) . ')' }}'>
                                     {{ $jabatan->nama_jabatan }} ({{ $jabatan->unitkerja->nama_kantor }})
+                                    @if ($isDisabled)
+                                        - <span class="italic text-xs text-red-500">Sudah terisi</span>
+                                    @endif
+
                                 </div>
                             @endforeach
                         </div>
@@ -151,9 +159,11 @@
             dropdowns[type] = !dropdowns[type];
         }
 
-        function selectItem(type, value, text) {
+        function selectItem(type, value, label, unitKerja = '') {
+            const displayText = unitKerja ? `${label} (${unitKerja})` : label;
+
             document.getElementById(`${type}-input`).value = value;
-            document.getElementById(`${type}-display`).textContent = text;
+            document.getElementById(`${type}-display`).textContent = displayText;
 
             // Reset highlight
             document.querySelectorAll(`#${type}-dropdown .option-item`).forEach(item => {
@@ -162,7 +172,9 @@
 
             // Highlight selected
             const selected = document.querySelector(`#${type}-dropdown .option-item[data-value="${value}"]`);
-            selected.classList.add('bg-[#00A181]', 'text-white', 'hover:bg-[#009171]');
+            if (selected) {
+                selected.classList.add('bg-[#00A181]', 'text-white', 'hover:bg-[#009171]');
+            }
 
             // Tutup dropdown
             toggleDropdown(type);
