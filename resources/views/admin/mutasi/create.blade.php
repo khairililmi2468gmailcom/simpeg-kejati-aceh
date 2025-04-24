@@ -80,7 +80,10 @@
                                 <div class="option-item px-3 py-2 hover:bg-gray-100 cursor-pointer transition-colors"
                                     title="{{ $isDisabled ? 'Jabatan ini sudah digunakan oleh pegawai lain' : '' }}"
                                     data-value="{{ $jabatan->id_jabatan }}"
-                                    onclick='{{ $isDisabled ? '' : "selectItem(\"jabatan\", " . json_encode($jabatan->id_jabatan) . ', ' . json_encode($jabatan->nama_jabatan) . ', ' . json_encode($jabatan->unitkerja->nama_kantor) . ')' }}'>
+                                    @if ($isDisabled) style="pointer-events: none; background-color: #f3f4f6;" 
+            class="cursor-not-allowed"
+        @else
+            onclick="selectItem('jabatan', {{ json_encode($jabatan->id_jabatan) }}, {{ json_encode($jabatan->nama_jabatan) }}, {{ json_encode($jabatan->unitkerja->nama_kantor) }})" @endif>
                                     {{ $jabatan->nama_jabatan }} ({{ $jabatan->unitkerja->nama_kantor }})
                                     @if ($isDisabled)
                                         - <span class="italic text-xs text-red-500">Sudah terisi</span>

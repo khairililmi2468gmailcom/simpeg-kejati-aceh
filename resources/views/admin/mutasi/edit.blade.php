@@ -76,12 +76,23 @@
                             placeholder="Cari jabatan..." onkeyup="filterOptions('jabatan', this.value)">
                         <div class="options" id="jabatan-options">
                             @foreach ($jabatanList as $jabatan)
+                                @php
+                                    $isDisabled = in_array($jabatan->id_jabatan, $jabatanTerisi ?? []);
+                                @endphp
                                 <div class="option-item px-3 py-2 hover:bg-gray-100 cursor-pointer transition-colors {{ old('id_jabatan', $data->id_jabatan) == $jabatan->id_jabatan ? 'bg-[#00A181] text-white hover:bg-[#009171]' : '' }}"
                                     data-value="{{ $jabatan->id_jabatan }}"
-                                    onclick='selectItem("jabatan", {{ $jabatan->id_jabatan }}, "{{ $jabatan->nama_jabatan }} ({{ $jabatan->unitkerja->nama_kantor }})")'>
+                                    title="{{ $isDisabled ? 'Jabatan ini sudah digunakan oleh pegawai lain' : '' }}"
+                                    @if ($isDisabled) style="pointer-events: none; background-color: #f3f4f6;" 
+            class="cursor-not-allowed"
+        @else
+            onclick="selectItem('jabatan', {{ json_encode($jabatan->id_jabatan) }}, {{ json_encode($jabatan->nama_jabatan) }}, {{ json_encode($jabatan->unitkerja->nama_kantor) }})" @endif>
                                     {{ $jabatan->nama_jabatan }} ({{ $jabatan->unitkerja->nama_kantor }})
+                                    @if ($isDisabled)
+                                        - <span class="italic text-xs text-red-500">Sudah terisi</span>
+                                    @endif
                                 </div>
                             @endforeach
+
                         </div>
                     </div>
                 </div>
@@ -181,9 +192,11 @@
             dropdowns[type] = !dropdowns[type];
         }
 
-        function selectItem(type, value, text) {
+        function selectItem(type, value, label, unitKerja = '') {
+            const displayText = unitKerja ? `${label} (${unitKerja})` : label;
+
             document.getElementById(`${type}-input`).value = value;
-            document.getElementById(`${type}-display`).textContent = text;
+            document.getElementById(`${type}-display`).textContent = displayText;
 
             // Reset highlight
             document.querySelectorAll(`#${type}-dropdown .option-item`).forEach(item => {
@@ -192,11 +205,14 @@
 
             // Highlight selected
             const selected = document.querySelector(`#${type}-dropdown .option-item[data-value="${value}"]`);
-            selected.classList.add('bg-[#00A181]', 'text-white', 'hover:bg-[#009171]');
+            if (selected) {
+                selected.classList.add('bg-[#00A181]', 'text-white', 'hover:bg-[#009171]');
+            }
 
             // Tutup dropdown
             toggleDropdown(type);
         }
+
 
         function filterOptions(type, query) {
             const options = document.querySelectorAll(`#${type}-options .option-item`);
