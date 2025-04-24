@@ -201,7 +201,8 @@
                     <td>{{ $key + 1 }}</td>
                     <td>
                         <strong>{{ strtoupper($data->pegawai->nama ?? '-') }}</strong><br>
-                        {{ $data->golonganPegawai->pangkat ?? '-' }} <br>
+                        {{ $data->golonganPegawai->jabatan_fungsional ?? '-' }} -
+                        ({{ $data->golonganPegawai->pangkat ?? '-' }}) <br>
                         NIP. {{ $data->nip ?? '-' }}<br>
                         NRP. {{ $data->pegawai->nrp ?? '-' }}
                     </td>

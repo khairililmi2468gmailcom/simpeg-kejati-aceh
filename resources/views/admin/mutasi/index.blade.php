@@ -81,48 +81,51 @@
                         <td class="px-5 py-4">{{ $item->tempat_l ?? '-' }}</td>
                         <td class="px-5 py-4">{{ \Carbon\Carbon::parse($item->tanggal_sk)->format('d M Y') ?? '-' }}</td>
 
-                        <td class="px-5 py-4 space-y-2">
-                            <a href="{{ route('admin.mutasi.show', $item->no_sk) }}"
-                                class="w-full sm:w-auto inline-flex justify-center items-center text-white bg-blue-500 hover:bg-blue-600 font-semibold rounded-md text-sm px-4 py-2">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                                Detail
-                            </a>
-                            @if ($item->is_last)
-                                <a href="{{ route('admin.mutasi.edit', $item->no_sk) }}"
-                                    class="w-full sm:w-auto inline-flex justify-center items-center text-white bg-yellow-500 hover:bg-yellow-600 font-semibold rounded-md text-sm px-4 py-2">
-                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
+                        <td class="px-5 py-4">
+                            <div class="flex flex-wrap gap-2 justify-center">
+                                <a href="{{ route('admin.mutasi.show', $item->no_sk) }}"
+                                    class="min-w-[8rem] inline-flex justify-center items-center text-white bg-blue-500 hover:bg-blue-600 font-semibold rounded-md text-sm px-3 py-2">
+                                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" stroke-width="2"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828A4 4 0 019 17H5v-4a4 4 0 014-4z" />
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                     </svg>
-                                    Edit
+                                    Detail
                                 </a>
-                                <form action="{{ route('admin.mutasi.destroy', $item->no_sk) }}" method="POST"
-                                    class="w-full sm:w-auto inline delete-form">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button"
-                                        class="cursor-pointer w-full sm:w-auto btn-delete inline-flex justify-center items-center text-white bg-red-500 hover:bg-red-600 font-semibold rounded-md text-sm px-4 py-2">
-                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
+
+                                @if ($item->is_last)
+                                    <a href="{{ route('admin.mutasi.edit', $item->no_sk) }}"
+                                        class="min-w-[8rem] inline-flex justify-center items-center text-white bg-yellow-500 hover:bg-yellow-600 font-semibold rounded-md text-sm px-3 py-2">
+                                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" stroke-width="2"
                                             viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a1 1 0 011 1v1H9V4a1 1 0 011-1zM4 7h16" />
+                                                d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828A4 4 0 019 17H5v-4a4 4 0 014-4z" />
                                         </svg>
-                                        Hapus
-                                    </button>
-                                </form>
-                            @else
-                                <div class="text-gray-400 italic text-sm">Mutasi telah berakhir</div>
-                            @endif
+                                        Edit
+                                    </a>
+                                    <form action="{{ route('admin.mutasi.destroy', $item->no_sk) }}" method="POST"
+                                        class="delete-form">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button"
+                                            class="cursor-pointer min-w-[8rem] btn-delete inline-flex justify-center items-center text-white bg-red-500 hover:bg-red-600 font-semibold rounded-md text-sm px-3 py-2">
+                                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor"
+                                                stroke-width="2" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a1 1 0 011 1v1H9V4a1 1 0 011-1zM4 7h16" />
+                                            </svg>
+                                            Hapus
+                                        </button>
+                                    </form>
+                                @else
+                                    <div class="text-gray-400 italic text-sm">Mutasi telah berakhir</div>
+                                @endif
+                            </div>
                         </td>
-                    </tr>
-                @empty
+
+                    @empty
                     <tr>
                         <td colspan="4" class="text-center py-6 text-gray-500">Data tidak ditemukan.</td>
                     </tr>
