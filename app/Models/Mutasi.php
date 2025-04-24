@@ -30,4 +30,16 @@ class Mutasi extends Model
     {
         return $this->hasOneThrough(UnitKerja::class, Jabatan::class, 'kode_kantor', 'kode_kantor', 'id_jabatan', 'kode_kantor');
     }
+    public function golonganPegawai()
+    {
+        return $this->hasOneThrough(
+            \App\Models\Golongan::class,
+            \App\Models\Pegawai::class,
+            'nip',          // Foreign key on Pegawai
+            'id_golongan',  // Foreign key on Golongan
+            'nip',          // Local key on Mutasi
+            'id_golongan'   // Local key on Pegawai
+        );
+    }
+    
 }

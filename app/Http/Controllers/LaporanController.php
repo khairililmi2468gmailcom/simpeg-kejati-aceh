@@ -458,7 +458,7 @@ class LaporanController extends Controller
             $query->where('id_jabatan', $request->id_jabatan);
         }
 
-        $mutasi = $query->get();
+        $mutasi = $query->with(['pegawai', 'jabatan', 'golonganPegawai'])->get(); // include eager load
         $kepalakejaksaan = KepalaKejaksaan::first();
 
         // QR Code: bisa berisi informasi tanggal cetak + info otentikasi
@@ -472,7 +472,7 @@ class LaporanController extends Controller
             'tanggalCetak' => $tanggalCetak,
             'qrCode' => $qrCode,
             'kepalakejaksaan' => $kepalakejaksaan,
-        ])->setPaper('A4', 'portrait');
+        ])->setPaper('A4', 'landscape');
 
         return $pdf->stream('Laporan_Daftar_Mutasi_Pegawai_Kejati_Aceh.pdf');
     }
