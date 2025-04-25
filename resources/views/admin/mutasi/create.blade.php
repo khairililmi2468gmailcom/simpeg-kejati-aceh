@@ -2,24 +2,15 @@
 
 @section('content')
     <div>
-        <h1 class="text-3xl font-bold text-[#00A181]">Tambah Mutasi</h1>
-        <p class="text-gray-600">Masukkan informasi mutasi pegawai.</p>
+        <h1 class="text-3xl font-bold text-[#00A181]">Tambah Mutasi/ Perencanaan</h1>
+        <p class="text-gray-600">Masukkan informasi mutasi atau perancanaan mutasi pegawai.</p>
     </div>
 
     <div class="max-w-3xl mx-auto mt-6 p-6 bg-white shadow-md rounded-xl">
         <form id="createForm" action="{{ route('admin.mutasi.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
-            {{-- Tempat jabatan --}}
-            <div class="mb-4">
-                <label for="no_sk" class="block text-sm font-medium text-gray-700">No. SK</label>
-                <input type="text" name="no_sk" id="no_sk" value="{{ old('no_sk') }}" maxlength="50"
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181]"
-                    required>
-                @error('no_sk')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
+
 
             {{-- Nama Pegawai --}}
             <div class="mb-4">
@@ -101,12 +92,20 @@
             </div>
 
 
-
+            {{-- Nomor SK --}}
+            <div class="mb-4">
+                <label for="nomor_sk" class="block text-sm font-medium text-gray-700">No. SK <span class="italic text-xs font-base text-yellow-500">(Boleh kosong)</span></label>
+                <input type="text" name="nomor_sk" id="nomor_sk" value="{{ old('nomor_sk') }}" maxlength="50"
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181]">
+                @error('nomor_sk')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
             {{-- Tanggal SK, TMT Jabatan --}}
             @foreach (['tanggal_sk' => 'Tanggal SK', 'tmt_jabatan' => 'TMT Jabatan'] as $field => $label)
                 <div class="mb-4">
                     <label for="{{ $field }}"
-                        class="block text-sm font-medium text-gray-700">{{ $label }}</label>
+                        class="block text-sm font-medium text-gray-700">{{ $label }} <span class="italic text-xs font-base text-yellow-500">(Boleh kosong)</span></label>
                     <div class="relative max-w-sm">
                         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                             <svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">

@@ -17,9 +17,10 @@ return new class extends Migration
             $table->unsignedBigInteger('id_jabatan')->nullable();
             $table->string('jabatan_l', 50)->nullable();
             $table->string('tempat_l', 100)->nullable();
-            $table->date('tanggal_sk');
+            $table->string('nomor_sk', 100)->nullable();
+            $table->date('tanggal_sk')->nullable();
             $table->date('tmt_l')->nullable(); // Tanggal Mulai Tugas Lama
-            $table->date('tmt_jabatan');
+            $table->date('tmt_jabatan')->nullable();
 
             // Foreign keys
             $table->foreign('nip')->references('nip')->on('pegawai')->onDelete('cascade');

@@ -32,7 +32,7 @@
                 <div>
                     <h3 class="text-lg font-semibold text-[24px] text-[#00A181] mb-4">Data Diklat</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-6 gap-x-6 gap-y-6">
-                        <x-display label="No. SK" class="sm:col-span-3">{{ $data->no_sk }}</x-display>
+                        <x-display label="No. SK" class="sm:col-span-3">{{ $data->nomor_sk ?? '-' }}</x-display>
                         <x-display label="Jabatan Saat Ini"
                             class="sm:col-span-3">{{ $data->pegawai->jabatan->nama_jabatan ?? '-' }}</x-display>
                         <x-display label="Keterangan Jabatan"

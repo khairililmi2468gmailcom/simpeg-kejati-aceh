@@ -11,14 +11,6 @@
             enctype="multipart/form-data">
             @csrf
             @method('PUT')
-            {{-- No SK --}}
-            <div class="mb-4">
-                <label for="no_sk" class="block text-sm font-medium text-gray-700">No. SK</label>
-                <input type="text" name="no_sk" id="no_sk" value="{{ old('no_sk', $data->no_sk) }}"
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181]"
-                    disabled>
-            </div>
-
 
             {{-- Nama Pegawai --}}
             <div class="mb-4">
@@ -102,10 +94,18 @@
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
-
+            {{-- No SK BOLEH KOSONG --}}
+            <div class="mb-4">
+                <label for="nomor_sk" class="block text-sm font-medium text-gray-700">No. SK <span class="italic text-xs font-base text-yellow-500">(Boleh kosong)</span></label>
+                <input type="text" name="nomor_sk" id="nomor_sk" value="{{ old('nomor_sk', $data->nomor_sk) }}"
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181]">
+                @error('nomor_sk')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
             {{-- Tanggal SK --}}
             <div class="mb-4">
-                <label for="tanggal_sk" class="block text-sm font-medium text-gray-700">Tanggal SK</label>
+                <label for="tanggal_sk" class="block text-sm font-medium text-gray-700">Tanggal SK <span class="italic text-xs font-base text-yellow-500">(Boleh kosong)</span></label>
                 <div class="relative max-w-sm">
                     <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                         <svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
@@ -125,7 +125,7 @@
             {{-- Tanggal Mulai Tugas --}}
             <div class="mb-4">
                 <label for="tmt_jabatan" class="block text-sm font-medium text-gray-700">Terhitung Mulai Tanggal Jabatan
-                </label>
+                    <span class="italic text-xs font-base text-yellow-500">(Boleh kosong)</span></label>
                 <div class="relative max-w-sm">
                     <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                         <svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">

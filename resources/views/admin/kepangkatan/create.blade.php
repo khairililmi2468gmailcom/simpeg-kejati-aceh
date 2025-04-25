@@ -2,8 +2,8 @@
 
 @section('content')
     <div>
-        <h1 class="text-3xl font-bold text-[#00A181]">Tambah Mutasi</h1>
-        <p class="text-gray-600">Masukkan informasi mutasi pegawai.</p>
+        <h1 class="text-3xl font-bold text-[#00A181]">Tambah Kepangkatan</h1>
+        <p class="text-gray-600">Masukkan informasi kepangkatan pegawai.</p>
     </div>
 
     <div class="max-w-3xl mx-auto mt-6 p-6 bg-white shadow-md rounded-xl">

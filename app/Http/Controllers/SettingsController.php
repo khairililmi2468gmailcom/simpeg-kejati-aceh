@@ -115,9 +115,16 @@ class SettingsController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'nip' => 'required|string|max:30',
+            'isPlt' => 'nullable|boolean',
+            'pangkat' => 'nullable|string|max:100',
         ]);
 
-        KepalaKejaksaan::create($request->only('nama', 'nip'));
+        KepalaKejaksaan::create([
+            'nama' => $request->nama,
+            'nip' => $request->nip,
+            'isPlt' => $request->has('isPlt') ? true : false,  // Menangani update isPlt
+            'pangkat' => $request->pangkat,
+        ]);
 
         return redirect()->route('admin.settings.index')->with('success', 'Kepala Kejaksaan berhasil ditambahkan');
     }
@@ -226,10 +233,18 @@ class SettingsController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'nip' => 'required|string|max:30',
+            'isPlt' => 'nullable|boolean',
+            'pangkat' => 'nullable|string|max:100',
         ]);
 
+
         $kepala = KepalaKejaksaan::findOrFail($id);
-        $kepala->update($request->only('nama', 'nip'));
+        $kepala->update([
+            'nama' => $request->nama,
+            'nip' => $request->nip,
+            'isPlt' => $request->has('isPlt') ? true : false,  // Menangani update isPlt
+            'pangkat' => $request->pangkat,
+        ]);
 
         return redirect()->route('admin.settings.index')->with('success', 'Data Kepala Kejaksaan berhasil diperbarui');
     }

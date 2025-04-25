@@ -430,7 +430,7 @@
                             <line x1="12" y1="2" x2="12" y2="22" />
                         </svg>
 
-                        <span class="flex-1 ms-3 whitespace-nowrap">Mutasi</span>
+                        <span class="flex-1 ms-3 whitespace-nowrap">Perencanaan & Mutasi</span>
                     </a>
                 </li>
                 <li>

@@ -139,7 +139,7 @@
         }
 
         .ttd-section {
-            margin-top: 30px;
+            margin-top: 16px;
             float: right;
             width: 300px;
         }
@@ -149,7 +149,7 @@
         }
 
         .qr-code {
-            margin-top: 15px;
+            margin-top: 12px;
             text-align: center;
         }
     </style>
@@ -202,7 +202,8 @@
                     <td>
                         <strong>{{ strtoupper($data->pegawai->nama ?? '-') }}</strong><br>
                         {{ $data->golonganPegawai->jabatan_fungsional ?? '-' }} -
-                        ({{ $data->golonganPegawai->pangkat ?? '-' }}) <br>
+                        ({{ $data->golonganPegawai->pangkat ?? '-' }})
+                        <br>
                         NIP. {{ $data->nip ?? '-' }}<br>
                         NRP. {{ $data->pegawai->nrp ?? '-' }}
                     </td>
@@ -219,17 +220,34 @@
 
     <div class="ttd-section">
         <div class="signature-box">
-            Banda Aceh, {{ $tanggalCetak }}<br>
-            Kepala Kejaksaan Tinggi Aceh<br>
+            Banda Aceh, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}<br>
+
+            {{-- Tampilkan "Plt." jika isPlt == true --}}
+            {{ $kepalakejaksaan->isPlt ? 'Plt. ' : '' }}Kepala Kejaksaan Tinggi Aceh<br>
+
             <div class="qr-code">
                 <img src="data:image/png;base64, {!! $qrCode !!}" width="100">
             </div>
+
             <br>
             <strong><u>{{ $kepalakejaksaan->nama ?? '-' }}</u></strong><br>
+
+            {{-- Tampilkan Pangkat di bawah nama --}}
+            {{ $kepalakejaksaan->pangkat ?? '-' }}<br>
+
             NIP.
-            {{ substr($kepalakejaksaan->nip, 0, 8) . ' ' . substr($kepalakejaksaan->nip, 8, 6) . ' ' . substr($kepalakejaksaan->nip, 14, 1) . ' ' . substr($kepalakejaksaan->nip, 15, 3) ?? '-' }}
+            {{ $kepalakejaksaan->nip
+                ? substr($kepalakejaksaan->nip, 0, 8) .
+                    ' ' .
+                    substr($kepalakejaksaan->nip, 8, 6) .
+                    ' ' .
+                    substr($kepalakejaksaan->nip, 14, 1) .
+                    ' ' .
+                    substr($kepalakejaksaan->nip, 15, 3)
+                : '-' }}
         </div>
     </div>
+
 </body>
 
 </html>

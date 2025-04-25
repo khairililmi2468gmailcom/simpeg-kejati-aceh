@@ -51,22 +51,28 @@
     <div class="overflow-auto max-h-[70vh] rounded-xl scrollbar-hidden">
 
         <table class="w-full text-base text-left text-gray-700 bg-white shadow-lg rounded-xl overflow-hidden">
-            <thead class="text-white bg-[#00A181]">
+            <thead class="text-white text-center bg-[#00A181]">
                 <tr>
-                    <th class="px-5 py-4 text-center"><input type="checkbox" id="checkAll"></th>
-                    <th class="px-5 py-4">NIP</th>
-                    <th class="px-5 py-4">Nama Pegawai</th>
-                    <th class="px-5 py-4">Jabatan Saat Ini</th>
-                    <th class="px-5 py-4">Jabatan Lama</th>
-                    <th class="px-5 py-4">Unit Kerja Saat Ini</th>
-                    <th class="px-5 py-4">Unit Kerja Lama</th>
-                    <th class="px-5 py-4">Tanggal SK</th>
-                    <th class="px-5 py-4 ">Aksi</th>
+                    <th class="px-2 py-4 text-center"><input type="checkbox" id="checkAll"></th>
+                    <th class="px-4 py-4">NIP</th>
+                    <th class="px-2 py-4">Nama Pegawai</th>
+                    <th class="px-2 py-4">Jabatan Saat Ini</th>
+                    <th class="px-2 py-4">Jabatan Lama</th>
+                    <th class="px-2 py-4">Unit Kerja Saat Ini</th>
+                    <th class="px-2 py-4">Unit Kerja Lama</th>
+                    <th class="px-2 py-4">Tanggal SK</th>
+                    <th class="px-2 py-4 ">Status</th>
+                    <th class="px-2 py-4 ">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
                 @forelse ($data as $item)
-                    <tr class="hover:bg-gray-50 transition-all duration-150">
+                    @php
+                        $lengkap =
+                            $item->no_sk && $item->nip && $item->id_jabatan && $item->tanggal_sk && $item->tmt_jabatan;
+                    @endphp
+
+                    <tr class="hover:bg-gray-50 transition-all duration-150 {{ $lengkap ? 'bg-green-100 hover:bg-green-200' : '' }}">
                         <td class="px-5 py-4 text-center">
                             <input type="checkbox" class="checkbox-item" value="{{ $item->no_sk }}">
                         </td>
@@ -80,7 +86,43 @@
                         <td class="px-5 py-4">{{ $item->pegawai->unitkerja->nama_kantor ?? '-' }}</td>
                         <td class="px-5 py-4">{{ $item->tempat_l ?? '-' }}</td>
                         <td class="px-5 py-4">{{ \Carbon\Carbon::parse($item->tanggal_sk)->format('d M Y') ?? '-' }}</td>
-
+                        <td class="px-5 py-4 text-center relative group">
+                            @php
+                                $incompleteFields = [];
+                        
+                                if (!$item->no_sk) $incompleteFields[] = 'No SK';
+                                if (!$item->tanggal_sk) $incompleteFields[] = 'Tanggal SK';
+                                if (!$item->tmt_jabatan) $incompleteFields[] = 'TMT Jabatan';
+                                if (!$item->id_jabatan) $incompleteFields[] = 'Jabatan';
+                                if (!$item->nip) $incompleteFields[] = 'NIP';
+                            @endphp
+                        
+                            @if (count($incompleteFields) === 0)
+                                <span class="text-green-600 font-semibold">Selesai</span>
+                            @else
+                                <div class="inline-flex items-center justify-center gap-1 relative group">
+                                    <span class="text-red-500 font-semibold">Belum Selesai</span>
+                        
+                                    <!-- Ikon info -->
+                                    <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" />
+                                    </svg>
+                        
+                                    <!-- Tooltip -->
+                                    <div
+                                        class="absolute top-7 left-1/2 transform -translate-x-1/2 w-52 text-sm bg-white border border-gray-300 shadow-lg p-3 rounded-md hidden group-hover:block z-10 text-left">
+                                        <p class="font-semibold mb-1 text-gray-700">Data Belum Lengkap:</p>
+                                        <ul class="list-disc pl-5 text-gray-600">
+                                            @foreach ($incompleteFields as $field)
+                                                <li>{{ $field }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
+                            @endif
+                        </td>
+                        
                         <td class="px-5 py-4">
                             <div class="flex flex-wrap gap-2 justify-center">
                                 <a href="{{ route('admin.mutasi.show', $item->no_sk) }}"
@@ -124,6 +166,7 @@
                                 @endif
                             </div>
                         </td>
+                        
 
                     @empty
                     <tr>

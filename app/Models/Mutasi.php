@@ -14,7 +14,7 @@ class Mutasi extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = [
-        'no_sk', 'nip', 'id_jabatan', 'jabatan_l', 'tempat_l', 'tanggal_sk', 'tmt_l', 'tmt_jabatan'
+        'no_sk', 'nip', 'id_jabatan', 'jabatan_l', 'tempat_l', 'tanggal_sk', 'tmt_l', 'tmt_jabatan', 'nomor_sk'
     ];
 
     public function pegawai()

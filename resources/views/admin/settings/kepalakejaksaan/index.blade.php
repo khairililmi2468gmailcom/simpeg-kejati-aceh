@@ -30,6 +30,23 @@
                         maxlength="18"
                         class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181]">
                 </div>
+                {{-- Pangkat --}}
+                <div class="mb-5">
+                    <label for="pangkat" class="block text-sm font-medium text-gray-700 mb-1">Pangkat</label>
+                    <input type="text" name="pangkat" id="pangkat" value="{{ $kepalakejaksaan->first()->pangkat }}"
+                        class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#00A181]">
+                </div>
+
+                {{-- Plt Checkbox --}}
+                <div class="mb-5">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" name="isPlt" value="1" class="form-checkbox text-[#00A181]"
+                            {{ $kepalakejaksaan->first()->isPlt ? 'checked' : '' }}>
+                        <span class="ml-2 text-gray-700">Pejabat Pelaksana Tugas (Plt)</span>
+                    </label>
+                </div>
+
+
 
                 {{-- Tombol --}}
                 <div class="flex justify-end">
@@ -70,7 +87,6 @@
 
 @push('scripts')
     <script>
-        
         document.getElementById('nip').addEventListener('input', function() {
             if (this.value.length > 18) {
                 this.value = this.value.slice(0, 18);

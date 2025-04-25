@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->string('nip')->unique();
+            $table->boolean('is_plt')->default(false);
+            $table->string('pangkat', 100)->nullable();
             $table->timestamps();
         });
     }

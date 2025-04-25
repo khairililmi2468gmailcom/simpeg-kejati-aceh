@@ -14,5 +14,7 @@ class KepalaKejaksaan extends Model
     protected $fillable = [
         'nama',
         'nip',
+        'isPlt',
+        'pangkat',
     ];
 }

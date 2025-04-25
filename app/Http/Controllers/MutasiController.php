@@ -64,12 +64,13 @@ class MutasiController extends Controller
         Log::info('Mulai proses penyimpanan mutasi.', $request->all());
 
         $request->validate([
-            'no_sk' => 'required|string|unique:mutasi,no_sk',
             'nip' => 'required|exists:pegawai,nip',
             'id_jabatan' => 'required|exists:jabatan,id_jabatan',
-            'tanggal_sk' => 'required|date',
-            'tmt_jabatan' => 'required|date',
+            'tanggal_sk' => 'nullable|date',
+            'tmt_jabatan' => 'nullable|date',
+            'nomor_sk' => 'nullable|string',
         ]);
+
 
         $pegawai = Pegawai::findOrFail($request->nip);
         Log::info('Data pegawai ditemukan:', $pegawai->toArray());
@@ -90,7 +91,20 @@ class MutasiController extends Controller
             Log::info('Unit kerja lama ditemukan:', ['nama_kantor' => $namaKantor]);
         }
 
+        // Cari no_sk otomatis dari 1 hingga tak terbatas
+        $usedNoSk = Mutasi::pluck('no_sk')->map(fn($val) => (int) $val)->sort()->values();
+
+        $noSkBaru = 1;
+        foreach ($usedNoSk as $number) {
+            if ($number == $noSkBaru) {
+                $noSkBaru++;
+            } else {
+                break;
+            }
+        }
+
         $mutasiData = $request->all();
+        $mutasiData['no_sk'] = (string) $noSkBaru; 
         $mutasiData['jabatan_l'] = $jabatanLama?->nama_jabatan;
         $mutasiData['tmt_l'] = $pegawai->tmt_jabatan ?? null;
         $mutasiData['tempat_l'] = $namaKantor;
@@ -147,8 +161,9 @@ class MutasiController extends Controller
         $request->validate([
             'nip' => 'required|exists:pegawai,nip',
             'id_jabatan' => 'required|exists:jabatan,id_jabatan',
-            'tanggal_sk' => 'required|date',
-            'tmt_jabatan' => 'required|date',
+            'tanggal_sk' => 'nullable|date',
+            'tmt_jabatan' => 'nullable|date',
+            'nomor_sk' => 'nullable|string',
         ]);
 
         // Temukan mutasi yang akan diperbarui
@@ -170,7 +185,11 @@ class MutasiController extends Controller
         ]);
 
         // Update data mutasi
-        $mutasi->update($request->all());
+        $mutasiData = $request->only([
+            'nip', 'id_jabatan', 'tanggal_sk', 'tmt_jabatan',
+            'nomor_sk', 'jabatan_l', 'tmt_l', 'tempat_l'
+        ]);
+        $mutasi->update($mutasiData);
 
         // Update pegawai dengan jabatan dan kode kantor baru dari form
         $pegawai->update([
